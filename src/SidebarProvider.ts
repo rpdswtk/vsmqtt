@@ -1,13 +1,12 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { MqttConfigPanel } from "./MqttConfigPanel";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
     _view?: vscode.WebviewView;
     _doc?: vscode.TextDocument;
 
-    constructor(private readonly _extensionUri: vscode.Uri) { 
-        console.log("init");
-    }
+    constructor(private readonly _extensionUri: vscode.Uri, private readonly _storage: vscode.Memento) { }
 
     public resolveWebviewView(webviewView: vscode.WebviewView) {
         this._view = webviewView;
@@ -37,6 +36,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     vscode.window.showErrorMessage(data.value);
                     break;
                 }
+                case "create-mqtt-profile": {
+                    MqttConfigPanel.createOrShow(this._extensionUri, this._storage);
+                }
             }
         });
     }
@@ -62,8 +64,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         // Use a nonce to only allow a specific script to be run.
         const nonce = getNonce();
 
-        console.log("HELLO");
-
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -83,8 +83,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 </script>
         </head>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-			</body>
-			</html>`;
+            <script nonce="${nonce}" src="${scriptUri}"></script>
+        </body>
+        </html>`;
     }
 }

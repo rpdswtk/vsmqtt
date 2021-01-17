@@ -1,25 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import type { MqttBrokerConfig } from "../models/MqttBrokerConfig";
 
-    interface MqttBrokerModel {
-        address?: string;
-        port?: number;
-    }
-
-    let brokers: Array<MqttBrokerModel> = [];
-    let broker: MqttBrokerModel = {};
-
-    function click() {
-        console.log("click");
-    }
-
-    function save() {
-        console.log("save");
-        brokers = [...brokers, { address: broker.address, port: broker.port }];
-        broker.address = undefined;
-        broker.port = undefined;
-        console.log(brokers);
-    }
+    let brokers: Array<MqttBrokerConfig> = [];
+    let broker: MqttBrokerConfig = { name: "profile name" };
 
     onMount(() => {
         window.addEventListener("message", (event) => {
@@ -36,15 +20,21 @@
 <div>
     <ul>
         {#each brokers as broker}
-            <li on:click={click}>{broker.address} {broker.port}</li>
+            <li>{broker.address} {broker.port}</li>
         {/each}
     </ul>
 </div>
 
-<input type="text" bind:value={broker.address} />
-<input type="number" bind:value={broker.port} />
-<button on:click={save}>Save</button>
+<button
+    on:click={() => {
+        vscode.postMessage({
+            type: "create-mqtt-profile",
+            value: broker,
+        });
+    }}>Create new profile</button
+>
 
+<!-- 
 <button
     on:click={() => {
         vscode.postMessage({
@@ -61,8 +51,7 @@
             value: "Error message",
         });
     }}>Click me for error</button
->
-
+> -->
 <style>
     li:hover {
         cursor: pointer;
@@ -70,5 +59,11 @@
 
     li {
         font-size: large;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 </style>

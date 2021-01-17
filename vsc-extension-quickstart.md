@@ -1,3 +1,8 @@
+# Resources
+https://www.youtube.com/watch?v=a5DX5pQ9p5M&list=PLE8rYxyRGo-2vJOV2qKnCEg040G2P_v7Q&index=2
+https://github.com/benawad/vstodo
+
+
 # Welcome to your VS Code Extension
 
 ## What's in the folder
