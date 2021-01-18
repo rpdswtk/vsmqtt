@@ -8,9 +8,11 @@
     onMount(() => {
         window.addEventListener("message", (event) => {
             const message = event.data; // The json data that the extension sent
+            console.log(message);
             switch (message.type) {
-                case "new-todo":
-                    console.log({ message });
+                case "update-profile-list":
+                    brokers = message.value;
+                    console.log(message.value);
                     break;
             }
         });

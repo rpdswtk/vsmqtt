@@ -1,6 +1,6 @@
-import { kill } from "process";
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { saveBrokerProfile } from './helpers';
 
 export class MqttConfigPanel {
     /**
@@ -13,9 +13,8 @@ export class MqttConfigPanel {
     public readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
-    private _storage: vscode.Memento;
 
-    public static createOrShow(extensionUri: vscode.Uri, storage: vscode.Memento) {
+    public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor
             ? vscode.window.activeTextEditor.viewColumn
             : undefined;
@@ -44,7 +43,7 @@ export class MqttConfigPanel {
             }
         );
 
-        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri, storage);
+        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri);
     }
 
     public static kill() {
@@ -52,14 +51,13 @@ export class MqttConfigPanel {
         MqttConfigPanel.currentPanel = undefined;
     }
 
-    public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, storage: vscode.Memento) {
-        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri, storage);
+    public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri);
     }
 
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, storage: vscode.Memento) {
+    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
         this._extensionUri = extensionUri;
-        this._storage = storage;
 
         // Set the webview's initial html content
         this._update();
@@ -68,39 +66,7 @@ export class MqttConfigPanel {
         // This happens when the user closes the panel or when the panel is closed programatically
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-        // // Handle messages from the webview
-        // this._panel.webview.onDidReceiveMessage(
-        //   (message) => {
-        //     switch (message.command) {
-        //       case "alert":
-        //         vscode.window.showErrorMessage(message.text);
-        //         return;
-        //     }
-        //   },
-        //   null,
-        //   this._disposables
-        // );
-    }
-
-    public dispose() {
-        MqttConfigPanel.currentPanel = undefined;
-
-        // Clean up our resources
-        this._panel.dispose();
-
-        while (this._disposables.length) {
-            const x = this._disposables.pop();
-            if (x) {
-                x.dispose();
-            }
-        }
-    }
-
-    private async _update() {
-        const webview = this._panel.webview;
-
-        this._panel.webview.html = this._getHtmlForWebview(webview);
-        webview.onDidReceiveMessage(async (data) => {
+        this._panel.webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
                 case "onInfo": {
                     if (!data.value) {
@@ -120,12 +86,60 @@ export class MqttConfigPanel {
                     if (!data.value) {
                         return;
                     }
-                    this._storage.update(data.value.name, data.value);
-                    MqttConfigPanel.kill();
+                    await saveBrokerProfile(data.value);
                     break;
                 }
             }
         });
+    }
+
+    public dispose() {
+        MqttConfigPanel.currentPanel = undefined;
+
+        // Clean up our resources
+        this._panel.dispose();
+
+        this._panel.webview.onDidReceiveMessage(() => {});
+
+        while (this._disposables.length) {
+            const x = this._disposables.pop();
+            if (x) {
+                x.dispose();
+            }
+        }
+
+    }
+
+    private async _update() {  
+        const webview = this._panel.webview;
+
+        this._panel.webview.html = this._getHtmlForWebview(webview);
+        // webview.onDidReceiveMessage(async (data) => {
+        //     switch (data.type) {
+        //         case "onInfo": {
+        //             if (!data.value) {
+        //                 return;
+        //             }
+        //             vscode.window.showInformationMessage(data.value);
+        //             break;
+        //         }
+        //         case "onError": {
+        //             if (!data.value) {
+        //                 return;
+        //             }
+        //             vscode.window.showErrorMessage(data.value);
+        //             break;
+        //         }
+        //         case "add-mqtt-profile": {
+        //             if (!data.value) {
+        //                 return;
+        //             }
+        //             console.log("GICIGECI");
+        //             await saveBrokerProfile(data.value);
+        //             break;
+        //         }
+        //     }
+        // });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {

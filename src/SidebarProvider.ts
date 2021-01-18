@@ -1,5 +1,7 @@
+import { config } from "process";
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { loadBrokerProfiles } from "./helpers";
 import { MqttConfigPanel } from "./MqttConfigPanel";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -8,7 +10,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     constructor(private readonly _extensionUri: vscode.Uri, private readonly _storage: vscode.Memento) { }
 
-    public resolveWebviewView(webviewView: vscode.WebviewView) {
+    public async resolveWebviewView(webviewView: vscode.WebviewView) {
         this._view = webviewView;
 
         webviewView.webview.options = {
@@ -19,6 +21,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         };
 
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+        let profiles = await loadBrokerProfiles();
+            this._view?.webview.postMessage({
+                type: "update-profile-list",
+                value: profiles?.brokerProfiles
+        });
 
         webviewView.webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
@@ -37,9 +45,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     break;
                 }
                 case "create-mqtt-profile": {
-                    MqttConfigPanel.createOrShow(this._extensionUri, this._storage);
+                    MqttConfigPanel.createOrShow(this._extensionUri);
                 }
             }
+        });
+
+        vscode.workspace.onDidChangeConfiguration(async (_event) => {
+            let profiles = await loadBrokerProfiles();
+            this._view?.webview.postMessage({
+                type: "update-profile-list",
+                value: profiles?.brokerProfiles
+            });
         });
     }
 

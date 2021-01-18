@@ -13,6 +13,7 @@
 		"onCommand:vsmqtt.helloWorld",
 		"onCommand:vsmqtt.refresh",
 		"onCommand:vsmqtt.addTodo",
+		"onCommand:vsmqtt.refreshMqttProfileList",
 		"onView:vsmqtt-sidebar"
 	],
 	"main": "./dist/extension.js",
@@ -49,11 +50,22 @@
 				"title": "Refresh"
 			},
 			{
-				"command": "vsmqtt.addTodo",
+				"command": "vsmqtt.refreshMqttProfileList",
 				"category": "VSMqtt",
 				"title": "AddTodo"
 			}
-		]
+		],
+		"configuration": {
+			"title": "vsmqtt",
+			"properties": {
+				"vsmqtt.brokerProfiles": {
+					"type": "array",
+					"default": [],
+					"scope": "window",
+					"description": "VSMQTT broker profiles"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
