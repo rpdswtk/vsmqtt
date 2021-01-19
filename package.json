@@ -10,9 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vsmqtt.helloWorld",
 		"onCommand:vsmqtt.refresh",
-		"onCommand:vsmqtt.addTodo",
 		"onCommand:vsmqtt.refreshMqttProfileList",
 		"onView:vsmqtt-sidebar"
 	],
@@ -39,11 +37,6 @@
 			]
 		},
 		"commands": [
-			{
-				"command": "vsmqtt.helloWorld",
-				"category": "VSMqtt",
-				"title": "Hello World"
-			},
 			{
 				"command": "vsmqtt.refresh",
 				"category": "VSMqtt",

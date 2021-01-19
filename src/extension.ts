@@ -12,11 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
 		)
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('vsmqtt.helloWorld', () => {
-		//HelloWorldPanel.createOrShow(context.extensionUri);
-		//MqttConfigPanel.createOrShow(context.extensionUri);
-	}));
-
 	context.subscriptions.push(vscode.commands.registerCommand('vsmqtt.refreshMqttProfileList', () => {
 		// brokerProfile = context.globalState.get("brokerProfiles");
 		sidebarProvider._view?.webview.postMessage({
@@ -38,19 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const config = vscode.workspace.getConfiguration("settings");
 	config.update("mqtt", "test", vscode.ConfigurationTarget.Global);
-
-	console.log(config.get("mqtt"));
-
-	// MqttConfigPanel.createOrShow(context.extensionUri);
-
-	// MqttConfigPanel.currentPanel?._panel.webview?.onDidReceiveMessage(async (data) => {
-	// 	switch (data.type) {
-	// 		case "add-mqtt-profile": {
-	// 			await context.globalState.update(data.value.name, data.value);
-	// 			MqttConfigPanel.kill();
-	// 		}
-	// 	}
-	// });
 }
 
 export function deactivate() { }
