@@ -21,7 +21,7 @@
 				{
 					"id": "vsmqtt-sidebar-view",
 					"title": "VSMqtt",
-					"icon": "media/browser.svg"
+					"icon": "media/radio-tower.svg"
 				}
 			]
 		},
@@ -31,7 +31,7 @@
 					"type": "webview",
 					"id": "vsmqtt-sidebar",
 					"name": "VSMqtt",
-					"icon": "media/browser.svg",
+					"icon": "media/radio-tower.svg",
 					"contextualTitle": "VSMqtt"
 				}
 			]
