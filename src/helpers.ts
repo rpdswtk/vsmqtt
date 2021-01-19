@@ -10,5 +10,5 @@ export async function saveBrokerProfile(newProfile: object) {
 export async function loadBrokerProfiles() {
     let config = await vscode.workspace.getConfiguration("vsmqtt");
     let brokerProfiles = await config.get<Array<{}>>("brokerProfiles");
-    return {brokerProfiles};
+    return brokerProfiles;
 }

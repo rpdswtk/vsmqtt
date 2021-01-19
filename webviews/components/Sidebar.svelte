@@ -6,6 +6,9 @@
     let broker: MqttBrokerConfig = { name: "profile name" };
 
     onMount(() => {
+        console.log("mount");
+        brokers = brokerProfiles;
+        console.log(brokerProfiles);
         window.addEventListener("message", (event) => {
             const message = event.data; // The json data that the extension sent
             console.log(message);

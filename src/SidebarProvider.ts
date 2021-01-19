@@ -1,4 +1,3 @@
-import { config } from "process";
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { loadBrokerProfiles } from "./helpers";
@@ -8,9 +7,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     _view?: vscode.WebviewView;
     _doc?: vscode.TextDocument;
 
-    constructor(private readonly _extensionUri: vscode.Uri, private readonly _storage: vscode.Memento) { }
+    constructor(private readonly _extensionUri: vscode.Uri) { }
 
     public async resolveWebviewView(webviewView: vscode.WebviewView) {
+
         this._view = webviewView;
 
         webviewView.webview.options = {
@@ -20,12 +20,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             localResourceRoots: [this._extensionUri],
         };
 
-        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        webviewView.webview.html = await this._getHtmlForWebview(webviewView.webview);
 
-        let profiles = await loadBrokerProfiles();
-            this._view?.webview.postMessage({
-                type: "update-profile-list",
-                value: profiles?.brokerProfiles
+        webviewView.onDidChangeVisibility(async (e) => {
+            let profiles = await loadBrokerProfiles();
+                this._view?.webview.postMessage({
+                    type: "update-profile-list",
+                    value: profiles
+            });
         });
 
         webviewView.webview.onDidReceiveMessage(async (data) => {
@@ -54,7 +56,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             let profiles = await loadBrokerProfiles();
             this._view?.webview.postMessage({
                 type: "update-profile-list",
-                value: profiles?.brokerProfiles
+                value: profiles
             });
         });
     }
@@ -63,7 +65,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         this._view = panel;
     }
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
+    private async _getHtmlForWebview(webview: vscode.Webview) {
         const styleResetUri = webview.asWebviewUri(
             vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
         );
@@ -71,14 +73,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
         );
         const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out", "compiled/sidebar.js")
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Sidebar.js")
         );
         const styleMainUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out", "compiled/sidebar.css")
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Sidebar.css")
         );
 
         // Use a nonce to only allow a specific script to be run.
         const nonce = getNonce();
+
+        const brokerProfiles = await loadBrokerProfiles();
 
         return `<!DOCTYPE html>
 			<html lang="en">
@@ -96,6 +100,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <link href="${styleMainUri}" rel="stylesheet">
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
+                    const brokerProfiles = ${JSON.stringify(brokerProfiles)}
                 </script>
         </head>
       <body>
