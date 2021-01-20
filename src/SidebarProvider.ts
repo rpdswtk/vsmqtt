@@ -24,9 +24,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         webviewView.onDidChangeVisibility(async (e) => {
             let profiles = await loadBrokerProfiles();
-                this._view?.webview.postMessage({
-                    type: "update-profile-list",
-                    value: profiles
+            this._view?.webview.postMessage({
+                type: "update-profile-list",
+                value: profiles
             });
         });
 
@@ -46,8 +46,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     vscode.window.showErrorMessage(data.value);
                     break;
                 }
-                case "create-mqtt-profile": {
-                    MqttConfigPanel.createOrShow(this._extensionUri);
+                case "edit-mqtt-profile": {
+                    if (!data.value) {
+                        return;
+                    }
+                    MqttConfigPanel.createOrShow(this._extensionUri, data.value);
+                    break;
                 }
             }
         });
@@ -100,7 +104,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <link href="${styleMainUri}" rel="stylesheet">
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
-                    const brokerProfiles = ${JSON.stringify(brokerProfiles)}
+                    const brokerProfiles = ${JSON.stringify(brokerProfiles)};
                 </script>
         </head>
       <body>

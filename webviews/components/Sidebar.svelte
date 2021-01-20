@@ -1,21 +1,16 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { MqttBrokerConfig } from "../models/MqttBrokerConfig";
+    import type { MqttBrokerConfig } from "../../src/models/MqttBrokerConfig";
 
     let brokers: Array<MqttBrokerConfig> = [];
-    let broker: MqttBrokerConfig = { name: "profile name" };
 
     onMount(() => {
-        console.log("mount");
         brokers = brokerProfiles;
-        console.log(brokerProfiles);
         window.addEventListener("message", (event) => {
-            const message = event.data; // The json data that the extension sent
-            console.log(message);
+            const message = event.data;
             switch (message.type) {
                 case "update-profile-list":
                     brokers = message.value;
-                    console.log(message.value);
                     break;
             }
         });
@@ -25,7 +20,14 @@
 <div>
     <ul>
         {#each brokers as broker}
-            <li>{broker.address} {broker.port}</li>
+            <li
+                on:click={() => {
+                    vscode.postMessage({
+                        type: "edit-mqtt-profile",
+                        value: broker,
+                    });
+                }}
+            >{broker.address} {broker.port}</li>
         {/each}
     </ul>
 </div>
@@ -33,30 +35,12 @@
 <button
     on:click={() => {
         vscode.postMessage({
-            type: "create-mqtt-profile",
-            value: broker,
+            type: "edit-mqtt-profile",
+            value: { name: "New profile", address: "localhost", port: 1883 },
         });
     }}>Create new profile</button
 >
 
-<!-- 
-<button
-    on:click={() => {
-        vscode.postMessage({
-            type: "onInfo",
-            value: "Info message",
-        });
-    }}>Click me</button
->
-
-<button
-    on:click={() => {
-        vscode.postMessage({
-            type: "onError",
-            value: "Error message",
-        });
-    }}>Click me for error</button
-> -->
 <style>
     li:hover {
         cursor: pointer;

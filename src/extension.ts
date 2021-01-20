@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { MqttConfigPanel } from './MqttConfigPanel';
 import { SidebarProvider } from './SidebarProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -21,8 +20,8 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('vsmqtt.refresh', async () => {
-		MqttConfigPanel.kill();
-		MqttConfigPanel.createOrShow(context.extensionUri);
+		//MqttConfigPanel.kill();
+		//MqttConfigPanel.createOrShow(context.extensionUri);
 		// await vscode.commands.executeCommand("workbench.action.closeSidebar");
 		// await vscode.commands.executeCommand("workbench.view.extension.vsmqtt-sidebar-view");
 		setTimeout(() => {

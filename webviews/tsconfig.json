@@ -1,6 +1,13 @@
 {
-    "extends": "@tsconfig/svelte/tsconfig.json",
-    "include": ["./**/*", "../src/models", ],
-    "exclude": ["../node_modules/*"],
-    "compilerOptions": {"strict": true, }
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "include": [
+    "./**/*",
+    "../src/models",
+  ],
+  "exclude": [
+    "../node_modules/*"
+  ],
+  "compilerOptions": {
+    "strict": true,
   }
+}

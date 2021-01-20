@@ -1,14 +1,32 @@
 <script lang="ts">
-    import type { MqttBrokerConfig } from "../models/MqttBrokerConfig";
+    import { onMount } from "svelte";
+    import type { MqttBrokerConfig } from "../../src/models/MqttBrokerConfig";
 
     let brokerConfig: MqttBrokerConfig = {
         name: "new profile",
         address: "localhost",
         port: 1883,
     };
+
+    onMount(() => {
+        brokerConfig = brokerProfile;
+        window.addEventListener("message", (event) => {
+            const message = event.data;
+            switch (message.type) {
+                case "update-broker-profile":
+                    console.log(message.data);
+                    brokerConfig = {
+                        name: message.data.name,
+                        address: message.data.address,
+                        port: message.data.port,
+                    };
+                    break;
+            }
+        });
+    });
 </script>
 
-<h1>Add new mqtt broker profile</h1>
+<h1>Mqtt broker profile configuration</h1>
 
 <form
     on:submit|preventDefault={() => {

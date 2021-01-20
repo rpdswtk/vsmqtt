@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { saveBrokerProfile } from './helpers';
+import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 
 export class MqttConfigPanel {
     /**
@@ -13,8 +14,10 @@ export class MqttConfigPanel {
     public readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
+    private _brokerConfig: MqttBrokerConfig;
 
-    public static createOrShow(extensionUri: vscode.Uri) {
+    public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
+
         const column = vscode.window.activeTextEditor
             ? vscode.window.activeTextEditor.viewColumn
             : undefined;
@@ -22,7 +25,7 @@ export class MqttConfigPanel {
         // If we already have a panel, show it.
         if (MqttConfigPanel.currentPanel) {
             MqttConfigPanel.currentPanel._panel.reveal(column);
-            MqttConfigPanel.currentPanel._update();
+            MqttConfigPanel.currentPanel._update(brokerConfig);
             return;
         }
 
@@ -43,7 +46,7 @@ export class MqttConfigPanel {
             }
         );
 
-        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri);
+        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri, brokerConfig);
     }
 
     public static kill() {
@@ -51,13 +54,14 @@ export class MqttConfigPanel {
         MqttConfigPanel.currentPanel = undefined;
     }
 
-    public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri);
+    public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
+        MqttConfigPanel.currentPanel = new MqttConfigPanel(panel, extensionUri, brokerConfig);
     }
 
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
         this._panel = panel;
         this._extensionUri = extensionUri;
+        this._brokerConfig = brokerConfig;
 
         // Set the webview's initial html content
         this._update();
@@ -110,10 +114,21 @@ export class MqttConfigPanel {
 
     }
 
-    private async _update() {  
+    private async _update(brokerConfig?: MqttBrokerConfig) {  
         const webview = this._panel.webview;
 
         this._panel.webview.html = this._getHtmlForWebview(webview);
+
+        if (brokerConfig) {
+            console.log("asasd");
+            this._brokerConfig = brokerConfig;
+        }
+
+        this._panel.webview.postMessage({
+            type: "update-broker-profile",
+            data: this._brokerConfig
+        });
+
         // webview.onDidReceiveMessage(async (data) => {
         //     switch (data.type) {
         //         case "onInfo": {
@@ -182,6 +197,7 @@ export class MqttConfigPanel {
                 <link href="${stylesPageUri}" rel="stylesheet">
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
+                    const brokerProfile = ${JSON.stringify(this._brokerConfig)};
                 </script>
             </head>
             <body>
