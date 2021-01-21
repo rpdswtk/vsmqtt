@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { loadBrokerProfiles } from "./helpers";
+import { loadBrokerProfiles, removeBrokerProfile } from "./helpers";
 import { MqttConfigPanel } from "./MqttConfigPanel";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -51,6 +51,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                         return;
                     }
                     MqttConfigPanel.createOrShow(this._extensionUri, data.value);
+                    break;
+                }
+                case "delete-mqtt-profile": {
+                    if (!data.value) {
+                        return;
+                    }
+                    removeBrokerProfile(data.value);
                     break;
                 }
             }

@@ -151,7 +151,6 @@ export class MqttConfigPanel {
         //             if (!data.value) {
         //                 return;
         //             }
-        //             console.log("GICIGECI");
         //             await saveBrokerProfile(data.value);
         //             break;
         //         }
