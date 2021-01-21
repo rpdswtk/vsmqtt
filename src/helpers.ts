@@ -22,6 +22,7 @@ export async function removeBrokerProfile(brokerProfile: MqttBrokerConfig) {
         let index = brokerProfiles?.findIndex((profile) => profile.id === brokerProfile.id);
         if (index !== undefined && index !== -1) {
             brokerProfiles.splice(index, 1);
+            await config.update("brokerProfiles", brokerProfiles);
         }
     }
 }

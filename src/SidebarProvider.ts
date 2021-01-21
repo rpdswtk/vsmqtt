@@ -65,6 +65,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         vscode.workspace.onDidChangeConfiguration(async (_event) => {
             let profiles = await loadBrokerProfiles();
+            console.log("ka djas dklasdh lkashdkadhkjahsd kashd kashdkashd lkajsd");
             this._view?.webview.postMessage({
                 type: "update-profile-list",
                 value: profiles
