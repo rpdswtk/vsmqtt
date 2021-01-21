@@ -91,7 +91,9 @@ export class MqttConfigPanel {
                         return;
                     }
                     await saveBrokerProfile(data.value);
-                    MqttConfigPanel.kill();
+                    setTimeout(() => {
+                        MqttConfigPanel.kill();
+                    }, 100);
                     break;
                 }
             }

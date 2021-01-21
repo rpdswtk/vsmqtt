@@ -8,10 +8,8 @@ export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
         let index = brokerProfiles?.findIndex((profile) => profile.id === newProfile.id);
         if (index !==undefined && index !== -1) {
             brokerProfiles[index] = newProfile;
-            console.log("UPDATE");
         } else {
             brokerProfiles.push(newProfile);
-            console.log("ADD");
         }
         await config.update("brokerProfiles", brokerProfiles);
     }
