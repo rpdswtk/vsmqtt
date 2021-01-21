@@ -86,11 +86,12 @@ export class MqttConfigPanel {
                     vscode.window.showErrorMessage(data.value);
                     break;
                 }
-                case "add-mqtt-profile": {
+                case "save-mqtt-profile": {
                     if (!data.value) {
                         return;
                     }
                     await saveBrokerProfile(data.value);
+                    MqttConfigPanel.kill();
                     break;
                 }
             }
@@ -120,7 +121,6 @@ export class MqttConfigPanel {
         this._panel.webview.html = this._getHtmlForWebview(webview);
 
         if (brokerConfig) {
-            console.log("asasd");
             this._brokerConfig = brokerConfig;
         }
 

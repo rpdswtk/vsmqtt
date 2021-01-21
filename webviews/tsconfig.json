@@ -3,6 +3,7 @@
   "include": [
     "./**/*",
     "../src/models",
+    "../src/getNonce.ts"
   ],
   "exclude": [
     "../node_modules/*"

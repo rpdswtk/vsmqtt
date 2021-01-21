@@ -107,7 +107,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     const brokerProfiles = ${JSON.stringify(brokerProfiles)};
                 </script>
         </head>
-      <body>
+        <body>
             <script nonce="${nonce}" src="${scriptUri}"></script>
         </body>
         </html>`;

@@ -1,5 +1,4 @@
 import * as _vscode from "vscode";
-import type { MqttBrokerConfig } from "../common/MqttBrokerConfig";
 import type { MqttBrokerConfig } from "../src/models/MqttBrokerConfig";
 
 declare global {

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { getNonce } from "../../src/getNonce";
     import type { MqttBrokerConfig } from "../../src/models/MqttBrokerConfig";
 
     let brokers: Array<MqttBrokerConfig> = [];
@@ -36,7 +37,7 @@
     on:click={() => {
         vscode.postMessage({
             type: "edit-mqtt-profile",
-            value: { name: "New profile", address: "localhost", port: 1883 },
+            value: {id: getNonce(), name: "New profile", address: "localhost", port: 1883 },
         });
     }}>Create new profile</button
 >
