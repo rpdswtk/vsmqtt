@@ -10,12 +10,19 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vsmqtt.refresh",
-		"onCommand:vsmqtt.refreshMqttProfileList",
-		"onView:vsmqtt-sidebar"
+		"onCommand:vsmqtt.refreshProfileList",
+		"onCommand:vsmqtt.addProfile",
+		"onCommand:vsmqtt.connectToBroker",
+		"onView:mqttProfiles"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
+		"viewsWelcome": [
+			{
+				"view": "mqttProfiles",
+				"contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
+			}
+		],
 		"viewsContainers": {
 			"activitybar": [
 				{
@@ -28,26 +35,61 @@
 		"views": {
 			"vsmqtt-sidebar-view": [
 				{
-					"type": "webview",
-					"id": "vsmqtt-sidebar",
-					"name": "VSMqtt",
-					"icon": "media/radio-tower.svg",
-					"contextualTitle": "VSMqtt"
+					"id": "mqttProfiles",
+					"name": "Profiles"
 				}
 			]
 		},
 		"commands": [
 			{
-				"command": "vsmqtt.refresh",
+				"command": "vsmqtt.refreshProfileList",
 				"category": "VSMqtt",
-				"title": "Refresh"
+				"title": "Refresh broker profile list",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
 			},
 			{
-				"command": "vsmqtt.refreshMqttProfileList",
+				"command": "vsmqtt.connectToBroker",
 				"category": "VSMqtt",
-				"title": "AddTodo"
+				"title": "Connect to mqtt broker",
+				"icon": {
+					"light": "resources/light/play.svg",
+					"dark": "resources/dark/play.svg"
+				}
+			},
+			{
+				"command": "vsmqtt.addProfile",
+				"category": "VSMqtt",
+				"title": "Add broker profile",
+				"icon": {
+					"light": "resources/light/add.svg",
+					"dark": "resources/dark/add.svg"
+				}
 			}
 		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "vsmqtt.addProfile",
+					"when": "view == mqttProfiles",
+					"group": "navigation"
+				},
+				{
+					"command": "vsmqtt.refreshProfileList",
+					"when": "view == mqttProfiles",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "vsmqtt.connectToBroker",
+					"when": "view == mqttProfiles",
+					"group": "inline"
+				}
+			]
+		},
 		"configuration": {
 			"title": "vsmqtt",
 			"properties": {

@@ -1,6 +1,6 @@
 export interface MqttBrokerConfig {
-    id: string;
+    //id?: number;
     name: string;
-    address?: string;
-    port?: number;
+    address: string;
+    port: number;
 }

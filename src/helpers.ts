@@ -5,7 +5,7 @@ export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
     let config = await vscode.workspace.getConfiguration("vsmqtt");
     let brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles");
     if (brokerProfiles) {
-        let index = brokerProfiles?.findIndex((profile) => profile.id === newProfile.id);
+        let index = brokerProfiles?.findIndex((profile) => profile.name === newProfile.name);
         if (index !== undefined && index !== -1) {
             brokerProfiles[index] = newProfile;
         } else {
@@ -19,7 +19,7 @@ export async function removeBrokerProfile(brokerProfile: MqttBrokerConfig) {
     let config = await vscode.workspace.getConfiguration("vsmqtt");
     let brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles");
     if (brokerProfiles) {
-        let index = brokerProfiles?.findIndex((profile) => profile.id === brokerProfile.id);
+        let index = brokerProfiles?.findIndex((profile) => profile.name === brokerProfile.name);
         if (index !== undefined && index !== -1) {
             brokerProfiles.splice(index, 1);
             await config.update("brokerProfiles", brokerProfiles);
