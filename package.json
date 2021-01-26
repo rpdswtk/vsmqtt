@@ -95,6 +95,26 @@
 			"properties": {
 				"vsmqtt.brokerProfiles": {
 					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "Broker profile objects",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "Broker profile name"
+							},
+							"address": {
+								"type": "string",
+								"description": "Broker address",
+								"default": "localhost"
+							},
+							"port": {
+								"type": "number",
+								"description": "Broker port",
+								"default": 1883
+							}
+						}
+					},
 					"default": [],
 					"scope": "window",
 					"description": "VSMQTT broker profiles"
