@@ -37,7 +37,6 @@ class BrokerProfile extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly brokerProfile: MqttBrokerConfig,
-        //public tooltip: string
     ) {
         super(label);
     }
