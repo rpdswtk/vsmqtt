@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { saveBrokerProfile } from './helpers';
+import { removeBrokerProfile, saveBrokerProfile } from './helpers';
+import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 
 
 export class CommandProvider {
@@ -23,5 +24,9 @@ export class CommandProvider {
         if (!port) { return; }
 
         saveBrokerProfile({ name, address, port: parseInt(port) });
+    }
+
+    async deleteProfile(brokerProfile:MqttBrokerConfig ) {
+        await removeBrokerProfile(brokerProfile);
     }
 }

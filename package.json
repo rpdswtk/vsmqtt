@@ -12,6 +12,7 @@
 	"activationEvents": [
 		"onCommand:vsmqtt.refreshProfileList",
 		"onCommand:vsmqtt.addProfile",
+		"onCommand:vsmqtt.deleteProfile",
 		"onCommand:vsmqtt.connectToBroker",
 		"onView:mqttProfiles"
 	],
@@ -67,6 +68,15 @@
 					"light": "resources/light/add.svg",
 					"dark": "resources/dark/add.svg"
 				}
+			},
+			{
+				"command": "vsmqtt.deleteProfile",
+				"category": "VSMqtt",
+				"title": "Remove broker profile",
+				"icon": {
+					"light": "resources/light/trash.svg",
+					"dark": "resources/dark/trash.svg"
+				}
 			}
 		],
 		"menus": {
@@ -85,6 +95,11 @@
 			"view/item/context": [
 				{
 					"command": "vsmqtt.connectToBroker",
+					"when": "view == mqttProfiles",
+					"group": "inline"
+				},
+				{
+					"command": "vsmqtt.deleteProfile",
 					"when": "view == mqttProfiles",
 					"group": "inline"
 				}

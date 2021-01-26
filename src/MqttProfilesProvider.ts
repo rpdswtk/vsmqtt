@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { loadBrokerProfiles } from './helpers';
+import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 
 export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfile> {
 
@@ -21,8 +22,7 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
                 let brokerProfiles = profiles.map((profile) => {
                     return new BrokerProfile(
                         profile.name,
-                        profile.address,
-                        profile.port.toString()
+                        profile
                     );
                 });
                 return Promise.resolve(brokerProfiles);
@@ -36,8 +36,8 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
 class BrokerProfile extends vscode.TreeItem {
     constructor(
         public readonly label: string,
-        private address: string,
-        public tooltip: string
+        public readonly brokerProfile: MqttBrokerConfig,
+        //public tooltip: string
     ) {
         super(label);
     }

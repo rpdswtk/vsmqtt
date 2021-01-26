@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { CommandProvider } from './CommandProvider';
+import { removeBrokerProfile } from './helpers';
 import { MqttProfilesProvider } from './MqttProfilesProvider';
 
 
@@ -29,12 +30,17 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('vsmqtt.refreshProfileList', async () => {
+		vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item) => {
+			await commandProvider.deleteProfile(item.brokerProfile);
 			profilesProvider.update();
 		})
 	);
 
-	console.log("asdasdasdasd");
+	context.subscriptions.push(
+		vscode.commands.registerCommand('vsmqtt.refreshProfileList', async () => {
+			profilesProvider.update();
+		})
+	);
 }
 
 export function deactivate() { }
