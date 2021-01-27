@@ -1,7 +1,8 @@
+import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { saveBrokerProfile } from './helpers';
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
+import { MqttClientFactory } from "./MqttService";
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
@@ -12,6 +13,7 @@ export class MqttConnectionView {
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
     private _brokerConfig: MqttBrokerConfig;
+    private _mqttClient?: AsyncClient;
 
     public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
 
@@ -66,39 +68,11 @@ export class MqttConnectionView {
         // Listen for when the panel is disposed
         // This happens when the user closes the panel or when the panel is closed programatically
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-
-        this._panel.webview.onDidReceiveMessage(async (data) => {
-            switch (data.type) {
-                case "onInfo": {
-                    if (!data.value) {
-                        return;
-                    }
-                    vscode.window.showInformationMessage(data.value);
-                    break;
-                }
-                case "onError": {
-                    if (!data.value) {
-                        return;
-                    }
-                    vscode.window.showErrorMessage(data.value);
-                    break;
-                }
-                case "save-mqtt-profile": {
-                    if (!data.value) {
-                        return;
-                    }
-                    await saveBrokerProfile(data.value);
-                    setTimeout(() => {
-                        MqttConnectionView.kill();
-                    }, 100);
-                    break;
-                }
-            }
-        });
     }
 
     public dispose() {
         MqttConnectionView.currentPanel = undefined;
+        MqttClientFactory.disposeClient(this._brokerConfig);
 
         // Clean up our resources
         this._panel.dispose();
@@ -111,22 +85,39 @@ export class MqttConnectionView {
                 x.dispose();
             }
         }
-
     }
 
     private async _update(brokerConfig?: MqttBrokerConfig) {
         const webview = this._panel.webview;
+
+        this._mqttClient = MqttClientFactory.createClient(this._brokerConfig);
+
+        this._panel.webview.onDidReceiveMessage(async (data) => {
+            switch (data.type) {
+                case "publish": {
+                    if (!data.value) {
+                        return;
+                    }
+                    await this._mqttClient?.publish(data.value.topic, data.value.payload);
+                }
+                case "subscribe": {
+                    if (!data.value) {
+                        return;
+                    }
+                    await this._mqttClient?.subscribe(data.value);
+                }
+            }
+        });
+
+        this._mqttClient.on("message", (topic, message) => {
+            console.log(`Message received ${topic} - ${message}`);
+        });
 
         this._panel.webview.html = this._getHtmlForWebview(webview);
 
         if (brokerConfig) {
             this._brokerConfig = brokerConfig;
         }
-
-        this._panel.webview.postMessage({
-            type: "update-broker-profile",
-            data: this._brokerConfig
-        });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {

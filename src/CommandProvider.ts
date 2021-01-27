@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { removeBrokerProfile, saveBrokerProfile } from './helpers';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
-import { MqttConnectionView } from './MqttConnectionView';
 
 
 export class CommandProvider {
