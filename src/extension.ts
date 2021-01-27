@@ -43,6 +43,12 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
+		vscode.commands.registerCommand("vsmqtt.editProfile", async () => {
+			await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile");
+		})
+	);
+
+	context.subscriptions.push(
 		vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item) => {
 			await commandProvider.deleteProfile(item.brokerProfile);
 			profilesProvider.update();
