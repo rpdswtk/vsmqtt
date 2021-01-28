@@ -2,8 +2,7 @@
   "extends": "@tsconfig/svelte/tsconfig.json",
   "include": [
     "./**/*",
-    "../src/models",
-    "../src/getNonce.ts"
+    "../src/models"
   ],
   "exclude": [
     "../node_modules/*"

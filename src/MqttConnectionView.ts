@@ -104,13 +104,17 @@ export class MqttConnectionView {
                     if (!data.value) {
                         return;
                     }
-                    await this._mqttClient?.subscribe(data.value);
+                    await this._mqttClient?.subscribe(data.value.topic, { qos: data.value.qos });
                 }
             }
         });
 
         this._mqttClient.on("message", (topic, message) => {
             console.log(`Message received ${topic} - ${message}`);
+            this._panel?.webview.postMessage({
+                type: "onMqttMessage",
+                value: { topic, payload: message.toString() }
+            });
         });
 
         this._panel.webview.html = this._getHtmlForWebview(webview);
