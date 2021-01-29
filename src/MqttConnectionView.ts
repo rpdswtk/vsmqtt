@@ -92,6 +92,18 @@ export class MqttConnectionView {
 
         this._mqttClient = MqttClientFactory.createClient(this._brokerConfig);
 
+        this._mqttClient.on('connect', () => {
+            vscode.window.showInformationMessage(`Connected to ${this._brokerConfig.address}`);
+
+            this._mqttClient?.once('error', () => {
+                vscode.window.showErrorMessage(`Disconnected from ${this._brokerConfig.address}`);
+            });
+        });
+
+        this._mqttClient.once('error', () => {
+            vscode.window.showErrorMessage(`Could not connect to ${this._brokerConfig.address}`);
+        });
+
         this._panel.webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
                 case "publish": {
@@ -109,7 +121,7 @@ export class MqttConnectionView {
             }
         });
 
-        this._mqttClient.on("message", (topic, message) => {
+        this._mqttClient?.on("message", (topic, message) => {
             console.log(`Message received ${topic} - ${message}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
