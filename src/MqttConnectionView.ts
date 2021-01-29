@@ -111,17 +111,26 @@ export class MqttConnectionView {
                         return;
                     }
                     await this._mqttClient?.publish(data.value.topic, data.value.payload);
+                    break;
                 }
                 case "subscribe": {
                     if (!data.value) {
                         return;
                     }
-                    await this._mqttClient?.subscribe(data.value.topic, { qos: data.value.qos });
+                    this._mqttClient?.subscribe(data.value.topic, { qos: data.value.qos });
+                    break;
+                }
+                case "unsubscribe": {
+                    if (!data.value) {
+                        return;
+                    }
+                    await this._mqttClient?.unsubscribe(data.value.topic);
+                    break;
                 }
             }
         });
 
-        this._mqttClient?.on("message", (topic, message) => {
+        this._mqttClient.on("message", (topic, message) => {
             console.log(`Message received ${topic} - ${message}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",

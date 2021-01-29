@@ -45,5 +45,17 @@
     <button on:click={subscribe}>Subscribe</button>
 </div>
 
-<SubscriptionList {subscriptions} />
-<MessageList />
+<table>
+    <td class="subscription-column">
+        <SubscriptionList {subscriptions} />
+    </td>
+    <td>
+        <MessageList />
+    </td>
+</table>
+
+<style>
+    .subscription-column {
+        width: 70%;
+    }
+</style>
