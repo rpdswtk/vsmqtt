@@ -19,6 +19,10 @@ export class VSMqttApp {
             )
         );
 
+        vscode.workspace.onDidChangeConfiguration(() => {
+            this._profilesProvider.update();
+        });
+
         this._initCommands();
     }
 

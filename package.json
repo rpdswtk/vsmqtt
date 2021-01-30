@@ -128,6 +128,7 @@
 					"items": {
 						"type": "object",
 						"title": "Broker profile objects",
+						"required": ["name", "address", "port"],
 						"properties": {
 							"name": {
 								"type": "string",
