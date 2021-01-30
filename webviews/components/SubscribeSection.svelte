@@ -6,7 +6,7 @@
     let subscribeTopic: string;
     let subscriptions: Array<SubscriptionItem> = [];
 
-    let selectedQos: number = 0;
+    let selectedQos: string = "0";
 
     function subscribe() {
         vscode.postMessage({
@@ -18,7 +18,7 @@
         });
         subscriptions = [
             ...subscriptions,
-            { topic: subscribeTopic, qos: selectedQos },
+            { topic: subscribeTopic, qos: parseInt(selectedQos) },
         ];
         subscribeTopic = "";
     }
@@ -35,7 +35,7 @@
             />
         </td>
         <td>
-            <select bind:value={selectedQos}>
+            <select value={selectedQos}>
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>

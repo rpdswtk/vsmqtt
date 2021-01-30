@@ -1,8 +1,8 @@
 <script lang="ts">
     let publishText: string;
     let publishTopic: string;
-    let selectedQos: number = 0;
-    let retain: number = 0;
+    let selectedQos: string = "0";
+    let retain: boolean = false;
 </script>
 
 <div>
@@ -15,18 +15,17 @@
         <option value="2">2</option>
     </select>
     <label for="">Retain:</label>
-    <input type="checkbox" id="retain" bind:value={retain} />
+    <input type="checkbox" id="retain" bind:checked={retain} />
     <textarea rows="5" placeholder="Payload" bind:value={publishText} />
     <button
         on:click={() => {
-            var retainFlag = false ? retain === 0 : true;
             vscode.postMessage({
                 type: "publish",
                 value: {
                     topic: publishTopic,
                     payload: publishText,
-                    qos: selectedQos,
-                    retain: retainFlag,
+                    qos: parseInt(selectedQos),
+                    retain: retain,
                 },
             });
         }}>Publish</button

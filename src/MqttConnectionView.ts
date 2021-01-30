@@ -111,7 +111,7 @@ export class MqttConnectionView {
                         return;
                     }
                     await this._mqttClient?.publish(data.value.topic,
-                        data.value.payload, { qos: data.value.qos, retain: data.value.retain },);
+                        data.value.payload, { qos: data.value.qos, retain: data.value.retain });
                     break;
                 }
                 case "subscribe": {
