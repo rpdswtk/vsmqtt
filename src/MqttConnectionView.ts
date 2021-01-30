@@ -92,14 +92,6 @@ export class MqttConnectionView {
 
         this._mqttClient = MqttClientFactory.createClient(this._brokerConfig);
 
-        this._mqttClient.on('connect', () => {
-            vscode.window.showInformationMessage(`Connected to ${this._brokerConfig.address}`);
-
-            this._mqttClient?.once('error', () => {
-                vscode.window.showErrorMessage(`Disconnected from ${this._brokerConfig.address}`);
-            });
-        });
-
         this._mqttClient.once('error', () => {
             vscode.window.showErrorMessage(`Could not connect to ${this._brokerConfig.address}`);
         });
@@ -144,6 +136,24 @@ export class MqttConnectionView {
         if (brokerConfig) {
             this._brokerConfig = brokerConfig;
         }
+
+        this._mqttClient.on('connect', () => {
+            vscode.window.showInformationMessage(`Connected to ${this._brokerConfig.address}`);
+
+            this._panel?.webview.postMessage({
+                type: "onMqttConnectionChange",
+                value: { connected: true  }
+            });
+
+            this._mqttClient?.once('error', () => {
+                vscode.window.showErrorMessage(`Disconnected from ${this._brokerConfig.address}`);
+
+                this._panel?.webview.postMessage({
+                    type: "onMqttConnectionChange",
+                    value: { connected: false  }
+                });
+            });
+        });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {
