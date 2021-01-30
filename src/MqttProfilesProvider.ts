@@ -2,25 +2,25 @@ import * as vscode from 'vscode';
 import { loadBrokerProfiles } from './helpers';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 
-export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfile> {
+export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfileTreeItem> {
 
-    private _onDidChangeTreeData: vscode.EventEmitter<BrokerProfile | undefined | void> = new vscode.EventEmitter<BrokerProfile | undefined | void>();
-    readonly onDidChangeTreeData: vscode.Event<BrokerProfile | undefined | null | void> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: vscode.EventEmitter<BrokerProfileTreeItem | undefined | void> = new vscode.EventEmitter<BrokerProfileTreeItem | undefined | void>();
+    readonly onDidChangeTreeData: vscode.Event<BrokerProfileTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     update() {
         this._onDidChangeTreeData.fire();
     }
 
-    getTreeItem(element: BrokerProfile): vscode.TreeItem {
+    getTreeItem(element: BrokerProfileTreeItem): vscode.TreeItem {
         return element;
     }
 
-    async getChildren(element?: BrokerProfile): Promise<BrokerProfile[] | undefined> {
+    async getChildren(element?: BrokerProfileTreeItem): Promise<BrokerProfileTreeItem[] | undefined> {
         try {
             let profiles = await loadBrokerProfiles();
             if (profiles) {
                 let brokerProfiles = profiles.map((profile) => {
-                    return new BrokerProfile(
+                    return new BrokerProfileTreeItem(
                         profile.name,
                         profile
                     );
@@ -33,7 +33,7 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
     }
 }
 
-class BrokerProfile extends vscode.TreeItem {
+export class BrokerProfileTreeItem extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly brokerProfile: MqttBrokerConfig,

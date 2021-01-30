@@ -2,7 +2,7 @@ import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
-import { MqttClientFactory } from "./MqttService";
+import { MqttClientFactory } from "./MqttClientFactory";
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
