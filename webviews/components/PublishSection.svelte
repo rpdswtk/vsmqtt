@@ -2,6 +2,7 @@
     let publishText: string;
     let publishTopic: string;
     let selectedQos: number = 0;
+    let retain: number = 0;
 </script>
 
 <div>
@@ -13,15 +14,19 @@
         <option value="1">1</option>
         <option value="2">2</option>
     </select>
+    <label for="">Retain:</label>
+    <input type="checkbox" id="retain" bind:value={retain} />
     <textarea rows="5" placeholder="Payload" bind:value={publishText} />
     <button
         on:click={() => {
+            var retainFlag = false ? retain === 0 : true;
             vscode.postMessage({
                 type: "publish",
                 value: {
                     topic: publishTopic,
                     payload: publishText,
                     qos: selectedQos,
+                    retain: retainFlag,
                 },
             });
         }}>Publish</button
