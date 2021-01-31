@@ -5,17 +5,20 @@
     let retain: boolean = false;
 </script>
 
-<div>
-    <h3>Publish</h3>
-    <input type="text" placeholder="Topic" bind:value={publishTopic} />
-    <br />
-    <select bind:value={selectedQos}>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-    </select>
-    <label for="">Retain:</label>
-    <input type="checkbox" id="retain" bind:checked={retain} />
+<div class="clr" />
+<h2>Publish</h2>
+
+<div class="container">
+    <div class="publish-options">
+        <input type="text" placeholder="Topic" bind:value={publishTopic} />
+        <select bind:value={selectedQos}>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+        <label for="">Retain:</label>
+        <input type="checkbox" id="retain" bind:checked={retain} />
+    </div>
     <textarea rows="5" placeholder="Payload" bind:value={publishText} />
     <button
         on:click={() => {
@@ -33,7 +36,26 @@
 </div>
 
 <style>
+    .clr {
+        clear: both;
+    }
+
     textarea {
         resize: none;
+        margin-bottom: 5px;
+    }
+
+    .container {
+        padding: 5px;
+        border: 2px solid var(--vscode-input-background);
+    }
+
+    .publish-options {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .publish-options input {
+        width: 40%;
     }
 </style>

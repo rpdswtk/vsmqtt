@@ -20,15 +20,32 @@
     });
 </script>
 
-{#if brokerConfig}
-    <h1>MQTT connection: {brokerConfig.name}</h1>
-    {#if connected}
-        <h3>Connected</h3>
-    {:else}
-        <h3>Disconnected</h3>
+<div id="title-bar">
+    {#if brokerConfig}
+        <h1 class="profile-name">MQTT profile: {brokerConfig.name}</h1>
+        {#if connected}
+            <h1 class="state">Connected</h1>
+        {:else}
+            <h1 class="state">Disconnected</h1>
+        {/if}
+        <br />
     {/if}
-    <hr />
-{/if}
+</div>
 
 <PublishSection />
 <SubscribeSection />
+
+<style>
+    .profile-name {
+        float: left;
+    }
+
+    .state {
+        float: right;
+    }
+
+    #title-bar {
+        width: 100%;
+        margin-bottom: 50px;
+    }
+</style>

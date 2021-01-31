@@ -24,24 +24,17 @@
     }
 </script>
 
-<div>
-    <h3>Subscribe</h3>
-    <table>
-        <td>
-            <input
-                type="text"
-                bind:value={subscribeTopic}
-                placeholder="Topic"
-            />
-        </td>
-        <td>
-            <select value={selectedQos}>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </select>
-        </td>
-    </table>
+<h2 class="title">Subscribe</h2>
+
+<div class="container">
+    <div class="subscription-options">
+        <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
+        <select value={selectedQos}>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div>
     <button on:click={subscribe}>Subscribe</button>
 </div>
 
@@ -55,7 +48,21 @@
 </table>
 
 <style>
-    .subscription-column {
-        width: 70%;
+    .title {
+        margin-top: 25px;
+    }
+
+    .container {
+        padding: 5px;
+        border: 2px solid var(--vscode-input-background);
+    }
+
+    .subscription-options {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .subscription-options input {
+        width: 40%;
     }
 </style>
