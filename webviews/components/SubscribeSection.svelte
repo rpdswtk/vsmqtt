@@ -30,9 +30,9 @@
     <div class="subscription-options">
         <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
         <select value={selectedQos}>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
+            <option value="0">QoS 0</option>
+            <option value="1">QoS 1</option>
+            <option value="2">QoS 2</option>
         </select>
     </div>
     <button on:click={subscribe}>Subscribe</button>
@@ -64,5 +64,9 @@
 
     .subscription-options input {
         width: 40%;
+    }
+
+    select {
+        margin-left: 15px;
     }
 </style>
