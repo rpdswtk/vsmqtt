@@ -13,7 +13,7 @@
             type: "subscribe",
             value: {
                 topic: subscribeTopic,
-                qos: selectedQos,
+                qos: parseInt(selectedQos),
             },
         });
         subscriptions = [
