@@ -97,7 +97,7 @@
     }
 
     .container {
-        margin-top: 20px;
+        margin-top: 10px;
         padding: 5px;
         border: 2px solid var(--vscode-input-background);
     }

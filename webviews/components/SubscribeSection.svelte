@@ -10,6 +10,9 @@
     const dispatch = createEventDispatcher();
 
     function subscribe() {
+        if (!subscribeTopic) {
+            return;
+        }
         vscode.postMessage({
             type: "subscribe",
             value: {
@@ -30,15 +33,17 @@
 
 <h2 class="title">Subscribe</h2>
 
-<div class="subscription-options">
-    <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
-    <select value={selectedQos}>
-        <option value="0">QoS 0</option>
-        <option value="1">QoS 1</option>
-        <option value="2">QoS 2</option>
-    </select>
-</div>
-<button on:click={subscribe}>Subscribe</button>
+<form action="">
+    <div class="subscription-options">
+        <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
+        <select value={selectedQos}>
+            <option value="0">QoS 0</option>
+            <option value="1">QoS 1</option>
+            <option value="2">QoS 2</option>
+        </select>
+    </div>
+    <button on:click={subscribe}>Subscribe</button>
+</form>
 
 <style>
     .subscription-options {
