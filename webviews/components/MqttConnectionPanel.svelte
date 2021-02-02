@@ -3,9 +3,18 @@
     import type { MqttBrokerConfig } from "../../src/models/MqttBrokerConfig";
     import PublishSection from "./PublishSection.svelte";
     import SubscribeSection from "./SubscribeSection.svelte";
+    import MessageList from "./MessageList.svelte";
+    import SubscriptionList from "./SubscriptionList.svelte";
+    import type { SubscriptionItem } from "./types";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
+
+    let subscriptions: Array<SubscriptionItem> = [];
+
+    function handleSubscribe(event: any) {
+        subscriptions = event.detail.subscriptions;
+    }
 
     onMount(() => {
         brokerConfig = brokerProfile;
@@ -20,22 +29,61 @@
     });
 </script>
 
-<div id="title-bar">
-    {#if brokerConfig}
-        <h1 class="profile-name">MQTT profile: {brokerConfig.name}</h1>
-        {#if connected}
-            <h1 class="state">Connected</h1>
-        {:else}
-            <h1 class="state">Disconnected</h1>
+<div id="content">
+    <div id="header">
+        {#if brokerConfig}
+            <h1 class="profile-name">MQTT profile: {brokerConfig.name}</h1>
+            {#if connected}
+                <h1 class="state">Connected</h1>
+            {:else}
+                <h1 class="state">Disconnected</h1>
+            {/if}
+            <br />
         {/if}
-        <br />
-    {/if}
+    </div>
+
+    <div class="container">
+        <PublishSection />
+    </div>
+
+    <div class="container">
+        <SubscribeSection on:subscribe={handleSubscribe} />
+    </div>
+
+    <div class="container subscription-section">
+        <table>
+            <td class="subscription-column">
+                <SubscriptionList {subscriptions} />
+            </td>
+            <td>
+                <MessageList />
+            </td>
+        </table>
+    </div>
 </div>
 
-<PublishSection />
-<SubscribeSection />
-
 <style>
+    #content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding-top: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #header {
+        height: 75px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
     .profile-name {
         float: left;
     }
@@ -44,8 +92,17 @@
         float: right;
     }
 
-    #title-bar {
-        width: 100%;
-        margin-bottom: 50px;
+    .subscription-section {
+        height: 55%;
+    }
+
+    .container {
+        margin-top: 20px;
+        padding: 5px;
+        border: 2px solid var(--vscode-input-background);
+    }
+
+    .subscription-column {
+        width: 70%;
     }
 </style>

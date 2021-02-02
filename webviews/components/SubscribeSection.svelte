@@ -1,12 +1,13 @@
 <script lang="ts">
-    import MessageList from "./MessageList.svelte";
-    import SubscriptionList from "./SubscriptionList.svelte";
     import type { SubscriptionItem } from "./types";
+    import { createEventDispatcher } from "svelte";
 
     let subscribeTopic: string;
     let subscriptions: Array<SubscriptionItem> = [];
 
     let selectedQos: string = "0";
+
+    const dispatch = createEventDispatcher();
 
     function subscribe() {
         vscode.postMessage({
@@ -20,43 +21,26 @@
             ...subscriptions,
             { topic: subscribeTopic, qos: parseInt(selectedQos) },
         ];
+        dispatch("subscribe", {
+            subscriptions: subscriptions,
+        });
         subscribeTopic = "";
     }
 </script>
 
 <h2 class="title">Subscribe</h2>
 
-<div class="container">
-    <div class="subscription-options">
-        <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
-        <select value={selectedQos}>
-            <option value="0">QoS 0</option>
-            <option value="1">QoS 1</option>
-            <option value="2">QoS 2</option>
-        </select>
-    </div>
-    <button on:click={subscribe}>Subscribe</button>
+<div class="subscription-options">
+    <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
+    <select value={selectedQos}>
+        <option value="0">QoS 0</option>
+        <option value="1">QoS 1</option>
+        <option value="2">QoS 2</option>
+    </select>
 </div>
-
-<table>
-    <td class="subscription-column">
-        <SubscriptionList {subscriptions} />
-    </td>
-    <td>
-        <MessageList />
-    </td>
-</table>
+<button on:click={subscribe}>Subscribe</button>
 
 <style>
-    .title {
-        margin-top: 25px;
-    }
-
-    .container {
-        padding: 5px;
-        border: 2px solid var(--vscode-input-background);
-    }
-
     .subscription-options {
         display: flex;
         margin-bottom: 10px;

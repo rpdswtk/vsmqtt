@@ -8,32 +8,30 @@
 <div class="clr" />
 <h2>Publish</h2>
 
-<div class="container">
-    <div class="publish-options">
-        <input type="text" placeholder="Topic" bind:value={publishTopic} />
-        <select bind:value={selectedQos}>
-            <option value="0">QoS 0</option>
-            <option value="1">QoS 1</option>
-            <option value="2">QoS 2</option>
-        </select>
-        <h3 class="input-label">Retain:</h3>
-        <input type="checkbox" class="checkbox" bind:checked={retain} />
-    </div>
-    <textarea rows="5" placeholder="Payload" bind:value={publishText} />
-    <button
-        on:click={() => {
-            vscode.postMessage({
-                type: "publish",
-                value: {
-                    topic: publishTopic,
-                    payload: publishText,
-                    qos: parseInt(selectedQos),
-                    retain: retain,
-                },
-            });
-        }}>Publish</button
-    >
+<div class="publish-options">
+    <input type="text" placeholder="Topic" bind:value={publishTopic} />
+    <select bind:value={selectedQos}>
+        <option value="0">QoS 0</option>
+        <option value="1">QoS 1</option>
+        <option value="2">QoS 2</option>
+    </select>
+    <h3 class="input-label">Retain:</h3>
+    <input type="checkbox" class="checkbox" bind:checked={retain} />
 </div>
+<textarea rows="5" placeholder="Payload" bind:value={publishText} />
+<button
+    on:click={() => {
+        vscode.postMessage({
+            type: "publish",
+            value: {
+                topic: publishTopic,
+                payload: publishText,
+                qos: parseInt(selectedQos),
+                retain: retain,
+            },
+        });
+    }}>Publish</button
+>
 
 <style>
     .clr {

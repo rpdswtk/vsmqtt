@@ -102,6 +102,7 @@ export class MqttConnectionView {
                     if (!data.value) {
                         return;
                     }
+                    console.log(`Publishing to topic: ${data.value.topic} QoS: ${data.value.qos} Retain: ${data.value.retain}`);
                     await this._mqttClient?.publish(data.value.topic,
                         data.value.payload, { qos: data.value.qos, retain: data.value.retain });
                     break;
@@ -110,13 +111,15 @@ export class MqttConnectionView {
                     if (!data.value) {
                         return;
                     }
-                    this._mqttClient?.subscribe(data.value.topic, { qos: data.value.qos });
+                    console.log(`Subscribing to topic: ${data.value.topic} ${data.value.qos}`);
+                    this._mqttClient?.subscribe(data.value.topic);
                     break;
                 }
                 case "unsubscribe": {
                     if (!data.value) {
                         return;
                     }
+                    console.log(`Unsubscribing from topic: ${data.value.topic} ${data.value.qos}`);
                     await this._mqttClient?.unsubscribe(data.value.topic);
                     break;
                 }
@@ -142,7 +145,7 @@ export class MqttConnectionView {
 
             this._panel?.webview.postMessage({
                 type: "onMqttConnectionChange",
-                value: { connected: true  }
+                value: { connected: true }
             });
 
             this._mqttClient?.once('error', () => {
@@ -150,7 +153,7 @@ export class MqttConnectionView {
 
                 this._panel?.webview.postMessage({
                     type: "onMqttConnectionChange",
-                    value: { connected: false  }
+                    value: { connected: false }
                 });
             });
         });
