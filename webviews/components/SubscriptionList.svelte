@@ -21,16 +21,32 @@
 <h2>Subscriptions</h2>
 
 {#each subscriptions as subscription}
-    <div>
-        <h3>{subscription.topic} - qos {subscription.qos}</h3>
-        <a
-            href="#"
+    <div class="list-item">
+        <span class="topic">Topic: {subscription.topic} QoS: {subscription.qos}</span>
+        <button
             on:click={() => {
                 unsubscribe(subscription);
-            }}><h3>unsubscribe</h3></a
+            }}>Unsubscribe</button
         >
     </div>
 {/each}
 
 <style>
+    .list-item {
+        background-color: var(--vscode-input-background);
+        margin-top: 10px;
+        height: 30px;
+        padding: 1px;
+    }
+
+    button {
+        width: 20%;
+        float: right;
+    }
+
+    .topic {
+        float: left;
+        margin-top: 5px;
+        margin-left: 5px;
+    }
 </style>
