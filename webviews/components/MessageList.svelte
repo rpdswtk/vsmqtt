@@ -16,6 +16,8 @@
     });
 </script>
 
+<h2>Messages</h2>
+
 <div>
     {#each messages as message}
         <h3>{message.topic} - {message.payload}</h3>

@@ -18,8 +18,10 @@
     }
 </script>
 
+<h2>Subscriptions</h2>
+
 {#each subscriptions as subscription}
-    <div class="">
+    <div>
         <h3>{subscription.topic} - qos {subscription.qos}</h3>
         <a
             href="#"

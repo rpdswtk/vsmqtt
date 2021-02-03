@@ -51,14 +51,11 @@
     </div>
 
     <div class="container subscription-section">
-        <table>
-            <td class="subscription-column">
-                <SubscriptionList {subscriptions} />
-            </td>
-            <td>
-                <MessageList />
-            </td>
-        </table>
+        <SubscriptionList {subscriptions} />
+    </div>
+
+    <div class="container message-section">
+        <MessageList />
     </div>
 </div>
 
@@ -93,16 +90,23 @@
     }
 
     .subscription-section {
+        overflow: scroll;
         height: 55%;
+        width: 49%;
+        float: left;
+        margin-right: 8px;
+    }
+
+    .message-section {
+        overflow: scroll;
+        height: 55%;
+        width: 49%;
+        float: right;
     }
 
     .container {
         margin-top: 10px;
         padding: 5px;
         border: 2px solid var(--vscode-input-background);
-    }
-
-    .subscription-column {
-        width: 70%;
     }
 </style>
