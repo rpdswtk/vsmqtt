@@ -42,43 +42,38 @@
         {/if}
     </div>
 
-    <div class="container">
+    <div id="publish-section" class="container">
         <PublishSection />
     </div>
 
-    <div class="container">
+    <div id="subscribe-section" class="container">
         <SubscribeSection on:subscribe={handleSubscribe} />
     </div>
 
-    <div class="container subscription-section">
+    <div id="subscription-list-section" class="container">
         <SubscriptionList {subscriptions} />
     </div>
 
-    <div class="container message-section">
+    <div id="message-section" class="container">
         <MessageList />
+    </div>
+
+    <div id="message-overview-section" class="container">
+        <h1>Message details</h1>
     </div>
 </div>
 
 <style>
     #content {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        padding-top: 30px;
-        padding-left: 10px;
-        padding-right: 10px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: 3em 1fr 0.2fr 2fr 1fr;
     }
 
     #header {
-        height: 75px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        margin-left: 10px;
-        margin-right: 10px;
+        grid-area: 1 / 1 / 2 / 3;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
     .profile-name {
@@ -89,24 +84,29 @@
         float: right;
     }
 
-    .subscription-section {
-        overflow: scroll;
-        height: 55%;
-        width: 49%;
-        float: left;
-        margin-right: 8px;
+    #publish-section {
+        grid-area: 2 / 1 / 3 / 3;
     }
 
-    .message-section {
-        overflow: scroll;
-        height: 55%;
-        width: 49%;
-        float: right;
+    #subscribe-section {
+        grid-area: 3 / 1 / 4 / 3;
+    }
+
+    #subscription-list-section {
+        grid-area: 4 / 1 / 6 / 2;
+    }
+
+    #message-section {
+        grid-area: 4 / 2 / 5 / 3;
+    }
+
+    #message-overview-section {
+        grid-area: 5 / 2 / 6 / 3;
     }
 
     .container {
-        margin-top: 10px;
         padding: 5px;
         border: 2px solid var(--vscode-input-background);
+        margin: 5px;
     }
 </style>
