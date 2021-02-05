@@ -22,7 +22,9 @@
 
 {#each subscriptions as subscription}
     <div class="list-item">
-        <span class="topic">Topic: {subscription.topic} QoS: {subscription.qos}</span>
+        <span class="topic"
+            >Topic: {subscription.topic} QoS: {subscription.qos}</span
+        >
         <button
             on:click={() => {
                 unsubscribe(subscription);
