@@ -7,5 +7,6 @@ export interface MQTTMessage {
     topic: string,
     payload: string,
     retain: boolean,
-    qos: number
+    qos: number,
+    timestamp: string
 }

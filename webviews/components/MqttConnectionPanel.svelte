@@ -5,15 +5,21 @@
     import SubscribeSection from "./SubscribeSection.svelte";
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
-    import type { SubscriptionItem } from "./types";
+    import MessageOverview from "./MessageOverview.svelte";
+    import type { MQTTMessage, SubscriptionItem } from "./types";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
 
     let subscriptions: Array<SubscriptionItem> = [];
+    let selectedMessage: MQTTMessage;
 
     function handleSubscribe(event: any) {
         subscriptions = event.detail.subscriptions;
+    }
+
+    function handleMessageSelected(event: any) {
+        selectedMessage = event.detail.selectedMessage;
     }
 
     onMount(() => {
@@ -55,11 +61,11 @@
     </div>
 
     <div id="message-section" class="container">
-        <MessageList />
+        <MessageList on:messageSelected={handleMessageSelected} />
     </div>
 
     <div id="message-overview-section" class="container">
-        <h1>Message details</h1>
+        <MessageOverview message={selectedMessage}/>
     </div>
 </div>
 

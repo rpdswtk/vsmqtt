@@ -4,6 +4,7 @@ import { getNonce } from "./getNonce";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
+import moment = require("moment");
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
@@ -113,7 +114,7 @@ export class MqttConnectionView {
                         return;
                     }
                     console.log(`Subscribing to topic: ${data.value.topic} QoS: ${data.value.qos}`);
-                    this._mqttClient?.subscribe(data.value.topic, {qos: data.value.qos});
+                    this._mqttClient?.subscribe(data.value.topic, { qos: data.value.qos });
                     break;
                 }
                 case "unsubscribe": {
@@ -128,12 +129,11 @@ export class MqttConnectionView {
         });
 
         this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
-            console.log(packet.qos);
-            console.log(packet.retain);
-            console.log(`Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
+            var timestamp = moment().format('YYYY-MM-DD h:mm:ss.SSS');
+            console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
-                value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain }
+                value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain, timestamp }
             });
         });
 

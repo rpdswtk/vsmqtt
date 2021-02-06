@@ -1,6 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { MQTTMessage } from "./types";
+    import { createEventDispatcher } from "svelte";
+
+    const dispatch = createEventDispatcher();
 
     let messages: Array<MQTTMessage> = [];
 
@@ -19,7 +22,14 @@
 <h2>Messages</h2>
 
 {#each messages as message}
-    <div class="list-item">
+    <div
+        class="list-item"
+        on:click={() => {
+            dispatch("messageSelected", {
+                selectedMessage: message,
+            });
+        }}
+    >
         <div class="topic">{message.topic}</div>
         <div class="qos">QoS {message.qos}</div>
         {#if message.retain}

@@ -20,24 +20,31 @@
     ],
     "main": "./dist/extension.js",
     "contributes": {
-        "viewsWelcome": [{
-            "view": "mqttProfiles",
-            "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
-        }],
+        "viewsWelcome": [
+            {
+                "view": "mqttProfiles",
+                "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
+            }
+        ],
         "viewsContainers": {
-            "activitybar": [{
-                "id": "vsmqtt-sidebar-view",
-                "title": "VSMqtt",
-                "icon": "media/radio-tower.svg"
-            }]
+            "activitybar": [
+                {
+                    "id": "vsmqtt-sidebar-view",
+                    "title": "VSMqtt",
+                    "icon": "media/radio-tower.svg"
+                }
+            ]
         },
         "views": {
-            "vsmqtt-sidebar-view": [{
-                "id": "mqttProfiles",
-                "name": "Profiles"
-            }]
+            "vsmqtt-sidebar-view": [
+                {
+                    "id": "mqttProfiles",
+                    "name": "Profiles"
+                }
+            ]
         },
-        "commands": [{
+        "commands": [
+            {
                 "command": "vsmqtt.refreshProfileList",
                 "category": "VSMqtt",
                 "title": "Refresh broker profile list",
@@ -89,7 +96,8 @@
             }
         ],
         "menus": {
-            "view/title": [{
+            "view/title": [
+                {
                     "command": "vsmqtt.addProfile",
                     "when": "view == mqttProfiles",
                     "group": "navigation"
@@ -100,7 +108,8 @@
                     "group": "navigation"
                 }
             ],
-            "view/item/context": [{
+            "view/item/context": [
+                {
                     "command": "vsmqtt.connectToBroker",
                     "when": "view == mqttProfiles",
                     "group": "inline"
@@ -125,7 +134,11 @@
                     "items": {
                         "type": "object",
                         "title": "Broker profile objects",
-                        "required": ["name", "address", "port"],
+                        "required": [
+                            "name",
+                            "address",
+                            "port"
+                        ],
                         "properties": {
                             "name": {
                                 "type": "string",
@@ -195,6 +208,7 @@
     },
     "dependencies": {
         "async-mqtt": "^2.6.1",
+        "moment": "^2.29.1",
         "mqtt": "^4.2.6"
     }
 }
