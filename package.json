@@ -1,198 +1,200 @@
 {
-	"name": "vsmqtt",
-	"displayName": "VSMqtt",
-	"description": "",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.52.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:vsmqtt.refreshProfileList",
-		"onCommand:vsmqtt.addProfile",
-		"onCommand:vsmqtt.editProfile",
-		"onCommand:vsmqtt.deleteProfile",
-		"onCommand:vsmqtt.connectToBroker",
-		"onView:mqttProfiles"
-	],
-	"main": "./dist/extension.js",
-	"contributes": {
-		"viewsWelcome": [
-			{
-				"view": "mqttProfiles",
-				"contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
-			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "vsmqtt-sidebar-view",
-					"title": "VSMqtt",
-					"icon": "media/radio-tower.svg"
-				}
-			]
-		},
-		"views": {
-			"vsmqtt-sidebar-view": [
-				{
-					"id": "mqttProfiles",
-					"name": "Profiles"
-				}
-			]
-		},
-		"commands": [
-			{
-				"command": "vsmqtt.refreshProfileList",
-				"category": "VSMqtt",
-				"title": "Refresh broker profile list",
-				"icon": {
-					"light": "resources/light/refresh.svg",
-					"dark": "resources/dark/refresh.svg"
-				}
-			},
-			{
-				"command": "vsmqtt.connectToBroker",
-				"category": "VSMqtt",
-				"title": "Connect to mqtt broker",
-				"icon": {
-					"light": "resources/light/play.svg",
-					"dark": "resources/dark/play.svg"
-				}
-			},
-			{
-				"command": "vsmqtt.addProfile",
-				"category": "VSMqtt",
-				"title": "Add broker profile",
-				"icon": {
-					"light": "resources/light/add.svg",
-					"dark": "resources/dark/add.svg"
-				}
-			},
-			{
-				"command": "vsmqtt.editProfile",
-				"category": "VSMqtt",
-				"title": "Edit broker profile",
-				"icon": {
-					"light": "resources/light/edit.svg",
-					"dark": "resources/dark/edit.svg"
-				}
-			},
-			{
-				"command": "vsmqtt.deleteProfile",
-				"category": "VSMqtt",
-				"title": "Remove broker profile",
-				"icon": {
-					"light": "resources/light/trash.svg",
-					"dark": "resources/dark/trash.svg"
-				}
-			}
-		],
-		"menus": {
-			"view/title": [
-				{
-					"command": "vsmqtt.addProfile",
-					"when": "view == mqttProfiles",
-					"group": "navigation"
-				},
-				{
-					"command": "vsmqtt.refreshProfileList",
-					"when": "view == mqttProfiles",
-					"group": "navigation"
-				}
-			],
-			"view/item/context": [
-				{
-					"command": "vsmqtt.connectToBroker",
-					"when": "view == mqttProfiles",
-					"group": "inline"
-				},
-				{
-					"command": "vsmqtt.deleteProfile",
-					"when": "view == mqttProfiles",
-					"group": "inline"
-				},
-				{
-					"command": "vsmqtt.editProfile",
-					"when": "view == mqttProfiles",
-					"group": "inline"
-				}
-			]
-		},
-		"configuration": {
-			"title": "vsmqtt",
-			"properties": {
-				"vsmqtt.brokerProfiles": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"title": "Broker profile objects",
-						"required": ["name", "address", "port"],
-						"properties": {
-							"name": {
-								"type": "string",
-								"description": "Broker profile name"
-							},
-							"address": {
-								"type": "string",
-								"description": "Broker address",
-								"default": "localhost"
-							},
-							"port": {
-								"type": "number",
-								"description": "Broker port",
-								"default": 1883
-							}
-						}
-					},
-					"default": [],
-					"scope": "window",
-					"description": "VSMQTT broker profiles"
-				}
-			}
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run package",
-		"compile": "webpack --config ./build/node-extension.webpack.config.js",
-		"watch": "concurrently \"rollup -c -w\" \"webpack --watch --config ./build/node-extension.webpack.config.js\"",
-		"package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
-		"test-compile": "tsc -p ./",
-		"test-watch": "tsc -watch -p ./",
-		"pretest": "npm run test-compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@rollup/plugin-commonjs": "^17.0.0",
-		"@rollup/plugin-node-resolve": "^11.1.0",
-		"@rollup/plugin-typescript": "^8.1.0",
-		"@tsconfig/svelte": "^1.0.10",
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.0.4",
-		"@types/node": "^12.11.7",
-		"@types/vscode": "^1.52.0",
-		"@typescript-eslint/eslint-plugin": "^4.9.0",
-		"@typescript-eslint/parser": "^4.9.0",
-		"concurrently": "^5.3.0",
-		"eslint": "^7.15.0",
-		"glob": "^7.1.6",
-		"mocha": "^8.1.3",
-		"rollup": "^2.36.1",
-		"rollup-plugin-svelte": "^6.0.0",
-		"rollup-plugin-terser": "^7.0.2",
-		"svelte": "^3.31.2",
-		"svelte-check": "^1.1.27",
-		"svelte-preprocess": "^4.6.1",
-		"ts-loader": "^8.0.11",
-		"typescript": "^4.1.2",
-		"vscode-test": "^1.4.1",
-		"webpack": "^5.10.0",
-		"webpack-cli": "^4.2.0"
-	},
-	"dependencies": {
-		"async-mqtt": "^2.6.1",
-		"mqtt": "^4.2.6"
-	}
+    "name": "vsmqtt",
+    "displayName": "VSMqtt",
+    "description": "",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.52.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:vsmqtt.refreshProfileList",
+        "onCommand:vsmqtt.addProfile",
+        "onCommand:vsmqtt.editProfile",
+        "onCommand:vsmqtt.deleteProfile",
+        "onCommand:vsmqtt.connectToBroker",
+        "onCommand:vsmqtt.devRefresh",
+        "onView:mqttProfiles"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "viewsWelcome": [{
+            "view": "mqttProfiles",
+            "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
+        }],
+        "viewsContainers": {
+            "activitybar": [{
+                "id": "vsmqtt-sidebar-view",
+                "title": "VSMqtt",
+                "icon": "media/radio-tower.svg"
+            }]
+        },
+        "views": {
+            "vsmqtt-sidebar-view": [{
+                "id": "mqttProfiles",
+                "name": "Profiles"
+            }]
+        },
+        "commands": [{
+                "command": "vsmqtt.refreshProfileList",
+                "category": "VSMqtt",
+                "title": "Refresh broker profile list",
+                "icon": {
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "vsmqtt.connectToBroker",
+                "category": "VSMqtt",
+                "title": "Connect to mqtt broker",
+                "icon": {
+                    "light": "resources/light/play.svg",
+                    "dark": "resources/dark/play.svg"
+                }
+            },
+            {
+                "command": "vsmqtt.addProfile",
+                "category": "VSMqtt",
+                "title": "Add broker profile",
+                "icon": {
+                    "light": "resources/light/add.svg",
+                    "dark": "resources/dark/add.svg"
+                }
+            },
+            {
+                "command": "vsmqtt.editProfile",
+                "category": "VSMqtt",
+                "title": "Edit broker profile",
+                "icon": {
+                    "light": "resources/light/edit.svg",
+                    "dark": "resources/dark/edit.svg"
+                }
+            },
+            {
+                "command": "vsmqtt.deleteProfile",
+                "category": "VSMqtt",
+                "title": "Remove broker profile",
+                "icon": {
+                    "light": "resources/light/trash.svg",
+                    "dark": "resources/dark/trash.svg"
+                }
+            },
+            {
+                "command": "vsmqtt.devRefresh",
+                "category": "VSMqtt",
+                "title": "Refresh dev"
+            }
+        ],
+        "menus": {
+            "view/title": [{
+                    "command": "vsmqtt.addProfile",
+                    "when": "view == mqttProfiles",
+                    "group": "navigation"
+                },
+                {
+                    "command": "vsmqtt.refreshProfileList",
+                    "when": "view == mqttProfiles",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [{
+                    "command": "vsmqtt.connectToBroker",
+                    "when": "view == mqttProfiles",
+                    "group": "inline"
+                },
+                {
+                    "command": "vsmqtt.deleteProfile",
+                    "when": "view == mqttProfiles",
+                    "group": "inline"
+                },
+                {
+                    "command": "vsmqtt.editProfile",
+                    "when": "view == mqttProfiles",
+                    "group": "inline"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "vsmqtt",
+            "properties": {
+                "vsmqtt.brokerProfiles": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "title": "Broker profile objects",
+                        "required": ["name", "address", "port"],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Broker profile name"
+                            },
+                            "address": {
+                                "type": "string",
+                                "description": "Broker address",
+                                "default": "localhost"
+                            },
+                            "port": {
+                                "type": "number",
+                                "description": "Broker port",
+                                "default": 1883
+                            },
+                            "clientID": {
+                                "type": "string",
+                                "description": "Client ID",
+                                "default": "vsmqtt_client"
+                            }
+                        }
+                    },
+                    "default": [],
+                    "scope": "window",
+                    "description": "VSMQTT broker profiles"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack --config ./build/node-extension.webpack.config.js",
+        "watch": "concurrently \"rollup -c -w\" \"webpack --watch --config ./build/node-extension.webpack.config.js\"",
+        "package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
+        "test-compile": "tsc -p ./",
+        "test-watch": "tsc -watch -p ./",
+        "pretest": "npm run test-compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^17.0.0",
+        "@rollup/plugin-node-resolve": "^11.1.0",
+        "@rollup/plugin-typescript": "^8.1.0",
+        "@tsconfig/svelte": "^1.0.10",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.0.4",
+        "@types/node": "^12.11.7",
+        "@types/vscode": "^1.52.0",
+        "@typescript-eslint/eslint-plugin": "^4.9.0",
+        "@typescript-eslint/parser": "^4.9.0",
+        "concurrently": "^5.3.0",
+        "eslint": "^7.15.0",
+        "glob": "^7.1.6",
+        "mocha": "^8.1.3",
+        "rollup": "^2.36.1",
+        "rollup-plugin-svelte": "^6.0.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "svelte": "^3.31.2",
+        "svelte-check": "^1.1.27",
+        "svelte-preprocess": "^4.6.1",
+        "ts-loader": "^8.0.11",
+        "typescript": "^4.1.2",
+        "vscode-test": "^1.4.1",
+        "webpack": "^5.10.0",
+        "webpack-cli": "^4.2.0"
+    },
+    "dependencies": {
+        "async-mqtt": "^2.6.1",
+        "mqtt": "^4.2.6"
+    }
 }

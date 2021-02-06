@@ -77,13 +77,13 @@ export class VSMqttApp {
 
     private async _addProfile() {
         let name = await vscode.window.showInputBox({
-            prompt: "Name"
+            prompt: "Profile name"
         });
         if (!name) { return; }
 
         let address = await vscode.window.showInputBox({
             prompt: "Address",
-            placeHolder: "localhost"
+            placeHolder: "localhost",
         });
         if (!address) { return; }
 
@@ -93,7 +93,7 @@ export class VSMqttApp {
         });
         if (!port) { return; }
 
-        await saveBrokerProfile({ name, address, port: parseInt(port) });
+        await saveBrokerProfile({ name, address, port: parseInt(port), clientID: "vsmqtt_client" });
         this._profilesProvider.update();
     }
 
