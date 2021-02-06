@@ -5,5 +5,7 @@ export interface SubscriptionItem {
 
 export interface MQTTMessage {
     topic: string,
-    payload: string
+    payload: string,
+    retain: boolean,
+    qos: number
 }
