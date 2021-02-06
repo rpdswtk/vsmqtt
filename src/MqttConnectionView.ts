@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
+import { IPublishPacket } from 'mqtt-packet';
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
@@ -111,26 +112,28 @@ export class MqttConnectionView {
                     if (!data.value) {
                         return;
                     }
-                    console.log(`Subscribing to topic: ${data.value.topic} ${data.value.qos}`);
-                    this._mqttClient?.subscribe(data.value.topic);
+                    console.log(`Subscribing to topic: ${data.value.topic} QoS: ${data.value.qos}`);
+                    this._mqttClient?.subscribe(data.value.topic, {qos: data.value.qos});
                     break;
                 }
                 case "unsubscribe": {
                     if (!data.value) {
                         return;
                     }
-                    console.log(`Unsubscribing from topic: ${data.value.topic} ${data.value.qos}`);
+                    console.log(`Unsubscribing from topic: ${data.value.topic}`);
                     await this._mqttClient?.unsubscribe(data.value.topic);
                     break;
                 }
             }
         });
 
-        this._mqttClient.on("message", (topic, message) => {
-            console.log(`Message received ${topic} - ${message}`);
+        this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
+            console.log(packet.qos);
+            console.log(packet.retain);
+            console.log(`Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
-                value: { topic, payload: message.toString() }
+                value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain }
             });
         });
 
