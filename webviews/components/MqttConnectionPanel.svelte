@@ -67,7 +67,7 @@
     #content {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        grid-template-rows: 3em 1fr 0.2fr 2fr 1fr;
+        grid-template-rows: 3em 1fr 0.2fr 40vh 20vh;
     }
 
     #header {
@@ -94,10 +94,12 @@
 
     #subscription-list-section {
         grid-area: 4 / 1 / 6 / 2;
+        overflow: scroll;
     }
 
     #message-section {
         grid-area: 4 / 2 / 5 / 3;
+        overflow: scroll;
     }
 
     #message-overview-section {
