@@ -22,10 +22,10 @@
 
 {#each subscriptions as subscription}
     <div class="list-item">
-        <span class="topic"
-            >Topic: {subscription.topic} QoS: {subscription.qos}</span
-        >
-        <button
+        <div class="topic-label">Topic: </div>
+        <div class="topic">{subscription.topic}</div>
+        <div class="qos">QoS {subscription.qos}</div>
+        <button class="unsub"
             on:click={() => {
                 unsubscribe(subscription);
             }}>Unsubscribe</button
@@ -35,20 +35,33 @@
 
 <style>
     .list-item {
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-template-columns: 4em auto 7em;
         background-color: var(--vscode-input-background);
-        margin-top: 10px;
-        height: 30px;
-        padding: 1px;
+        margin-bottom: 5px;
+        margin-top: 5px;
     }
 
-    button {
-        width: 30%;
-        float: right;
+    .topic-label {
+        grid-area: 1 / 1 / 2 / 2;
+        margin: 5px;
     }
 
     .topic {
-        float: left;
-        margin-top: 5px;
-        margin-left: 5px;
+        grid-area: 1 / 2 / 2 /3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 5px;
+    }
+
+    .qos {
+        grid-area: 2 / 1/ 3/ 2;
+        margin: 5px;
+    }
+
+    .unsub {
+        grid-area: 1 / 3 / 2 / 4;
     }
 </style>
