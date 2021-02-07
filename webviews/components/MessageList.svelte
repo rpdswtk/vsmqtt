@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import type { MQTTMessage } from "./types";
     import { createEventDispatcher, afterUpdate } from "svelte";
 
@@ -10,22 +10,23 @@
     let list: Element;
     let selectedItemIndex: Number;
 
+    function scrollToBottom() {
+        list.scroll(0, list.scrollHeight);
+    }
+
     onMount(() => {
-        window.addEventListener("message", (event) => {
+        window.addEventListener("message", async (event) => {
             const message = event.data;
             switch (message.type) {
                 case "onMqttMessage":
                     messages = [...messages, message.value];
+                    await tick();
+                    if (autoScroll) {
+                        scrollToBottom();
+                    }
                     break;
             }
         });
-    });
-
-    afterUpdate(() => {
-        if (autoScroll) {
-            // scrolls to bottom of list
-            list.scroll(0, list.scrollHeight);
-        }
     });
 </script>
 
@@ -54,7 +55,11 @@
 </div>
 
 <span>Autoscroll</span>
-<input type="checkbox" class="checkbox" bind:checked={autoScroll} />
+<input type="checkbox" class="checkbox" bind:checked={autoScroll} on:change={() => {
+    if (autoScroll) {
+        scrollToBottom();
+    }
+}}/>
 
 <style>
     .root {
