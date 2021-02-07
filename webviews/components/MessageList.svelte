@@ -11,7 +11,8 @@
     let selectedItemIndex: Number;
 
     function scrollToBottom() {
-        list.scroll(0, list.scrollHeight);
+        //list.scroll(0, list.scrollHeight, );
+        list.scroll({ top: list.scrollHeight, left: 0, behavior: "smooth" });
     }
 
     onMount(() => {
@@ -55,11 +56,16 @@
 </div>
 
 <span>Autoscroll</span>
-<input type="checkbox" class="checkbox" bind:checked={autoScroll} on:change={() => {
-    if (autoScroll) {
-        scrollToBottom();
-    }
-}}/>
+<input
+    type="checkbox"
+    class="checkbox"
+    bind:checked={autoScroll}
+    on:change={() => {
+        if (autoScroll) {
+            scrollToBottom();
+        }
+    }}
+/>
 
 <style>
     .root {
