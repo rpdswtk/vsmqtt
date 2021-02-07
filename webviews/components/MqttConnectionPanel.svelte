@@ -65,7 +65,7 @@
     </div>
 
     <div id="message-overview-section" class="container">
-        <MessageOverview message={selectedMessage}/>
+        <MessageOverview message={selectedMessage} />
     </div>
 </div>
 
@@ -105,7 +105,6 @@
 
     #message-section {
         grid-area: 4 / 2 / 5 / 3;
-        overflow: scroll;
     }
 
     #message-overview-section {

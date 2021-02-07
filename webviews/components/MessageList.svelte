@@ -1,11 +1,15 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { MQTTMessage } from "./types";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, afterUpdate } from "svelte";
 
     const dispatch = createEventDispatcher();
 
     let messages: Array<MQTTMessage> = [];
+
+    let autoScroll: boolean = true;
+
+    let list: Element;
 
     onMount(() => {
         window.addEventListener("message", (event) => {
@@ -17,29 +21,46 @@
             }
         });
     });
+
+    afterUpdate(() => {
+        if (autoScroll) {
+            // scrolls to bottom of list
+            list.scroll(0, list.scrollHeight);
+        }
+    });
 </script>
 
 <h2>Messages</h2>
 
-{#each messages as message}
-    <div
-        class="list-item"
-        on:click={() => {
-            dispatch("messageSelected", {
-                selectedMessage: message,
-            });
-        }}
-    >
-        <div class="topic">{message.topic}</div>
-        <div class="qos">QoS {message.qos}</div>
-        {#if message.retain}
-            <div class="retain">Retained</div>
-        {/if}
-        <div class="payload">{message.payload}</div>
-    </div>
-{/each}
+<div class="root" bind:this={list}>
+    {#each messages as message}
+        <div
+            class="list-item"
+            on:click={() => {
+                dispatch("messageSelected", {
+                    selectedMessage: message,
+                });
+            }}
+        >
+            <div class="topic">{message.topic}</div>
+            <div class="qos">QoS {message.qos}</div>
+            {#if message.retain}
+                <div class="retain">Retained</div>
+            {/if}
+            <div class="payload">{message.payload}</div>
+        </div>
+    {/each}
+</div>
+
+<span>Autoscroll</span>
+<input type="checkbox" class="checkbox" bind:checked={autoScroll} />
 
 <style>
+    .root {
+        height: 90%;
+        overflow: scroll;
+    }
+
     .list-item {
         display: grid;
         grid-template-rows: auto 2em;
