@@ -6,10 +6,9 @@
     const dispatch = createEventDispatcher();
 
     let messages: Array<MQTTMessage> = [];
-
     let autoScroll: boolean = true;
-
     let list: Element;
+    let selectedItemIndex: Number;
 
     onMount(() => {
         window.addEventListener("message", (event) => {
@@ -33,10 +32,12 @@
 <h2>Messages</h2>
 
 <div class="root" bind:this={list}>
-    {#each messages as message}
+    {#each messages as message, index}
         <div
             class="list-item"
+            class:selected={selectedItemIndex === index}
             on:click={() => {
+                selectedItemIndex = index;
                 dispatch("messageSelected", {
                     selectedMessage: message,
                 });
@@ -93,5 +94,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .selected {
+        outline: solid 1px var(--vscode-focusBorder);
     }
 </style>
