@@ -1,5 +1,6 @@
 {
     "name": "vsmqtt",
+    "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "",
     "version": "0.0.1",
@@ -20,31 +21,24 @@
     ],
     "main": "./dist/extension.js",
     "contributes": {
-        "viewsWelcome": [
-            {
-                "view": "mqttProfiles",
-                "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
-            }
-        ],
+        "viewsWelcome": [{
+            "view": "mqttProfiles",
+            "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
+        }],
         "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "vsmqtt-sidebar-view",
-                    "title": "VSMqtt",
-                    "icon": "media/radio-tower.svg"
-                }
-            ]
+            "activitybar": [{
+                "id": "vsmqtt-sidebar-view",
+                "title": "VSMqtt",
+                "icon": "media/radio-tower.svg"
+            }]
         },
         "views": {
-            "vsmqtt-sidebar-view": [
-                {
-                    "id": "mqttProfiles",
-                    "name": "Profiles"
-                }
-            ]
+            "vsmqtt-sidebar-view": [{
+                "id": "mqttProfiles",
+                "name": "Profiles"
+            }]
         },
-        "commands": [
-            {
+        "commands": [{
                 "command": "vsmqtt.refreshProfileList",
                 "category": "VSMqtt",
                 "title": "Refresh broker profile list",
@@ -96,8 +90,7 @@
             }
         ],
         "menus": {
-            "view/title": [
-                {
+            "view/title": [{
                     "command": "vsmqtt.addProfile",
                     "when": "view == mqttProfiles",
                     "group": "navigation"
@@ -108,8 +101,7 @@
                     "group": "navigation"
                 }
             ],
-            "view/item/context": [
-                {
+            "view/item/context": [{
                     "command": "vsmqtt.connectToBroker",
                     "when": "view == mqttProfiles",
                     "group": "inline"
