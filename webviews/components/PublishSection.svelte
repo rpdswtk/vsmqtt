@@ -21,7 +21,8 @@
 <textarea rows="5" placeholder="Payload" bind:value={publishText} />
 <button
     on:click={() => {
-        vscode.postMessage({
+        if (publishTopic) {
+            vscode.postMessage({
             type: "publish",
             value: {
                 topic: publishTopic,
@@ -30,6 +31,7 @@
                 retain: retain,
             },
         });
+        }
     }}>Publish</button
 >
 

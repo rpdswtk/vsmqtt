@@ -144,7 +144,6 @@ export class MqttConnectionView {
         this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
             var timestamp = moment().format('YYYY-MM-DD h:mm:ss.SSS');
             console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
-            console.log(this._brokerConfig.name);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
                 value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain, timestamp }
