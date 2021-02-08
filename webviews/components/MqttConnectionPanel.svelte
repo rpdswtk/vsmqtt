@@ -30,6 +30,9 @@
                 case "onMqttConnectionChange":
                     connected = message.value.connected;
                     break;
+                case "onMqttProfileChange":
+                    brokerConfig = message.value.brokerConfig;
+                    break;
             }
         });
     });
