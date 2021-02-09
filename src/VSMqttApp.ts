@@ -98,6 +98,17 @@ export class VSMqttApp {
     }
 
     private async _deleteProfile(treeItem: BrokerProfileTreeItem) {
+        const result = await vscode.window.showWarningMessage(
+            `Are you sure you want to delete profile: ${treeItem.brokerProfile.name} ?`,
+            {
+                modal: true
+            },
+            "Yes",
+            "No"
+        );
+        if (!result || result === "No") {
+            return;
+        }
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
     }
