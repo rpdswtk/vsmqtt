@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import type { MQTTMessage } from "./types";
-    import { createEventDispatcher, afterUpdate } from "svelte";
+    import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -11,8 +11,15 @@
     let selectedItemIndex: Number;
 
     function scrollToBottom() {
-        //list.scroll(0, list.scrollHeight, );
-        list.scroll({ top: list.scrollHeight, left: 0, behavior: "smooth" });
+        if (list.scrollTop > 0 && list.scrollHeight / list.scrollTop < 1.5) {
+            list.scroll({
+                top: list.scrollHeight,
+                left: 0,
+                behavior: "smooth",
+            });
+        } else {
+            list.scroll({ top: list.scrollHeight, left: 0, behavior: "auto" });
+        }
     }
 
     onMount(() => {
