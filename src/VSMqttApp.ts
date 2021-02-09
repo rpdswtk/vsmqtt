@@ -72,7 +72,10 @@ export class VSMqttApp {
             if (!selectedProfile) { return; }
             brokerConfig = selectedProfile;
         }
-        MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
+
+        if (MqttConnectionView.currentPanel?.brokerConfig.name !== brokerConfig.name) {
+            MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
+        }
     }
 
     private async _addProfile() {
