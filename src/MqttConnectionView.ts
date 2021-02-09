@@ -8,13 +8,13 @@ import moment = require("moment");
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
-
+    
     public static readonly viewType = "mqtt-connection";
-
+    
+    public brokerConfig: MqttBrokerConfig;
     public readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
-    private _brokerConfig: MqttBrokerConfig;
     private _mqttClient?: AsyncClient;
 
     public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
@@ -62,7 +62,7 @@ export class MqttConnectionView {
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
         this._panel = panel;
         this._extensionUri = extensionUri;
-        this._brokerConfig = brokerConfig;
+        this.brokerConfig = brokerConfig;
 
         // Set the webview's initial html content
         this._update();
@@ -104,12 +104,12 @@ export class MqttConnectionView {
 
     public dispose() {
         MqttConnectionView.currentPanel = undefined;
-        MqttClientFactory.disposeClient(this._brokerConfig);
+        MqttClientFactory.disposeClient(this.brokerConfig);
 
         // Clean up our resources
+        this._panel.webview.onDidReceiveMessage(() => { });
         this._panel.dispose();
 
-        this._panel.webview.onDidReceiveMessage(() => { });
 
         while (this._disposables.length) {
             const x = this._disposables.pop();
@@ -122,23 +122,23 @@ export class MqttConnectionView {
     private async _update(brokerConfig?: MqttBrokerConfig) {
         const webview = this._panel.webview;
         if (brokerConfig) {
-            if (this._brokerConfig.name !== brokerConfig.name) {
+            if (this.brokerConfig.name !== brokerConfig.name) {
                 // disposing previous client
-                MqttClientFactory.disposeClient(this._brokerConfig);
+                MqttClientFactory.disposeClient(this.brokerConfig);
             }
 
-            this._brokerConfig = brokerConfig;
+            this.brokerConfig = brokerConfig;
 
             this._panel?.webview.postMessage({
                 type: "onMqttProfileChange",
-                value: { brokerConfig: this._brokerConfig }
+                value: { brokerConfig: this.brokerConfig }
             });
         }
 
-        this._mqttClient = MqttClientFactory.createClient(this._brokerConfig);
+        this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', () => {
-            vscode.window.showErrorMessage(`Could not connect to ${this._brokerConfig.address}`);
+            vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.address}`);
         });
 
         this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
@@ -153,7 +153,7 @@ export class MqttConnectionView {
         this._panel.webview.html = this._getHtmlForWebview(webview);
 
         this._mqttClient.on('connect', () => {
-            vscode.window.showInformationMessage(`Connected to ${this._brokerConfig.address}`);
+            vscode.window.showInformationMessage(`Connected to ${this.brokerConfig.address}`,{modal: true});
 
             this._panel?.webview.postMessage({
                 type: "onMqttConnectionChange",
@@ -161,7 +161,7 @@ export class MqttConnectionView {
             });
 
             this._mqttClient?.once('error', () => {
-                vscode.window.showErrorMessage(`Disconnected from ${this._brokerConfig.address}`);
+                vscode.window.showErrorMessage(`Disconnected from ${this.brokerConfig.address}`);
 
                 this._panel?.webview.postMessage({
                     type: "onMqttConnectionChange",
@@ -211,7 +211,7 @@ export class MqttConnectionView {
                 <link href="${stylesPageUri}" rel="stylesheet">
                 <script nonce="${nonce}">
                     const vscode = acquireVsCodeApi();
-                    const brokerProfile = ${JSON.stringify(this._brokerConfig)};
+                    const brokerProfile = ${JSON.stringify(this.brokerConfig)};
                 </script>
             </head>
             <body>

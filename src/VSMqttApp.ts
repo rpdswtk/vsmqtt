@@ -98,8 +98,9 @@ export class VSMqttApp {
     }
 
     private async _deleteProfile(treeItem: BrokerProfileTreeItem) {
+        const profileName = treeItem.brokerProfile.name;
         const result = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete profile: ${treeItem.brokerProfile.name} ?`,
+            `Are you sure you want to delete profile: ${profileName} ?`,
             {
                 modal: true
             },
@@ -111,5 +112,9 @@ export class VSMqttApp {
         }
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
+        const currentPanel = MqttConnectionView.currentPanel;
+        if (currentPanel?.brokerConfig.name === profileName) {
+            currentPanel.dispose();
+        }            
     }
 }
