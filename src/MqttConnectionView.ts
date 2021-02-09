@@ -153,7 +153,7 @@ export class MqttConnectionView {
         this._panel.webview.html = this._getHtmlForWebview(webview);
 
         this._mqttClient.on('connect', () => {
-            vscode.window.showInformationMessage(`Connected to ${this.brokerConfig.address}`,{modal: true});
+            vscode.window.showInformationMessage(`Connected to ${this.brokerConfig.address}`);
 
             this._panel?.webview.postMessage({
                 type: "onMqttConnectionChange",
