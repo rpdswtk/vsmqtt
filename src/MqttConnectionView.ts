@@ -121,6 +121,11 @@ export class MqttConnectionView {
 
     private async _update(brokerConfig?: MqttBrokerConfig) {
         const webview = this._panel.webview;
+        this._initMqtt(brokerConfig);
+        this._panel.webview.html = this._getHtmlForWebview(webview);
+    }
+
+    private _initMqtt(brokerConfig?: MqttBrokerConfig) {
         if (brokerConfig) {
             if (this.brokerConfig.name !== brokerConfig.name) {
                 // disposing previous client
@@ -149,8 +154,6 @@ export class MqttConnectionView {
                 value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain, timestamp }
             });
         });
-
-        this._panel.webview.html = this._getHtmlForWebview(webview);
 
         this._mqttClient.on('connect', () => {
             vscode.window.showInformationMessage(`Connected to ${this.brokerConfig.address}`);
