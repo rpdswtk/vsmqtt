@@ -11,14 +11,11 @@
     let selectedItemIndex: Number;
 
     function scrollToBottom() {
-        if (list.scrollTop > 0 && list.scrollHeight / list.scrollTop < 1.5) {
-            list.scroll({
-                top: list.scrollHeight,
-                left: 0,
-                behavior: "smooth",
-            });
-        } else {
+        if (list.scrollHeight - list.scrollTop >= list.clientHeight * 3) {
             list.scroll({ top: list.scrollHeight, left: 0, behavior: "auto" });
+        }
+        else {
+            list.scroll({ top: list.scrollHeight, left: 0, behavior: "smooth" });
         }
     }
 
