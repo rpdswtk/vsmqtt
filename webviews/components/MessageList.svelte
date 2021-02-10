@@ -13,9 +13,12 @@
     function scrollToBottom() {
         if (list.scrollHeight - list.scrollTop >= list.clientHeight * 3) {
             list.scroll({ top: list.scrollHeight, left: 0, behavior: "auto" });
-        }
-        else {
-            list.scroll({ top: list.scrollHeight, left: 0, behavior: "smooth" });
+        } else {
+            list.scroll({
+                top: list.scrollHeight,
+                left: 0,
+                behavior: "smooth",
+            });
         }
     }
 
@@ -59,7 +62,7 @@
     {/each}
 </div>
 
-<span>Autoscroll</span>
+<span class="scroll">Autoscroll</span>
 <input
     type="checkbox"
     class="checkbox"
@@ -70,6 +73,12 @@
         }
     }}
 />
+<span
+    class="clear-button"
+    on:click={() => {
+        messages = [];
+    }}>Clear list</span
+>
 
 <style>
     .root {
@@ -113,5 +122,14 @@
 
     .selected {
         outline: solid 1px var(--vscode-focusBorder);
+    }
+
+    .scroll {
+        float: left;
+    }
+
+    .clear-button {
+        cursor: pointer;
+        float: right;
     }
 </style>
