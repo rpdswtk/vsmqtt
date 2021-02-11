@@ -91,7 +91,10 @@
         grid-template-rows: auto 2em;
         grid-template-columns: auto 60px 50px;
         background-color: var(--vscode-input-background);
-        margin: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        margin-left: 1px;
         padding: 5px;
         cursor: pointer;
     }
@@ -126,10 +129,12 @@
 
     .scroll {
         float: left;
+        margin-left: 2px;
     }
 
     .clear-button {
         cursor: pointer;
         float: right;
+        margin-right: 2px;
     }
 </style>

@@ -76,7 +76,7 @@
     #content {
         display: grid;
         grid-template-columns: 1fr 2fr;
-        grid-template-rows: 3em 1fr 0.2fr 40vh 20vh;
+        grid-template-rows: 3em auto auto 40vh 20vh;
     }
 
     #header {

@@ -58,7 +58,7 @@
 
     .qos {
         grid-area: 2 / 1/ 3/ 2;
-        margin: 5px;
+        margin: 2px 5px 5px 5px;
     }
 
     .unsub {

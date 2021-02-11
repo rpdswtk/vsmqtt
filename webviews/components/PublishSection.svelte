@@ -5,7 +5,6 @@
     let retain: boolean = false;
 </script>
 
-<div class="clr" />
 <h2>Publish</h2>
 
 <div class="publish-options">
@@ -18,59 +17,53 @@
     <h3 class="input-label">Retain:</h3>
     <input type="checkbox" class="checkbox" bind:checked={retain} />
 </div>
+
 <textarea rows="5" placeholder="Payload" bind:value={publishText} />
+
 <button
     on:click={() => {
         if (publishTopic) {
             vscode.postMessage({
-            type: "publish",
-            value: {
-                topic: publishTopic,
-                payload: publishText,
-                qos: parseInt(selectedQos),
-                retain: retain,
-            },
-        });
+                type: "publish",
+                value: {
+                    topic: publishTopic,
+                    payload: publishText,
+                    qos: parseInt(selectedQos),
+                    retain: retain,
+                },
+            });
         }
     }}>Publish</button
 >
 
 <style>
-    .clr {
-        clear: both;
-    }
-
     textarea {
         resize: none;
         margin-bottom: 5px;
     }
 
-    .container {
-        padding: 5px;
-        border: 2px solid var(--vscode-input-background);
-    }
-
     .publish-options {
         display: flex;
-        margin-bottom: 10px;
+        height: 30px;
+        margin-bottom: 5px;
+        margin-top: 5px;
     }
 
-    .publish-options input[type="text"] {
-        width: 40%;
+    input[type="text"] {
+        width: 50%;
     }
 
-    .checkbox {
-        width: 1.8em;
-        height: 1.8em;
-    }
-
-    .input-label {
-        margin-left: 20px;
-        margin-right: 5px;
-        margin-top: 6px;
+    input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
     }
 
     select {
-        margin-left: 15px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .input-label {
+        margin-top: 6px;
     }
 </style>

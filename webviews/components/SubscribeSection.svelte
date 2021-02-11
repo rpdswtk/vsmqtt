@@ -31,7 +31,7 @@
     }
 </script>
 
-<h2 class="title">Subscribe</h2>
+<h2>Subscribe</h2>
 
 <form action="">
     <div class="subscription-options">
@@ -48,14 +48,20 @@
 <style>
     .subscription-options {
         display: flex;
-        margin-bottom: 10px;
+        height: 30px;
+        margin-bottom: 1px;
+        margin-top: 5px;
     }
 
-    .subscription-options input {
-        width: 40%;
+    input {
+        width: 50%;
     }
 
     select {
-        margin-left: 15px;
+        margin-left: 5px;
+    }
+    
+    button {
+        margin-bottom: 0;
     }
 </style>
