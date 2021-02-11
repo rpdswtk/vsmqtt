@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { MQTTMessage } from "./types";
-    export let message: MQTTMessage;
+    export let message: MQTTMessage | undefined;
 </script>
 
 {#if message}

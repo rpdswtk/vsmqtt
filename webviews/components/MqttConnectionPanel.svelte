@@ -12,10 +12,14 @@
     let connected: boolean = false;
 
     let subscriptions: Array<SubscriptionItem> = [];
-    let selectedMessage: MQTTMessage;
+    let selectedMessage: MQTTMessage | undefined;
 
     function handleSubscribe(event: any) {
         subscriptions = event.detail.subscriptions;
+    }
+
+    function handleListCleared() {
+        selectedMessage = undefined;
     }
 
     function handleMessageSelected(event: any) {
@@ -64,7 +68,10 @@
     </div>
 
     <div id="message-section" class="container">
-        <MessageList on:messageSelected={handleMessageSelected} />
+        <MessageList
+            on:messageSelected={handleMessageSelected}
+            on:listCleared={handleListCleared}
+        />
     </div>
 
     <div id="message-overview-section" class="container">

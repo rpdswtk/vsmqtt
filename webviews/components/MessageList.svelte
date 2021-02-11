@@ -77,6 +77,7 @@
     class="clear-button"
     on:click={() => {
         messages = [];
+        dispatch("listCleared", null);
     }}>Clear list</span
 >
 
