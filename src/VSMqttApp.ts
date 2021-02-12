@@ -88,13 +88,17 @@ export class VSMqttApp {
             prompt: "Address",
             placeHolder: "localhost",
         });
-        if (!address) { return; }
+        if (!address) {
+            address = "localhost";
+        }
 
         let port = await vscode.window.showInputBox({
             prompt: "Port",
             placeHolder: "1883"
         });
-        if (!port) { return; }
+        if (!port) {
+            port = "1883";
+        }
 
         await saveBrokerProfile({ name, address, port: parseInt(port), clientID: "vsmqtt_client" });
         this._profilesProvider.update();
@@ -118,6 +122,6 @@ export class VSMqttApp {
         const currentPanel = MqttConnectionView.currentPanel;
         if (currentPanel?.brokerConfig.name === profileName) {
             currentPanel.dispose();
-        }            
+        }
     }
 }
