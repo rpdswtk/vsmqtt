@@ -22,9 +22,16 @@
     "main": "./dist/extension.js",
     "contributes": {
         "viewsWelcome": [{
-            "view": "mqttProfiles",
-            "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)"
-        }],
+                "view": "mqttProfiles",
+                "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)",
+                "when": "workbenchState == folder"
+            },
+            {
+                "view": "mqttProfiles",
+                "contents": "Vsmqtt uses workspace config. Please open a folder.",
+                "when": "workbenchState == empty"
+            }
+        ],
         "viewsContainers": {
             "activitybar": [{
                 "id": "vsmqtt-sidebar-view",
