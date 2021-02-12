@@ -16,7 +16,6 @@
         "onCommand:vsmqtt.editProfile",
         "onCommand:vsmqtt.deleteProfile",
         "onCommand:vsmqtt.connectToBroker",
-        "onCommand:vsmqtt.devRefresh",
         "onView:mqttProfiles"
     ],
     "main": "./dist/extension.js",
@@ -89,11 +88,6 @@
                     "light": "resources/light/trash.svg",
                     "dark": "resources/dark/trash.svg"
                 }
-            },
-            {
-                "command": "vsmqtt.devRefresh",
-                "category": "VSMqtt",
-                "title": "Refresh dev"
             }
         ],
         "menus": {
