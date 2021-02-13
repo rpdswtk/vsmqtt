@@ -8,9 +8,9 @@ import moment = require("moment");
 
 export class MqttConnectionView {
     public static currentPanel: MqttConnectionView | undefined;
-    
+
     public static readonly viewType = "mqtt-connection";
-    
+
     public brokerConfig: MqttBrokerConfig;
     public readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
@@ -142,8 +142,11 @@ export class MqttConnectionView {
 
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
-        this._mqttClient.once('error', () => {
-            vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.address}`);
+        this._mqttClient.once('error', async () => {
+            const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.address}`, "Open settings.json");
+            if (result) {
+                await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile");
+            }
         });
 
         this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
@@ -156,16 +159,12 @@ export class MqttConnectionView {
         });
 
         this._mqttClient.on('connect', () => {
-            vscode.window.showInformationMessage(`Connected to ${this.brokerConfig.address}`);
-
             this._panel?.webview.postMessage({
                 type: "onMqttConnectionChange",
                 value: { connected: true }
             });
 
             this._mqttClient?.once('error', () => {
-                vscode.window.showErrorMessage(`Disconnected from ${this.brokerConfig.address}`);
-
                 this._panel?.webview.postMessage({
                     type: "onMqttConnectionChange",
                     value: { connected: false }
