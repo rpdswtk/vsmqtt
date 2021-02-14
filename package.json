@@ -166,10 +166,9 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run package",
-        "compile": "webpack --config ./build/node-extension.webpack.config.js",
+        "vscode:prepublish": "npm run compile",
+        "compile": "rollup -c && webpack --mode production --config ./build/node-extension.webpack.config.js",
         "watch": "concurrently \"rollup -c -w\" \"webpack --watch --config ./build/node-extension.webpack.config.js\"",
-        "package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
         "test-compile": "tsc -p ./",
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
