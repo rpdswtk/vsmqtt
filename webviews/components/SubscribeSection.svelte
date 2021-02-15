@@ -55,6 +55,7 @@
 
     input {
         width: 50%;
+        margin-right: 5px;
     }
 
     select {

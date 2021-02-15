@@ -51,6 +51,7 @@
 
     input[type="text"] {
         width: 50%;
+        margin-right: 5px;
     }
 
     input[type="checkbox"] {
