@@ -40,7 +40,26 @@
 
 <h2>Messages</h2>
 
-<div class="root" bind:this={list}>
+<span class="scroll">Autoscroll</span>
+<input
+    type="checkbox"
+    class="checkbox"
+    bind:checked={autoScroll}
+    on:change={() => {
+        if (autoScroll) {
+            scrollToBottom();
+        }
+    }}
+/>
+<span
+    class="clear-button"
+    on:click={() => {
+        messages = [];
+        dispatch("listCleared", null);
+    }}>Clear list</span
+>
+
+<div class="list" bind:this={list}>
     {#each messages as message, index}
         <div
             class="list-item"
@@ -62,28 +81,11 @@
     {/each}
 </div>
 
-<span class="scroll">Autoscroll</span>
-<input
-    type="checkbox"
-    class="checkbox"
-    bind:checked={autoScroll}
-    on:change={() => {
-        if (autoScroll) {
-            scrollToBottom();
-        }
-    }}
-/>
-<span
-    class="clear-button"
-    on:click={() => {
-        messages = [];
-        dispatch("listCleared", null);
-    }}>Clear list</span
->
+
 
 <style>
-    .root {
-        height: 90%;
+    .list {
+        height: 32vh;
         overflow: scroll;
     }
 
@@ -136,6 +138,6 @@
     .clear-button {
         cursor: pointer;
         float: right;
-        margin-right: 2px;
+        margin-right: 15px;
     }
 </style>
