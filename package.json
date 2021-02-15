@@ -39,7 +39,7 @@
             "activitybar": [{
                 "id": "vsmqtt-sidebar-view",
                 "title": "VSMqtt",
-                "icon": "media/radio-tower.svg"
+                "icon": "media/cloud.svg"
             }]
         },
         "views": {
