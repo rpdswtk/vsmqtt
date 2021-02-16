@@ -12,13 +12,7 @@
     let connected: boolean = false;
 
     let subscriptions: Array<SubscriptionItem> = [];
-    let selectedMessage: MQTTMessage | undefined = {
-        topic: "test",
-        payload: "hello",
-        qos: 0,
-        retain: true,
-        timestamp: "TIMESTAMP"
-    }
+    let selectedMessage: MQTTMessage | undefined;
 
     function handleSubscribe(event: any) {
         subscriptions = event.detail.subscriptions;
