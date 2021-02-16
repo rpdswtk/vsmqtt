@@ -31,7 +31,7 @@
             },
             {
                 "view": "mqttProfiles",
-                "contents": "Vsmqtt uses workspace config. Please open a folder.",
+                "contents": "Vsmqtt uses workspace config. Please open a folder.\n[Open Folder](command:workbench.action.files.openFolder)",
                 "when": "workbenchState == empty"
             }
         ],
