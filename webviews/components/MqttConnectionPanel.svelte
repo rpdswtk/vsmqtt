@@ -12,7 +12,13 @@
     let connected: boolean = false;
 
     let subscriptions: Array<SubscriptionItem> = [];
-    let selectedMessage: MQTTMessage | undefined;
+    let selectedMessage: MQTTMessage | undefined = {
+        topic: "test",
+        payload: "hello",
+        qos: 0,
+        retain: true,
+        timestamp: "TIMESTAMP"
+    }
 
     function handleSubscribe(event: any) {
         subscriptions = event.detail.subscriptions;
@@ -81,9 +87,10 @@
 
 <style>
     #content {
+        height: 100%;
         display: grid;
         grid-template-columns: 1fr 2fr;
-        grid-template-rows: 3em auto auto 40vh 20vh;
+        grid-template-rows: min-content min-content min-content 40vh 20vh;
     }
 
     #header {
@@ -115,15 +122,17 @@
 
     #message-section {
         grid-area: 4 / 2 / 5 / 3;
+        height: 100%;
     }
 
     #message-overview-section {
         grid-area: 5 / 2 / 6 / 3;
+        border-top: None;
     }
 
     .container {
         padding: 5px;
-        border: 2px solid var(--vscode-input-background);
+        border: 1.5px solid var(--vscode-input-background);
         margin: 5px;
     }
 </style>

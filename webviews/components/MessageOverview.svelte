@@ -18,24 +18,29 @@
 <style>
     .list-item {
         display: grid;
-        grid-template-rows: 2em 2em 12vh;
+        grid-template-rows: min-content min-content auto;
         grid-template-columns: auto 5em 3em;
+        height: 100%;
     }
 
     .timestamp {
         grid-area: 1 / 1 / 2 / 2;
+        margin-bottom: 2px;
     }
 
     .retained {
         grid-area: 2 / 2 / 3 / 3;
+        margin-bottom: 2px;
     }
 
     .topic {
         grid-area: 2 / 1 / 3 / 2;
+        margin-bottom: 2px;
     }
 
     .qos {
         grid-area: 2 / 3 / 3 / 4;
+        margin-bottom: 2px;
     }
 
     .payload {

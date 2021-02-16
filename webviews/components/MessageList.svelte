@@ -38,54 +38,69 @@
     });
 </script>
 
-<h2>Messages</h2>
+<div class="root">
+    <h2 class="title">Messages</h2>
 
-<span class="scroll">Autoscroll</span>
-<input
-    type="checkbox"
-    class="checkbox"
-    bind:checked={autoScroll}
-    on:change={() => {
-        if (autoScroll) {
-            scrollToBottom();
-        }
-    }}
-/>
-<span
-    class="clear-button"
-    on:click={() => {
-        messages = [];
-        dispatch("listCleared", null);
-    }}>Clear list</span
->
+    <div class="list" bind:this={list}>
+        {#each messages as message, index}
+            <div
+                class="list-item"
+                class:selected={selectedItemIndex === index}
+                on:click={() => {
+                    selectedItemIndex = index;
+                    dispatch("messageSelected", {
+                        selectedMessage: message,
+                    });
+                }}
+            >
+                <div class="topic">{message.topic}</div>
+                <div class="qos">QoS {message.qos}</div>
+                {#if message.retain}
+                    <div class="retain">Retained</div>
+                {/if}
+                <div class="payload">{message.payload}</div>
+            </div>
+        {/each}
+    </div>
 
-<div class="list" bind:this={list}>
-    {#each messages as message, index}
-        <div
-            class="list-item"
-            class:selected={selectedItemIndex === index}
-            on:click={() => {
-                selectedItemIndex = index;
-                dispatch("messageSelected", {
-                    selectedMessage: message,
-                });
+    <div class="options">
+        <span class="scroll">Autoscroll</span>
+        <input
+            type="checkbox"
+            class="checkbox"
+            bind:checked={autoScroll}
+            on:change={() => {
+                if (autoScroll) {
+                    scrollToBottom();
+                }
             }}
+        />
+        <span
+            class="clear-button"
+            on:click={() => {
+                messages = [];
+                dispatch("listCleared", null);
+            }}>Clear list</span
         >
-            <div class="topic">{message.topic}</div>
-            <div class="qos">QoS {message.qos}</div>
-            {#if message.retain}
-                <div class="retain">Retained</div>
-            {/if}
-            <div class="payload">{message.payload}</div>
-        </div>
-    {/each}
+    </div>
 </div>
 
-
-
 <style>
+    .root {
+        display: grid;
+        grid-template-rows: min-content auto min-content;
+        height: 100%;
+    }
+
+    .title {
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+
     .list {
-        height: 32vh;
+        grid-row-start: 2;
+        grid-row-end: 3;
+        height: 100%;
         overflow: scroll;
     }
 
@@ -100,6 +115,11 @@
         margin-left: 1px;
         padding: 5px;
         cursor: pointer;
+    }
+
+    .options {
+        grid-row-start: 3;
+        grid-row-end: 4;
     }
 
     .topic {
