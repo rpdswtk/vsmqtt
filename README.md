@@ -2,6 +2,8 @@
 
 Vsmqtt is a simple MQTT client integrated in vscode.
 
+![Alt Text](screen.gif)
+
 ## Features
 
 Existing features:
