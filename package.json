@@ -15,6 +15,9 @@
     "categories": [
         "Other"
     ],
+    "tags": [
+        "mqtt", "client", "mqtt-client"
+    ],
     "activationEvents": [
         "onCommand:vsmqtt.refreshProfileList",
         "onCommand:vsmqtt.addProfile",
