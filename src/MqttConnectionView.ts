@@ -60,6 +60,10 @@ export class MqttConnectionView {
         MqttConnectionView.currentPanel = new MqttConnectionView(panel, extensionUri, brokerConfig);
     }
 
+    public static reveal() {
+        MqttConnectionView.currentPanel?._panel.reveal();
+    }
+
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
         this._panel = panel;
         this._extensionUri = extensionUri;

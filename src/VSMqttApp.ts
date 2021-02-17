@@ -75,6 +75,8 @@ export class VSMqttApp {
 
         if (MqttConnectionView.currentPanel?.brokerConfig.name !== brokerConfig.name) {
             MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
+        } else {
+            MqttConnectionView.reveal();
         }
     }
 
