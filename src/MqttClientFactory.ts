@@ -1,5 +1,4 @@
 import { AsyncClient, connect } from 'async-mqtt';
-import { formatWithOptions } from 'util';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 
 export class MqttClientFactory {
@@ -12,7 +11,7 @@ export class MqttClientFactory {
             return client;
         }
 
-        client = connect(`tcp://${config.address}`, { port: config.port, clientId: config.clientID });
+        client = connect(`tcp://${config.host}`,  config);
         MqttClientFactory.clients.set(config.name, client);
         return client;
     }

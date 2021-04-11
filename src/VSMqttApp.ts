@@ -86,12 +86,12 @@ export class VSMqttApp {
         });
         if (!name) { return; }
 
-        let address = await vscode.window.showInputBox({
-            prompt: "Address",
+        let host = await vscode.window.showInputBox({
+            prompt: "Host",
             placeHolder: "localhost",
         });
-        if (!address) {
-            address = "localhost";
+        if (!host) {
+            host = "localhost";
         }
 
         let port = await vscode.window.showInputBox({
@@ -102,7 +102,7 @@ export class VSMqttApp {
             port = "1883";
         }
 
-        await saveBrokerProfile({ name, address, port: parseInt(port), clientID: "vsmqtt_client" });
+        await saveBrokerProfile({ name, host, port: parseInt(port), clientId: "vsmqtt_client" });
         this._profilesProvider.update();
     }
 

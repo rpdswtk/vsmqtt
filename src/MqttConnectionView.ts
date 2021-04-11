@@ -148,7 +148,7 @@ export class MqttConnectionView {
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', async () => {
-            const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.address}`, "Open settings.json");
+            const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.host}`, "Open settings.json");
             if (result) {
                 await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile");
             }
