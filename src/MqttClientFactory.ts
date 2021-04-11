@@ -1,5 +1,6 @@
 import { AsyncClient, connect } from 'async-mqtt';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
+import * as fs from 'fs';
 
 export class MqttClientFactory {
 
@@ -11,7 +12,11 @@ export class MqttClientFactory {
             return client;
         }
 
-        client = connect(`tcp://${config.host}`,  config);
+        if (config.ca) {
+            config.ca = fs.readFileSync(config.ca);
+        }
+
+        client = connect(config);
         MqttClientFactory.clients.set(config.name, client);
         return client;
     }

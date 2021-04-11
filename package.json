@@ -165,6 +165,17 @@
                                 "description": "Broker host without port",
                                 "default": "localhost"
                             },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "mqtt",
+                                    "mqtts",
+                                    "tcp",
+                                    "tls",
+                                    "ws",
+                                    "wss"
+                                ]
+                            },
                             "clientId": {
                                 "type": "string",
                                 "description": "Client ID",
@@ -184,6 +195,10 @@
                             "password": {
                                 "type": "string",
                                 "description": "Broker password"
+                            },
+                            "ca": {
+                                "type": "string",
+                                "description": "Path for cert file"
                             }
                         }
                     },
