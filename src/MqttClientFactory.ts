@@ -1,6 +1,7 @@
 import { AsyncClient, connect } from 'async-mqtt';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 import * as fs from 'fs';
+import * as vscode from 'vscode';
 
 export class MqttClientFactory {
 
@@ -13,7 +14,12 @@ export class MqttClientFactory {
         }
 
         if (config.ca) {
-            config.ca = fs.readFileSync(config.ca);
+            try {
+                config.ca = fs.readFileSync(config.ca);
+            } catch (error) {
+                config.ca = undefined;
+                vscode.window.showErrorMessage("Could not open cert file");
+            }
         }
 
         client = connect(config);
