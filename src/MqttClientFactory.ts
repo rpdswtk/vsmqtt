@@ -13,17 +13,20 @@ export class MqttClientFactory {
             return client;
         }
 
-        if (config.ca) {
+        let options = Object.assign({}, config);
+
+        if (options.ca) {
             try {
-                config.ca = fs.readFileSync(config.ca);
+                options.ca = fs.readFileSync(options.ca);
             } catch (error) {
-                config.ca = undefined;
+                options.ca = undefined;
+                console.error(error);
                 vscode.window.showErrorMessage("Could not open cert file");
             }
         }
 
-        client = connect(config);
-        MqttClientFactory.clients.set(config.name, client);
+        client = connect(options);
+        MqttClientFactory.clients.set(options.name, client);
         return client;
     }
 
