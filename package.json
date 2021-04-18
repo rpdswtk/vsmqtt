@@ -181,10 +181,6 @@
                                 "description": "Client ID",
                                 "default": "vsmqtt_client"
                             },
-                            "path": {
-                                "type": "string",
-                                "description": "Path for broker"
-                            },
                             "keepalive": {
                                 "type": "number"
                             },
