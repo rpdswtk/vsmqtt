@@ -3,7 +3,7 @@
     "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "VSMqtt is a simple MQTT client integrated in vscode.",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "icon": "logo.png",
     "repository": {
         "type": "git",
