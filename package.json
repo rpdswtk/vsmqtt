@@ -3,7 +3,7 @@
     "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "VSMqtt is a simple MQTT client integrated in vscode.",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "icon": "logo.png",
     "repository": {
         "type": "git",
@@ -16,7 +16,9 @@
         "Other"
     ],
     "tags": [
-        "mqtt", "client", "mqtt-client"
+        "mqtt",
+        "client",
+        "mqtt-client"
     ],
     "activationEvents": [
         "onCommand:vsmqtt.refreshProfileList",
@@ -28,7 +30,8 @@
     ],
     "main": "./dist/extension.js",
     "contributes": {
-        "viewsWelcome": [{
+        "viewsWelcome": [
+            {
                 "view": "mqttProfiles",
                 "contents": "No broker profiles found.\n[Add profile](command:vsmqtt.addProfile)",
                 "when": "workbenchState == folder"
@@ -40,19 +43,24 @@
             }
         ],
         "viewsContainers": {
-            "activitybar": [{
-                "id": "vsmqtt-sidebar-view",
-                "title": "VSMqtt",
-                "icon": "media/cloud.svg"
-            }]
+            "activitybar": [
+                {
+                    "id": "vsmqtt-sidebar-view",
+                    "title": "VSMqtt",
+                    "icon": "media/cloud.svg"
+                }
+            ]
         },
         "views": {
-            "vsmqtt-sidebar-view": [{
-                "id": "mqttProfiles",
-                "name": "Profiles"
-            }]
+            "vsmqtt-sidebar-view": [
+                {
+                    "id": "mqttProfiles",
+                    "name": "Profiles"
+                }
+            ]
         },
-        "commands": [{
+        "commands": [
+            {
                 "command": "vsmqtt.refreshProfileList",
                 "category": "VSMqtt",
                 "title": "Refresh broker profile list",
@@ -99,7 +107,8 @@
             }
         ],
         "menus": {
-            "view/title": [{
+            "view/title": [
+                {
                     "command": "vsmqtt.addProfile",
                     "when": "view == mqttProfiles",
                     "group": "navigation"
@@ -110,7 +119,8 @@
                     "group": "navigation"
                 }
             ],
-            "view/item/context": [{
+            "view/item/context": [
+                {
                     "command": "vsmqtt.connectToBroker",
                     "when": "view == mqttProfiles",
                     "group": "inline"
@@ -137,7 +147,7 @@
                         "title": "Broker profile objects",
                         "required": [
                             "name",
-                            "address",
+                            "host",
                             "port"
                         ],
                         "properties": {
@@ -145,20 +155,46 @@
                                 "type": "string",
                                 "description": "Broker profile name"
                             },
-                            "address": {
-                                "type": "string",
-                                "description": "Broker address",
-                                "default": "localhost"
-                            },
                             "port": {
                                 "type": "number",
                                 "description": "Broker port",
                                 "default": 1883
                             },
-                            "clientID": {
+                            "host": {
+                                "type": "string",
+                                "description": "Broker host without port",
+                                "default": "localhost"
+                            },
+                            "protocol": {
+                                "type": "string",
+                                "enum": [
+                                    "mqtt",
+                                    "mqtts",
+                                    "tcp",
+                                    "tls",
+                                    "ws",
+                                    "wss"
+                                ]
+                            },
+                            "clientId": {
                                 "type": "string",
                                 "description": "Client ID",
                                 "default": "vsmqtt_client"
+                            },
+                            "keepalive": {
+                                "type": "number"
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "Broker username"
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "Broker password"
+                            },
+                            "ca": {
+                                "type": "string",
+                                "description": "Path for cert file"
                             }
                         }
                     },

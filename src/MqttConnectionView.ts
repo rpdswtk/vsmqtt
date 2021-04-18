@@ -1,6 +1,6 @@
 import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
-import { getNonce } from "./getNonce";
+import { getNonce } from "./helpers";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
@@ -148,7 +148,7 @@ export class MqttConnectionView {
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', async () => {
-            const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.address}`, "Open settings.json");
+            const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.host}`, "Open settings.json");
             if (result) {
                 await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile");
             }

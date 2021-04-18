@@ -13,6 +13,11 @@
         if (!subscribeTopic) {
             return;
         }
+
+        if (subscriptions.some(s => s.topic === subscribeTopic)) {
+            return;
+        }
+
         vscode.postMessage({
             type: "subscribe",
             value: {

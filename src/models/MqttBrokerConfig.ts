@@ -1,7 +1,12 @@
 export interface MqttBrokerConfig {
-    //id?: number;
     name: string;
-    address: string;
+    host: string;
     port: number;
-    clientID?: string;
+    protocol?: string;
+    clientId?: string;
+    path?: string;
+    keepalive?: number;
+    username?: string;
+    password?: string;
+    ca?: Buffer;
 }
