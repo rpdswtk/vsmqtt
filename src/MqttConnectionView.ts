@@ -1,6 +1,6 @@
 import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
-import { getNonce } from "./getNonce";
+import { getNonce } from "./helpers";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
