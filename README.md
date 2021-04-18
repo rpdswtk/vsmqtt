@@ -10,21 +10,59 @@ Existing features:
 
 * Create and use multiple mqtt profiles
 * Connect to broker
+* Support for secure connection
 * Publish messages to mqtt brokers
 * Subscribe to topics
-* Browse details of received messages 
+* Browse details of received messages
 
 Future features:
 
 * Connect to multiple brokers simultaneously
 * Support for websocket connection
-* Support for secure connection
 * Colors to differentiate messages by topics
 * Pin topics (pinned topics will be saved to profiles and will be used to subscribe to automatically upon connection)
 
 ## Extension Settings
 
 This extension stores mqtt broker profiles in workspace settings.json under: `"vsmqtt.brokerProfiles"`.
+
+### Properties:
+
+| name      | type   | description                                | required |
+|-----------|--------|--------------------------------------------|----------|
+| name      | string | Profile name                               |     -    |
+| host      | string | Broker host                                |     -    |
+| port      | number | Broker port                                |     -    |
+| username  | string | User name for broker                       |          |
+| password  | string | Password for broker                        |          |
+| protocol  | string | "mqtt", "mqtts", "tcp", "tls", "ws", "wss" |          |
+| ca        | string | Path for cert file                         |          |
+| clientId  | string | Client ID                                  |          |
+| keepalive | number | Keepalive interval in seconds.             |          |
+
+### Examples:
+
+Password protected connection:
+```json
+{
+    "name": "client with password",
+    "host": "localhost",
+    "port": 1884,
+    "username": "user01",
+    "password": "securepassword"
+}
+```
+
+Connecting to TLS protected broker:
+```json
+{
+    "name": "client with tls",
+    "host": "broker.emqx.io",
+    "port": 8883,
+    "protocol": "mqtts",
+    "ca": "/path_to_crt"
+}
+```
 
 ## Commands
 
