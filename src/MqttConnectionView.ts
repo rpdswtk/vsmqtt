@@ -27,7 +27,6 @@ export class MqttConnectionView {
         let existingView = MqttConnectionView._openViews.get(brokerConfig.name);
         if (existingView) {
             existingView._panel.reveal(column);
-            existingView._update(brokerConfig);
             return;
         }
 
@@ -115,7 +114,6 @@ export class MqttConnectionView {
         this._panel.webview.onDidReceiveMessage(() => { });
         this._panel.dispose();
 
-
         while (this._disposables.length) {
             const x = this._disposables.pop();
             if (x) {
@@ -124,22 +122,13 @@ export class MqttConnectionView {
         }
     }
 
-    private async _update(brokerConfig?: MqttBrokerConfig) {
+    private async _update() {
         const webview = this._panel.webview;
-        this._initMqtt(brokerConfig);
+        this._initMqtt();
         this._panel.webview.html = this._getHtmlForWebview(webview);
     }
 
-    private _initMqtt(brokerConfig?: MqttBrokerConfig) {
-        if (brokerConfig) {
-            this.brokerConfig = brokerConfig;
-
-            this._panel?.webview.postMessage({
-                type: "onMqttProfileChange",
-                value: { brokerConfig: this.brokerConfig }
-            });
-        }
-       
+    private _initMqtt() {
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', async () => {
