@@ -7,8 +7,6 @@ import { IPublishPacket } from 'mqtt-packet';
 import moment = require("moment");
 
 export class MqttConnectionView {
-    public static currentPanel: MqttConnectionView | undefined;
-
     public static readonly viewType = "mqtt-connection";
 
     public brokerConfig: MqttBrokerConfig;
@@ -17,6 +15,8 @@ export class MqttConnectionView {
     private _disposables: vscode.Disposable[] = [];
     private _mqttClient?: AsyncClient;
 
+    private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>();
+
     public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
 
         const column = vscode.window.activeTextEditor
@@ -24,9 +24,10 @@ export class MqttConnectionView {
             : undefined;
 
         // If we already have a panel, show it.
-        if (MqttConnectionView.currentPanel) {
-            MqttConnectionView.currentPanel._panel.reveal(column);
-            MqttConnectionView.currentPanel._update(brokerConfig);
+        let existingView = MqttConnectionView._openViews.get(brokerConfig.name);
+        if (existingView) {
+            existingView._panel.reveal(column);
+            existingView._update(brokerConfig);
             return;
         }
 
@@ -48,20 +49,19 @@ export class MqttConnectionView {
             }
         );
 
-        MqttConnectionView.currentPanel = new MqttConnectionView(panel, extensionUri, brokerConfig);
+        MqttConnectionView._openViews.set(brokerConfig.name, new MqttConnectionView(panel, extensionUri, brokerConfig));
     }
 
-    public static kill() {
-        MqttConnectionView.currentPanel?.dispose();
-        MqttConnectionView.currentPanel = undefined;
+    public static kill(brokerConfig: MqttBrokerConfig) {
+        MqttConnectionView._openViews.get(brokerConfig.name)?.dispose();
     }
 
     public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
-        MqttConnectionView.currentPanel = new MqttConnectionView(panel, extensionUri, brokerConfig);
+        MqttConnectionView._openViews.set(brokerConfig.name, new MqttConnectionView(panel, extensionUri, brokerConfig));
     }
 
-    public static reveal() {
-        MqttConnectionView.currentPanel?._panel.reveal();
+    public static reveal(brokerConfig: MqttBrokerConfig) {
+        MqttConnectionView._openViews.get(brokerConfig.name)?._panel.reveal();
     }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
@@ -108,7 +108,7 @@ export class MqttConnectionView {
     }
 
     public dispose() {
-        MqttConnectionView.currentPanel = undefined;
+        MqttConnectionView._openViews.delete(this.brokerConfig.name);
         MqttClientFactory.disposeClient(this.brokerConfig);
 
         // Clean up our resources
@@ -132,11 +132,6 @@ export class MqttConnectionView {
 
     private _initMqtt(brokerConfig?: MqttBrokerConfig) {
         if (brokerConfig) {
-            if (this.brokerConfig.name !== brokerConfig.name) {
-                // disposing previous client
-                MqttClientFactory.disposeClient(this.brokerConfig);
-            }
-
             this.brokerConfig = brokerConfig;
 
             this._panel?.webview.postMessage({
@@ -144,7 +139,7 @@ export class MqttConnectionView {
                 value: { brokerConfig: this.brokerConfig }
             });
         }
-
+       
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', async () => {
