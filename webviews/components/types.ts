@@ -1,6 +1,7 @@
 export interface SubscriptionItem {
     topic: string,
-    qos: number
+    qos: number,
+    color: string
 }
 
 export interface MQTTMessage {

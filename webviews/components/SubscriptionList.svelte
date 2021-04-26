@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { ColorManager } from "./ColorManager";
     import type { SubscriptionItem } from "./types";
 
     export let subscriptions: Array<SubscriptionItem> = [];
@@ -22,7 +23,7 @@
 
 {#each subscriptions as subscription}
     <div class="list-item">
-        <div class="color-marker"></div>
+        <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
         <div class="topic-label">Topic: </div>
         <div class="topic">{subscription.topic}</div>
         <div class="qos">QoS {subscription.qos}</div>

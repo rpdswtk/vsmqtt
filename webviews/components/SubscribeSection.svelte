@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { SubscriptionItem } from "./types";
     import { createEventDispatcher } from "svelte";
+    import { ColorManager } from './ColorManager';
 
     let subscribeTopic: string;
     let subscriptions: Array<SubscriptionItem> = [];
@@ -27,7 +28,11 @@
         });
         subscriptions = [
             ...subscriptions,
-            { topic: subscribeTopic, qos: parseInt(selectedQos) },
+            { 
+                topic: subscribeTopic, 
+                qos: parseInt(selectedQos), 
+                color: ColorManager.getColor(subscribeTopic)
+            },
         ];
         dispatch("subscribe", {
             subscriptions: subscriptions,

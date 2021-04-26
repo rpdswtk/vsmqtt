@@ -2,6 +2,7 @@
     import { onMount, tick } from "svelte";
     import type { MQTTMessage } from "./types";
     import { createEventDispatcher } from "svelte";
+    import { ColorManager } from "./ColorManager";
 
     const dispatch = createEventDispatcher();
 
@@ -53,7 +54,7 @@
                     });
                 }}
             >
-                <div class="color-marker"></div>
+                <div class="color-marker" style="background-color: {ColorManager.getColor(message.topic)};"></div>
                 <div class="topic">{message.topic}</div>
                 <div class="qos">QoS {message.qos}</div>
                 {#if message.retain}
