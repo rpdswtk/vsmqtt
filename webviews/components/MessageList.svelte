@@ -57,10 +57,10 @@
                 <div class="color-marker" style="background-color: {ColorManager.getColor(message.topic)};"></div>
                 <div class="topic">{message.topic}</div>
                 <div class="qos">QoS {message.qos}</div>
+                <div class="payload">{message.payload}</div>
                 {#if message.retain}
                     <div class="retain">Retained</div>
                 {/if}
-                <div class="payload">{message.payload}</div>
             </div>
         {/each}
     </div>
@@ -118,7 +118,7 @@
         padding: 2px;
         cursor: pointer;
         grid-template-areas: 
-            "color-marker topic qos retain"
+            "color-marker topic retain qos"
             "color-marker payload payload payload";
     }
 
