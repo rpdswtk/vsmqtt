@@ -61,6 +61,7 @@
                 {#if message.retain}
                     <div class="retain">Retained</div>
                 {/if}
+                <div class="id">{message.id}</div>
             </div>
         {/each}
     </div>
@@ -119,7 +120,7 @@
         cursor: pointer;
         grid-template-areas: 
             "color-marker topic retain qos"
-            "color-marker payload payload payload";
+            "color-marker payload payload id";
     }
 
     .options {
@@ -170,5 +171,12 @@
     .color-marker {
         grid-area: color-marker;
         margin-right: 3px;
+    }
+
+    .id {
+        grid-area: id;
+        text-align: right;
+        padding-right: 15px;
+        margin-top: 3px;
     }
 </style>

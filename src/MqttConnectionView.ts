@@ -16,6 +16,7 @@ export class MqttConnectionView {
     private _mqttClient?: AsyncClient;
 
     private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>();
+    private _messageCount: number;
 
     public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
 
@@ -67,6 +68,7 @@ export class MqttConnectionView {
         this._panel = panel;
         this._extensionUri = extensionUri;
         this.brokerConfig = brokerConfig;
+        this._messageCount = 0;
 
         // Set the webview's initial html content
         this._update();
@@ -143,7 +145,14 @@ export class MqttConnectionView {
             console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
-                value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain, timestamp }
+                value: { 
+                    id: this._messageCount++,
+                    topic,
+                    payload: message.toString(),
+                    qos: packet.qos,
+                    retain: packet.retain,
+                    timestamp 
+                }
             });
         });
 
