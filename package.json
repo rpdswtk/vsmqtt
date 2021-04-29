@@ -195,6 +195,10 @@
                             "ca": {
                                 "type": "string",
                                 "description": "Path for cert file"
+                            },
+                            "caString": {
+                                "type": "string",
+                                "description": "Cert PEM string"
                             }
                         }
                     },

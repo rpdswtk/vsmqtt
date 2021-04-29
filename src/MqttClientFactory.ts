@@ -25,6 +25,11 @@ export class MqttClientFactory {
             }
         }
 
+        if (options.caString) {
+            console.log(options.caString);
+            options.ca = options.caString;
+        }
+
         client = connect(options);
         MqttClientFactory.clients.set(options.name, client);
         return client;
