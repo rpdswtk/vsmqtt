@@ -11,3 +11,11 @@ VSMQTT versions.
 
 ### Changed
 - Minor bugfixes on UI.
+
+## [1.2.0] - 2021-04-30
+### Added
+- Support for multiple broker connections.
+- Colors for topics.
+
+### Changed
+- Changed ca option to handle PEM format strings.
