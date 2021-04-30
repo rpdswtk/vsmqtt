@@ -2,6 +2,7 @@ import { AsyncClient, connect } from 'async-mqtt';
 import { MqttBrokerConfig } from './models/MqttBrokerConfig';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+const { isAbsolutePath } = require('path-validation');
 
 export class MqttClientFactory {
 
@@ -16,18 +17,15 @@ export class MqttClientFactory {
         let options = Object.assign({}, config);
 
         if (options.ca) {
-            try {
-                options.ca = fs.readFileSync(options.ca);
-            } catch (error) {
-                options.ca = undefined;
-                console.error(error);
-                vscode.window.showErrorMessage("Could not open cert file");
+            if (isAbsolutePath(options.ca, "\\") || isAbsolutePath(options.ca, "/")) {
+                try {
+                    options.ca = fs.readFileSync(options.ca);
+                } catch (error) {
+                    options.ca = undefined;
+                    console.error(error);
+                    vscode.window.showErrorMessage("Could not open cert file");
+                }
             }
-        }
-
-        if (options.caString) {
-            console.log(options.caString);
-            options.ca = options.caString;
         }
 
         client = connect(options);
