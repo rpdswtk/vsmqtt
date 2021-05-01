@@ -14,12 +14,12 @@ Existing features:
 * Publish messages to mqtt brokers
 * Subscribe to topics
 * Browse details of received messages
+* Connect to multiple brokers simultaneously
+* Colors to differentiate messages by topics
 
 Future features:
 
-* Connect to multiple brokers simultaneously
 * Support for websocket connection
-* Colors to differentiate messages by topics
 * Pin topics (pinned topics will be saved to profiles and will be used to subscribe to automatically upon connection)
 
 ## Extension Settings
