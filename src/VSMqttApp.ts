@@ -73,11 +73,7 @@ export class VSMqttApp {
             brokerConfig = selectedProfile;
         }
 
-        if (MqttConnectionView.currentPanel?.brokerConfig.name !== brokerConfig.name) {
-            MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
-        } else {
-            MqttConnectionView.reveal();
-        }
+        MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
     }
 
     private async _addProfile() {
@@ -121,9 +117,6 @@ export class VSMqttApp {
         }
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
-        const currentPanel = MqttConnectionView.currentPanel;
-        if (currentPanel?.brokerConfig.name === profileName) {
-            currentPanel.dispose();
-        }
+        MqttConnectionView.kill(treeItem.brokerProfile);
     }
 }

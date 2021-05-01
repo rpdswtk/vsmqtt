@@ -8,5 +8,6 @@ export interface MqttBrokerConfig {
     keepalive?: number;
     username?: string;
     password?: string;
-    ca?: Buffer;
+    ca?: Buffer|string;
+    caString?: string;
 }
