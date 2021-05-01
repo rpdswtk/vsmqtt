@@ -2,6 +2,7 @@
     import { onMount, tick } from "svelte";
     import type { MQTTMessage } from "./types";
     import { createEventDispatcher } from "svelte";
+    import { ColorManager } from "./ColorManager";
 
     const dispatch = createEventDispatcher();
 
@@ -53,12 +54,14 @@
                     });
                 }}
             >
+                <div class="color-marker" style="background-color: {ColorManager.getColor(message.topic)};"></div>
                 <div class="topic">{message.topic}</div>
                 <div class="qos">QoS {message.qos}</div>
+                <div class="payload">{message.payload}</div>
                 {#if message.retain}
                     <div class="retain">Retained</div>
                 {/if}
-                <div class="payload">{message.payload}</div>
+                <div class="id">{message.id}</div>
             </div>
         {/each}
     </div>
@@ -107,14 +110,17 @@
     .list-item {
         display: grid;
         grid-template-rows: auto 2em;
-        grid-template-columns: auto 60px 50px;
+        grid-template-columns: 6px auto 60px 50px;
         background-color: var(--vscode-input-background);
         margin-top: 5px;
         margin-bottom: 5px;
         margin-right: 5px;
         margin-left: 1px;
-        padding: 5px;
+        padding: 2px;
         cursor: pointer;
+        grid-template-areas: 
+            "color-marker topic retain qos"
+            "color-marker payload payload id";
     }
 
     .options {
@@ -123,7 +129,7 @@
     }
 
     .topic {
-        grid-area: 1 / 1 / 2 / 2;
+        grid-area: topic;
         font-weight: bold;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -131,16 +137,17 @@
     }
 
     .qos {
-        grid-area: 1 / 3 / 2 / 4;
+        grid-area: qos;
     }
 
     .retain {
-        grid-area: 1 / 2 / 2 / 3;
+        grid-area: retain;
+        margin-right: 5px;
     }
 
     .payload {
-        grid-area: 2 / 1 / 3 / 4;
-        margin-top: 5px;
+        grid-area: payload;
+        margin-top: 3px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -159,5 +166,17 @@
         cursor: pointer;
         float: right;
         margin-right: 15px;
+    }
+
+    .color-marker {
+        grid-area: color-marker;
+        margin-right: 3px;
+    }
+
+    .id {
+        grid-area: id;
+        text-align: right;
+        padding-right: 15px;
+        margin-top: 3px;
     }
 </style>

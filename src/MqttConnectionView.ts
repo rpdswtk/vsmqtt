@@ -7,8 +7,6 @@ import { IPublishPacket } from 'mqtt-packet';
 import moment = require("moment");
 
 export class MqttConnectionView {
-    public static currentPanel: MqttConnectionView | undefined;
-
     public static readonly viewType = "mqtt-connection";
 
     public brokerConfig: MqttBrokerConfig;
@@ -17,6 +15,9 @@ export class MqttConnectionView {
     private _disposables: vscode.Disposable[] = [];
     private _mqttClient?: AsyncClient;
 
+    private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>();
+    private _messageCount: number;
+
     public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
 
         const column = vscode.window.activeTextEditor
@@ -24,9 +25,9 @@ export class MqttConnectionView {
             : undefined;
 
         // If we already have a panel, show it.
-        if (MqttConnectionView.currentPanel) {
-            MqttConnectionView.currentPanel._panel.reveal(column);
-            MqttConnectionView.currentPanel._update(brokerConfig);
+        let existingView = MqttConnectionView._openViews.get(brokerConfig.name);
+        if (existingView) {
+            existingView._panel.reveal(column);
             return;
         }
 
@@ -48,26 +49,26 @@ export class MqttConnectionView {
             }
         );
 
-        MqttConnectionView.currentPanel = new MqttConnectionView(panel, extensionUri, brokerConfig);
+        MqttConnectionView._openViews.set(brokerConfig.name, new MqttConnectionView(panel, extensionUri, brokerConfig));
     }
 
-    public static kill() {
-        MqttConnectionView.currentPanel?.dispose();
-        MqttConnectionView.currentPanel = undefined;
+    public static kill(brokerConfig: MqttBrokerConfig) {
+        MqttConnectionView._openViews.get(brokerConfig.name)?.dispose();
     }
 
     public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
-        MqttConnectionView.currentPanel = new MqttConnectionView(panel, extensionUri, brokerConfig);
+        MqttConnectionView._openViews.set(brokerConfig.name, new MqttConnectionView(panel, extensionUri, brokerConfig));
     }
 
-    public static reveal() {
-        MqttConnectionView.currentPanel?._panel.reveal();
+    public static reveal(brokerConfig: MqttBrokerConfig) {
+        MqttConnectionView._openViews.get(brokerConfig.name)?._panel.reveal();
     }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
         this._panel = panel;
         this._extensionUri = extensionUri;
         this.brokerConfig = brokerConfig;
+        this._messageCount = 0;
 
         // Set the webview's initial html content
         this._update();
@@ -108,13 +109,12 @@ export class MqttConnectionView {
     }
 
     public dispose() {
-        MqttConnectionView.currentPanel = undefined;
+        MqttConnectionView._openViews.delete(this.brokerConfig.name);
         MqttClientFactory.disposeClient(this.brokerConfig);
 
         // Clean up our resources
         this._panel.webview.onDidReceiveMessage(() => { });
         this._panel.dispose();
-
 
         while (this._disposables.length) {
             const x = this._disposables.pop();
@@ -124,27 +124,13 @@ export class MqttConnectionView {
         }
     }
 
-    private async _update(brokerConfig?: MqttBrokerConfig) {
+    private async _update() {
         const webview = this._panel.webview;
-        this._initMqtt(brokerConfig);
+        this._initMqtt();
         this._panel.webview.html = this._getHtmlForWebview(webview);
     }
 
-    private _initMqtt(brokerConfig?: MqttBrokerConfig) {
-        if (brokerConfig) {
-            if (this.brokerConfig.name !== brokerConfig.name) {
-                // disposing previous client
-                MqttClientFactory.disposeClient(this.brokerConfig);
-            }
-
-            this.brokerConfig = brokerConfig;
-
-            this._panel?.webview.postMessage({
-                type: "onMqttProfileChange",
-                value: { brokerConfig: this.brokerConfig }
-            });
-        }
-
+    private _initMqtt() {
         this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
 
         this._mqttClient.once('error', async () => {
@@ -159,7 +145,14 @@ export class MqttConnectionView {
             console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`);
             this._panel?.webview.postMessage({
                 type: "onMqttMessage",
-                value: { topic, payload: message.toString(), qos: packet.qos, retain: packet.retain, timestamp }
+                value: { 
+                    id: this._messageCount++,
+                    topic,
+                    payload: message.toString(),
+                    qos: packet.qos,
+                    retain: packet.retain,
+                    timestamp 
+                }
             });
         });
 

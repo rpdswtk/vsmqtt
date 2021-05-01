@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { ColorManager } from "./ColorManager";
     import type { SubscriptionItem } from "./types";
 
     export let subscriptions: Array<SubscriptionItem> = [];
@@ -22,6 +23,7 @@
 
 {#each subscriptions as subscription}
     <div class="list-item">
+        <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
         <div class="topic-label">Topic: </div>
         <div class="topic">{subscription.topic}</div>
         <div class="qos">QoS {subscription.qos}</div>
@@ -37,19 +39,22 @@
     .list-item {
         display: grid;
         grid-template-rows: auto auto;
-        grid-template-columns: 4em auto 7em;
+        grid-template-columns: 4px 4em auto 7em;
+        grid-template-areas: 
+            "color-marker topic-label topic unsub"
+            "color-marker qos . .";
         background-color: var(--vscode-input-background);
         margin-bottom: 5px;
         margin-top: 5px;
     }
 
     .topic-label {
-        grid-area: 1 / 1 / 2 / 2;
+        grid-area: topic-label;
         margin: 5px;
     }
 
     .topic {
-        grid-area: 1 / 2 / 2 /3;
+        grid-area: topic;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -57,11 +62,17 @@
     }
 
     .qos {
-        grid-area: 2 / 1/ 3/ 2;
+        grid-area: qos;
         margin: 2px 5px 5px 5px;
     }
 
     .unsub {
-        grid-area: 1 / 3 / 2 / 4;
+        grid-area: unsub;
+    }
+
+    .color-marker {
+        grid-area: color-marker;
+        width: 3px;
+        margin: 3px;
     }
 </style>

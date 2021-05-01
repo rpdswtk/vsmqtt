@@ -3,7 +3,7 @@
     "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "VSMqtt is a simple MQTT client integrated in vscode.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "icon": "logo.png",
     "repository": {
         "type": "git",
@@ -194,7 +194,7 @@
                             },
                             "ca": {
                                 "type": "string",
-                                "description": "Path for cert file"
+                                "description": "Path for cert file or cert string in PEM format"
                             }
                         }
                     },
@@ -245,6 +245,7 @@
     "dependencies": {
         "async-mqtt": "^2.6.1",
         "moment": "^2.29.1",
-        "mqtt": "^4.2.6"
+        "mqtt": "^4.2.6",
+        "path-validation": "^0.2.3"
     }
 }
