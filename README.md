@@ -36,7 +36,7 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | username  | string | User name for broker                       |          |
 | password  | string | Password for broker                        |          |
 | protocol  | string | "mqtt", "mqtts", "tcp", "tls", "ws", "wss" |          |
-| ca        | string | Path for cert file                         |          |
+| ca        | string | Path for cert file or PEM string           |          |
 | clientId  | string | Client ID                                  |          |
 | keepalive | number | Keepalive interval in seconds.             |          |
 

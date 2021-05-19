@@ -42,8 +42,7 @@
 </script>
 
 <h2>Subscribe</h2>
-
-<form action="">
+<form on:submit|preventDefault={subscribe}>
     <div class="subscription-options">
         <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
         <select bind:value={selectedQos}>
@@ -52,7 +51,7 @@
             <option value="2">QoS 2</option>
         </select>
     </div>
-    <button on:click={subscribe}>Subscribe</button>
+    <button type="submit">Subscribe</button>
 </form>
 
 <style>
