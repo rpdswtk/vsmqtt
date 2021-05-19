@@ -23,3 +23,7 @@ VSMQTT versions.
 ## [1.2.1] - 2021-04-01
 ### Changed
 - Updated readme.
+
+## [1.2.2] - 2021-04-19
+### Changed
+- Fixed 'blank screen after subscribe' issue
