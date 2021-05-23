@@ -1,16 +1,14 @@
 <script lang="ts">
     import { ColorManager } from "./ColorManager";
     import type { SubscriptionItem } from "./types";
-
-    export let subscriptions: Array<SubscriptionItem> = [];
+    import { subscriptions } from './stores';
 
     function unsubscribe(subscriptionItem: SubscriptionItem) {
-        const index = subscriptions.findIndex((subscription) => {
+        const index = $subscriptions.findIndex((subscription) => {
             return subscription.topic === subscriptionItem.topic;
         });
         if (index > -1) {
-            subscriptions.splice(index, 1);
-            subscriptions = subscriptions;
+            $subscriptions.splice(index, 1);
         }
         vscode.postMessage({
             type: "unsubscribe",
@@ -21,7 +19,7 @@
 
 <h2>Subscriptions</h2>
 
-{#each subscriptions as subscription}
+{#each $subscriptions as subscription}
     <div class="list-item">
         <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
         <div class="topic-label">Topic: </div>

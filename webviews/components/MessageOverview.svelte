@@ -1,17 +1,16 @@
 <script lang="ts">
-    import type { MQTTMessage } from "./types";
-    export let message: MQTTMessage | undefined;
+    import { selectedMessage } from "./stores";
 </script>
 
-{#if message}
+{#if $selectedMessage}
     <div class="list-item">
-        <div class="timestamp">{message.timestamp}</div>
-        <div class="topic">{message.topic}</div>
-        <div class="qos">QoS {message.qos}</div>
-        {#if message.retain}
+        <div class="timestamp">{$selectedMessage.timestamp}</div>
+        <div class="topic">{$selectedMessage.topic}</div>
+        <div class="qos">QoS {$selectedMessage.qos}</div>
+        {#if $selectedMessage.retain}
             <div class="retained">Retained</div>
         {/if}
-        <textarea class="payload" readonly>{message.payload}</textarea>
+        <textarea class="payload" readonly>{$selectedMessage.payload}</textarea>
     </div>
 {/if}
 

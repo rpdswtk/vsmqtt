@@ -1,15 +1,10 @@
 <script lang="ts">
-    import { onMount, tick } from "svelte";
-    import type { MQTTMessage } from "./types";
-    import { createEventDispatcher } from "svelte";
+    import { tick } from "svelte";
     import { ColorManager } from "./ColorManager";
+    import { messages, selectedMessage } from './stores';
 
-    const dispatch = createEventDispatcher();
-
-    let messages: Array<MQTTMessage> = [];
     let autoScroll: boolean = true;
     let list: Element;
-    let selectedItemIndex: Number;
 
     function scrollToBottom() {
         if (list.scrollHeight - list.scrollTop >= list.clientHeight * 3) {
@@ -23,19 +18,11 @@
         }
     }
 
-    onMount(() => {
-        window.addEventListener("message", async (event) => {
-            const message = event.data;
-            switch (message.type) {
-                case "onMqttMessage":
-                    messages = [...messages, message.value];
-                    await tick();
-                    if (autoScroll) {
-                        scrollToBottom();
-                    }
-                    break;
-            }
-        });
+    messages.subscribe(async () => {
+        await tick();
+        if (autoScroll) {
+            scrollToBottom();
+        }
     });
 </script>
 
@@ -43,15 +30,12 @@
     <h2 class="title">Messages</h2>
 
     <div class="list" bind:this={list}>
-        {#each messages as message, index}
+        {#each $messages as message, index}
             <div
                 class="list-item"
-                class:selected={selectedItemIndex === index}
+                class:selected={$selectedMessage === message}
                 on:click={() => {
-                    selectedItemIndex = index;
-                    dispatch("messageSelected", {
-                        selectedMessage: message,
-                    });
+                    $selectedMessage = message;
                 }}
             >
                 <div class="color-marker" style="background-color: {ColorManager.getColor(message.topic)};"></div>
@@ -81,8 +65,7 @@
         <span
             class="clear-button"
             on:click={() => {
-                messages = [];
-                dispatch("listCleared", null);
+                $messages = [];
             }}>Clear list</span
         >
     </div>

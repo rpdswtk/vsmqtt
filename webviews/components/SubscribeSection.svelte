@@ -1,21 +1,12 @@
 <script lang="ts">
-    import type { SubscriptionItem } from "./types";
-    import { createEventDispatcher } from "svelte";
     import { ColorManager } from './ColorManager';
+    import { subscriptions } from './stores';
 
     let subscribeTopic: string;
-    let subscriptions: Array<SubscriptionItem> = [];
-
     let selectedQos: string = "0";
 
-    const dispatch = createEventDispatcher();
-
     function subscribe() {
-        if (!subscribeTopic) {
-            return;
-        }
-
-        if (subscriptions.some(s => s.topic === subscribeTopic)) {
+        if (!subscribeTopic || $subscriptions.some(s => s.topic === subscribeTopic)) {
             return;
         }
 
@@ -26,17 +17,15 @@
                 qos: parseInt(selectedQos),
             },
         });
-        subscriptions = [
-            ...subscriptions,
+        
+        $subscriptions = [
+            ...$subscriptions,
             { 
                 topic: subscribeTopic, 
                 qos: parseInt(selectedQos), 
                 color: ColorManager.getColor(subscribeTopic)
             },
         ];
-        dispatch("subscribe", {
-            subscriptions: subscriptions,
-        });
         subscribeTopic = "";
     }
 </script>

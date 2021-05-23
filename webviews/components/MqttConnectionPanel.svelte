@@ -6,24 +6,23 @@
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
-    import type { MQTTMessage, SubscriptionItem } from "./types";
+
+    import { messages, subscriptions, selectedMessage } from "./stores";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
 
-    let subscriptions: Array<SubscriptionItem> = [];
-    let selectedMessage: MQTTMessage | undefined;
-
     function handleSubscribe(event: any) {
-        subscriptions = event.detail.subscriptions;
+        $subscriptions = event.detail.subscriptions;
     }
 
     function handleListCleared() {
-        selectedMessage = undefined;
+        $selectedMessage = undefined;
     }
 
     function handleMessageSelected(event: any) {
-        selectedMessage = event.detail.selectedMessage;
+        $selectedMessage = event.detail.selectedMessage;
+        console.log($selectedMessage);
     }
 
     onMount(() => {
@@ -37,8 +36,17 @@
                 case "onMqttProfileChange":
                     brokerConfig = message.value.brokerConfig;
                     break;
+                case "onMqttMessage":
+                    $messages = [...$messages, message.value];
+                    break;
             }
         });
+    });
+
+    messages.subscribe((m) => {
+        if (m.length === 0) {
+            $selectedMessage = undefined;
+        }
     });
 </script>
 
@@ -64,7 +72,7 @@
     </div>
 
     <div id="subscription-list-section" class="container">
-        <SubscriptionList {subscriptions} />
+        <SubscriptionList />
     </div>
 
     <div id="message-section" class="container">
@@ -75,7 +83,7 @@
     </div>
 
     <div id="message-overview-section" class="container">
-        <MessageOverview message={selectedMessage} />
+        <MessageOverview />
     </div>
 </div>
 
