@@ -30,7 +30,7 @@
     <h2 class="title">Messages</h2>
 
     <div class="list" bind:this={list}>
-        {#each $messages as message, index}
+        {#each $messages as message}
             <div
                 class="list-item"
                 class:selected={$selectedMessage === message}

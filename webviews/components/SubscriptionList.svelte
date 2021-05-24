@@ -4,12 +4,13 @@
     import { subscriptions } from './stores';
 
     function unsubscribe(subscriptionItem: SubscriptionItem) {
-        const index = $subscriptions.findIndex((subscription) => {
-            return subscription.topic === subscriptionItem.topic;
-        });
+        const index = $subscriptions.findIndex((subscription) => subscription.topic === subscriptionItem.topic);
+
         if (index > -1) {
             $subscriptions.splice(index, 1);
+            $subscriptions = $subscriptions;
         }
+
         vscode.postMessage({
             type: "unsubscribe",
             value: { topic: subscriptionItem.topic },

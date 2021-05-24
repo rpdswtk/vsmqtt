@@ -6,24 +6,10 @@
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
-
-    import { messages, subscriptions, selectedMessage } from "./stores";
+    import { messages, selectedMessage } from "./stores";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
-
-    function handleSubscribe(event: any) {
-        $subscriptions = event.detail.subscriptions;
-    }
-
-    function handleListCleared() {
-        $selectedMessage = undefined;
-    }
-
-    function handleMessageSelected(event: any) {
-        $selectedMessage = event.detail.selectedMessage;
-        console.log($selectedMessage);
-    }
 
     onMount(() => {
         brokerConfig = brokerProfile;
@@ -68,7 +54,7 @@
     </div>
 
     <div id="subscribe-section" class="container">
-        <SubscribeSection on:subscribe={handleSubscribe} />
+        <SubscribeSection />
     </div>
 
     <div id="subscription-list-section" class="container">
@@ -76,10 +62,7 @@
     </div>
 
     <div id="message-section" class="container">
-        <MessageList
-            on:messageSelected={handleMessageSelected}
-            on:listCleared={handleListCleared}
-        />
+        <MessageList />
     </div>
 
     <div id="message-overview-section" class="container">
