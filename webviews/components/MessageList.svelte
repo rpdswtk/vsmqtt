@@ -121,6 +121,8 @@
 
     .qos {
         grid-area: qos;
+        text-align: right;
+        padding-right: 4px;
     }
 
     .retain {
@@ -159,7 +161,7 @@
     .id {
         grid-area: id;
         text-align: right;
-        padding-right: 15px;
+        padding-right: 4px;
         margin-top: 3px;
     }
 </style>

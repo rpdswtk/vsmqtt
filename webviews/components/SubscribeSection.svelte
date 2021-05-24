@@ -6,7 +6,7 @@
     let selectedQos: string = "0";
 
     function subscribe() {
-        if (!subscribeTopic || $subscriptions.some(s => s.topic === subscribeTopic)) {
+        if (!subscribeTopic) {
             return;
         }
 
@@ -18,14 +18,16 @@
             },
         });
         
-        $subscriptions = [
-            ...$subscriptions,
+        $subscriptions = $subscriptions.set(
+            subscribeTopic, 
             { 
                 topic: subscribeTopic, 
                 qos: parseInt(selectedQos), 
-                color: ColorManager.getColor(subscribeTopic)
-            },
-        ];
+                color: ColorManager.getColor(subscribeTopic),
+                messageCount: 0
+            }
+        );
+
         subscribeTopic = "";
     }
 </script>

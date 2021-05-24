@@ -6,7 +6,7 @@
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
-    import { messages, selectedMessage } from "./stores";
+    import { messages, selectedMessage, subscriptions } from "./stores";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
@@ -24,6 +24,12 @@
                     break;
                 case "onMqttMessage":
                     $messages = [...$messages, message.value];
+                    let subscription = $subscriptions.get(message.value.topic);
+                    if (subscription) {
+                        subscription.messageCount += 1;
+                        $subscriptions.set(subscription.topic, subscription);
+                        $subscriptions = $subscriptions;
+                    }
                     break;
             }
         });

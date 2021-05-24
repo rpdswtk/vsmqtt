@@ -4,12 +4,8 @@
     import { subscriptions } from './stores';
 
     function unsubscribe(subscriptionItem: SubscriptionItem) {
-        const index = $subscriptions.findIndex((subscription) => subscription.topic === subscriptionItem.topic);
-
-        if (index > -1) {
-            $subscriptions.splice(index, 1);
-            $subscriptions = $subscriptions;
-        }
+        $subscriptions.delete(subscriptionItem.topic);
+        $subscriptions = $subscriptions;
 
         vscode.postMessage({
             type: "unsubscribe",
@@ -20,12 +16,13 @@
 
 <h2>Subscriptions</h2>
 
-{#each $subscriptions as subscription}
+{#each Array.from($subscriptions.values()) as subscription}
     <div class="list-item">
         <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
         <div class="topic-label">Topic: </div>
         <div class="topic">{subscription.topic}</div>
         <div class="qos">QoS {subscription.qos}</div>
+        <div class="msg-cnt">{subscription.messageCount}</div>
         <button class="unsub"
             on:click={() => {
                 unsubscribe(subscription);
@@ -41,7 +38,7 @@
         grid-template-columns: 4px 4em auto 7em;
         grid-template-areas: 
             "color-marker topic-label topic unsub"
-            "color-marker qos . .";
+            "color-marker qos . message-count";
         background-color: var(--vscode-input-background);
         margin-bottom: 5px;
         margin-top: 5px;
@@ -73,5 +70,12 @@
         grid-area: color-marker;
         width: 3px;
         margin: 3px;
+    }
+
+    .msg-cnt {
+        grid-area: message-count;
+        text-align: right;
+        margin-right: 5px;
+        margin-top: 2px;
     }
 </style>
