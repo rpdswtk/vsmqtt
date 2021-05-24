@@ -1,5 +1,8 @@
 # VSMQTT
 
+[![](https://img.shields.io/visual-studio-marketplace/v/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
+[![](https://img.shields.io/visual-studio-marketplace/i/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
+
 Vsmqtt is a simple MQTT client integrated in vscode.
 
 ![Alt Text](screen.gif)
