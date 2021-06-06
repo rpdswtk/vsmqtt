@@ -1,3 +1,5 @@
+import { MqttSubscription } from './MqttSubscription';
+
 export interface MqttBrokerConfig {
     name: string;
     host: string;
@@ -10,4 +12,5 @@ export interface MqttBrokerConfig {
     password?: string;
     ca?: Buffer|string;
     caString?: string;
+    savedSubscriptions?: Array<MqttSubscription>;
 }

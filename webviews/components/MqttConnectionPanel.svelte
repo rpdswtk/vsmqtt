@@ -6,13 +6,15 @@
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
-    import { messages, selectedMessage, subscriptions } from "./stores";
+    import { messages, selectedMessage, subscriptions, savedSubscriptions } from "./stores";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
 
     onMount(() => {
         brokerConfig = brokerProfile;
+        $savedSubscriptions = new Map();
+        brokerConfig.savedSubscriptions?.forEach((subscription) => $savedSubscriptions.set(subscription.topic, subscription));
         window.addEventListener("message", (event) => {
             const message = event.data;
             switch (message.type) {
@@ -63,9 +65,11 @@
         <SubscribeSection />
     </div>
 
-    <div id="subscription-list-section" class="container">
-        <SubscriptionList />
-    </div>
+    {#if brokerConfig}
+        <div id="subscription-list-section" class="container">
+            <SubscriptionList profileName={brokerConfig.name} />
+        </div>
+    {/if}
 
     <div id="message-section" class="container">
         <MessageList />

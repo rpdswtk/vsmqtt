@@ -1,6 +1,6 @@
 import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
-import { getNonce } from "./helpers";
+import { getNonce, removeSavedSubscription, saveSubscription } from "./helpers";
 import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
@@ -98,6 +98,22 @@ export class MqttConnectionView {
                     }
                     console.log(`Unsubscribing from topic: ${data.value.topic}`);
                     await this._mqttClient?.unsubscribe(data.value.topic);
+                    break;
+                }
+                case "saveSubscription": {
+                    if (!data.value) {
+                        return;
+                    }
+                    console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`);
+                    await saveSubscription(data.value.profileName ,data.value.subscription);
+                    break;
+                }
+                case "removeSavedSubscription": {
+                    if (!data.value) {
+                        return;
+                    }
+                    console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`);
+                    await removeSavedSubscription(data.value.profileName ,data.value.subscription);
                     break;
                 }
             }

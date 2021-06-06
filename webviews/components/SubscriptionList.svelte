@@ -1,7 +1,10 @@
 <script lang="ts">
     import { ColorManager } from "./ColorManager";
     import type { SubscriptionItem } from "./types";
-    import { subscriptions } from './stores';
+    import { subscriptions, savedSubscriptions } from './stores';
+    import { onMount } from "svelte";
+
+    export let profileName: string;
 
     function unsubscribe(subscriptionItem: SubscriptionItem) {
         $subscriptions.delete(subscriptionItem.topic);
@@ -12,6 +15,28 @@
             value: { topic: subscriptionItem.topic },
         });
     }
+
+    onMount(() => {
+        $savedSubscriptions?.forEach((subscription => {
+            vscode.postMessage({
+                type: "subscribe",
+                value: {
+                    topic: subscription.topic,
+                    qos: subscription.qos
+                },
+            });
+
+            $subscriptions = $subscriptions.set(
+            subscription.topic, 
+            {
+                topic: subscription.topic, 
+                qos: subscription.qos, 
+                color: ColorManager.getColor(subscription.topic),
+                messageCount: 0
+            }
+        );
+        }));
+    });
 </script>
 
 <h2>Subscriptions</h2>
@@ -21,13 +46,46 @@
         <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
         <div class="topic-label">Topic: </div>
         <div class="topic">{subscription.topic}</div>
+        {#if !$savedSubscriptions.has(subscription.topic)}
+            <div class="pin" on:click={() => {
+                vscode.postMessage({type: "saveSubscription",
+                    value: {
+                        profileName: profileName,
+                        subscription: {
+                            topic: subscription.topic,
+                            qos: subscription.qos
+                        }
+                        
+                    }
+                });
+                $savedSubscriptions.set(subscription.topic, subscription);
+                $savedSubscriptions = $savedSubscriptions;
+            }}>+</div>
+        {/if}
+        
+        {#if $savedSubscriptions.has(subscription.topic)}
+            <div class="pin" on:click={() => {
+               vscode.postMessage({type: "removeSavedSubscription",
+                    value: {
+                        profileName: profileName,
+                        subscription: {
+                            topic: subscription.topic,
+                            qos: subscription.qos
+                        }
+                        
+                    }
+                });
+                $savedSubscriptions. delete(subscription.topic);
+                $savedSubscriptions = $savedSubscriptions;
+            }}>-</div>
+        {/if}
+
         <div class="qos">QoS {subscription.qos}</div>
         <div class="msg-cnt">{subscription.messageCount}</div>
         <button class="unsub"
             on:click={() => {
                 unsubscribe(subscription);
-            }}>Unsubscribe</button
-        >
+            }}>Unsubscribe</button>
     </div>
 {/each}
 
@@ -35,10 +93,10 @@
     .list-item {
         display: grid;
         grid-template-rows: auto auto;
-        grid-template-columns: 4px 4em auto 7em;
+        grid-template-columns: 4px 4em auto 1em 7em;
         grid-template-areas: 
-            "color-marker topic-label topic unsub"
-            "color-marker qos . message-count";
+            "color-marker topic-label topic pin unsub"
+            "color-marker qos . . message-count";
         background-color: var(--vscode-input-background);
         margin-bottom: 5px;
         margin-top: 5px;
@@ -77,5 +135,11 @@
         text-align: right;
         margin-right: 5px;
         margin-top: 2px;
+    }
+
+    .pin {
+        grid-area: pin;
+        cursor: pointer;
+        margin: 3px;
     }
 </style>
