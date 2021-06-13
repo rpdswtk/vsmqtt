@@ -3,6 +3,7 @@
     import type { SubscriptionItem } from "./types";
     import { subscriptions, savedSubscriptions } from './stores';
     import { onMount } from "svelte";
+    import Icon from './Icon.svelte';
 
     export let profileName: string;
 
@@ -47,7 +48,7 @@
         <div class="topic-label">Topic: </div>
         <div class="topic">{subscription.topic}</div>
         {#if !$savedSubscriptions.has(subscription.topic)}
-            <div class="pin" on:click={() => {
+            <div class="pin" title="pin" on:click={() => {
                 vscode.postMessage({type: "saveSubscription",
                     value: {
                         profileName: profileName,
@@ -60,11 +61,13 @@
                 });
                 $savedSubscriptions.set(subscription.topic, subscription);
                 $savedSubscriptions = $savedSubscriptions;
-            }}>+</div>
+            }}>
+                <Icon name="pin"></Icon>
+            </div>
         {/if}
         
         {#if $savedSubscriptions.has(subscription.topic)}
-            <div class="pin" on:click={() => {
+            <div class="pin" title="unpin" on:click={() => {
                vscode.postMessage({type: "removeSavedSubscription",
                     value: {
                         profileName: profileName,
@@ -75,9 +78,11 @@
                         
                     }
                 });
-                $savedSubscriptions. delete(subscription.topic);
+                $savedSubscriptions.delete(subscription.topic);
                 $savedSubscriptions = $savedSubscriptions;
-            }}>-</div>
+            }}>
+            <Icon name="pinned"></Icon>
+        </div>
         {/if}
 
         <div class="qos">QoS {subscription.qos}</div>
@@ -93,7 +98,7 @@
     .list-item {
         display: grid;
         grid-template-rows: auto auto;
-        grid-template-columns: 4px 4em auto 1em 7em;
+        grid-template-columns: 4px 4em auto 2em 7em;
         grid-template-areas: 
             "color-marker topic-label topic pin unsub"
             "color-marker qos . . message-count";
