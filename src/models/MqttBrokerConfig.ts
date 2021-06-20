@@ -1,4 +1,4 @@
-import { MqttSubscription } from './MqttSubscription';
+import type { MqttSubscription } from './MqttSubscription';
 
 export interface MqttBrokerConfig {
     name: string;
