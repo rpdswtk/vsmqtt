@@ -7,6 +7,8 @@
     export let subscription: SubscriptionItem;
     export let profileName: string;
 
+    let showMenu = true;
+
     function unsubscribe(subscriptionItem: SubscriptionItem) {
         $subscriptions.delete(subscriptionItem.topic);
         $subscriptions = $subscriptions;
@@ -22,6 +24,7 @@
     <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
     <div class="topic-label">Topic: </div>
     <div class="topic">{subscription.topic}</div>
+    <!--
     {#if !$savedSubscriptions.has(subscription.topic)}
         <div class="pin" title="pin" on:click={() => {
             vscode.postMessage({type: "saveSubscription",
@@ -58,7 +61,24 @@
         <Icon name="pinned"></Icon>
     </div>
     {/if}
-
+    -->
+    {#if !showMenu}
+        <div class="menu-icon" on:click={() => {showMenu = true}}>
+            <Icon name="menu"></Icon>
+        </div>
+    {/if}
+    {#if showMenu}
+        <div class="menu">
+            <div class="menu-icon close" on:click={() => {showMenu = false}}>
+                <Icon name="close"></Icon>
+            </div>
+           <ul class="menu-list">
+               <li>Mute</li>
+               <li>Pin</li>
+               <li>Download</li>
+           </ul>
+        </div>
+    {/if}
     <div class="qos">QoS {subscription.qos}</div>
     <div class="msg-cnt">{subscription.messageCount}</div>
     <button class="unsub"
@@ -70,10 +90,10 @@
 <style>
      .list-item {
         display: grid;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto 30px;
         grid-template-columns: 4px 4em auto 2em 7em;
         grid-template-areas: 
-            "color-marker topic-label topic pin unsub"
+            "color-marker topic-label topic menu-icon unsub"
             "color-marker qos . . message-count";
         background-color: var(--vscode-input-background);
         margin-bottom: 5px;
@@ -115,9 +135,20 @@
         margin-top: 2px;
     }
 
-    .pin {
-        grid-area: pin;
+    .menu-icon {
+        grid-area: menu-icon;
         cursor: pointer;
         margin: 3px;
+        z-index: 2;
+    }
+
+    .menu {
+        grid-area: 1 / 4 / 3 / 6;
+        z-index: 1;
+        background-color: var(--vscode-input-background);
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid var(--vscode-textLink-activeForeground);
     }
 </style>
