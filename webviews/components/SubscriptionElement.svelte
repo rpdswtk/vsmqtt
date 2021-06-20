@@ -151,4 +151,15 @@
         flex-direction: row;
         border: 1px solid var(--vscode-textLink-activeForeground);
     }
+
+    .menu-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu-list li:hover {
+        color: var(--vscode-button-foreground);
+        cursor: pointer;
+    }
 </style>

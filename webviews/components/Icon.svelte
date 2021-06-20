@@ -22,5 +22,12 @@
 </script>
 
 {#if displayIcon }
-    <div>{@html displayIcon.svg}</div>
+    <div class="icon">{@html displayIcon.svg}</div>
 {/if}
+
+<style>
+    .icon:hover {
+        color: var(--vscode-button-foreground);
+        cursor: pointer;
+    }
+</style>
