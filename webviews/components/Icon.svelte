@@ -1,5 +1,7 @@
 <script lang="ts">
     export let name: string;
+    export let hoverable = true;
+
     let icons = [
         {
             name: "pin",
@@ -22,7 +24,7 @@
 </script>
 
 {#if displayIcon }
-    <div class="icon">{@html displayIcon.svg}</div>
+    <div class="{hoverable ? 'icon' : ''}">{@html displayIcon.svg}</div>
 {/if}
 
 <style>

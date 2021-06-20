@@ -18,50 +18,36 @@
             value: { topic: subscriptionItem.topic },
         });
     }
+
+    function handlePin(pin=true) {
+        let type = pin ? "saveSubscription":  "removeSavedSubscription";
+        let payload = {
+            profileName: profileName,
+            subscription: {
+                topic: subscription.topic,
+                qos: subscription.qos
+            }
+        }
+
+        vscode.postMessage({
+            type,
+            value: payload
+        });
+
+        if (pin) {
+            $savedSubscriptions.set(subscription.topic, subscription);
+        } else {
+            $savedSubscriptions.delete(subscription.topic);
+        }
+
+        $savedSubscriptions = $savedSubscriptions;
+    }
 </script>
 
 <div class="list-item">
     <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
     <div class="topic-label">Topic: </div>
     <div class="topic">{subscription.topic}</div>
-    <!--
-    {#if !$savedSubscriptions.has(subscription.topic)}
-        <div class="pin" title="pin" on:click={() => {
-            vscode.postMessage({type: "saveSubscription",
-                value: {
-                    profileName: profileName,
-                    subscription: {
-                        topic: subscription.topic,
-                        qos: subscription.qos
-                    }
-                    
-                }
-            });
-            $savedSubscriptions.set(subscription.topic, subscription);
-            $savedSubscriptions = $savedSubscriptions;
-        }}>
-            <Icon name="pin"></Icon>
-        </div>
-    {/if}
-    
-    {#if $savedSubscriptions.has(subscription.topic)}
-        <div class="pin" title="unpin" on:click={() => {
-           vscode.postMessage({type: "removeSavedSubscription",
-                value: {
-                    profileName: profileName,
-                    subscription: {
-                        topic: subscription.topic,
-                        qos: subscription.qos
-                    }
-                }
-            });
-            $savedSubscriptions.delete(subscription.topic);
-            $savedSubscriptions = $savedSubscriptions;
-        }}>
-        <Icon name="pinned"></Icon>
-    </div>
-    {/if}
-    -->
     {#if !showMenu}
         <div class="menu-icon" on:click={() => {showMenu = true}}>
             <Icon name="menu"></Icon>
@@ -72,14 +58,24 @@
             <div class="menu-icon close" on:click={() => {showMenu = false}}>
                 <Icon name="close"></Icon>
             </div>
-           <ul class="menu-list">
-               <li>Mute</li>
-               <li>Pin</li>
-               <li>Download</li>
-           </ul>
+            <ul class="menu-list">
+                <li>Mute</li>
+                {#if $savedSubscriptions.has(subscription.topic)}
+                <li on:click={() => handlePin(false)}>Unpin</li>
+                {/if}
+                {#if !$savedSubscriptions.has(subscription.topic)}
+                <li on:click={() => handlePin()}>Pin</li>
+                {/if}
+                <li>Download</li>
+            </ul>
         </div>
     {/if}
     <div class="qos">QoS {subscription.qos}</div>
+    <div class="pin-icon">
+        {#if $savedSubscriptions.has(subscription.topic)}
+            <Icon name="pinned" hoverable={false}/>
+        {/if}
+    </div>
     <div class="msg-cnt">{subscription.messageCount}</div>
     <button class="unsub"
         on:click={() => {
@@ -94,7 +90,7 @@
         grid-template-columns: 4px 4em auto 2em 7em;
         grid-template-areas: 
             "color-marker topic-label topic menu-icon unsub"
-            "color-marker qos . . message-count";
+            "color-marker qos pin-icon . message-count";
         background-color: var(--vscode-input-background);
         margin-bottom: 5px;
         margin-top: 5px;
@@ -161,5 +157,10 @@
     .menu-list li:hover {
         color: var(--vscode-button-foreground);
         cursor: pointer;
+    }
+
+    .pin-icon {
+        grid-area: pin-icon;
+        margin: 3px;
     }
 </style>
