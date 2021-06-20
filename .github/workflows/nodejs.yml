@@ -2,8 +2,18 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
-  
+    branches:
+      - master
+      - dev
+
+  pull_request:
+    branches:
+      - master
+      - dev
+
+jobs:
+  build:
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,4 +27,4 @@ on:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm run compile --if-present
+      - run: npm compile --if-present
