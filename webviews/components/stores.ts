@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
-import type { MqttSubscription } from '../../src/models/MqttSubscription';
-import type { MQTTMessage, SubscriptionItem } from './types';
+import type { MqttSubscription } from '../../src/interfaces/MqttSubscription';
+import type { SubscriptionItem } from './types';
+import type { MQTTMessage } from '../../src/interfaces/MqttMessage';
 
 export const messages = writable(new Array<MQTTMessage>());
 export let selectedMessage = writable({} as MQTTMessage | undefined);

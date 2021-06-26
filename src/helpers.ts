@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { MqttBrokerConfig } from './models/MqttBrokerConfig';
-import { MqttSubscription } from './models/MqttSubscription';
+import { MqttBrokerConfig } from './interfaces/MqttBrokerConfig';
+import { MqttSubscription } from './interfaces/MqttSubscription';
 
 export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
     let config = await vscode.workspace.getConfiguration("vsmqtt");

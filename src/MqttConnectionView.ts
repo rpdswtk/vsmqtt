@@ -1,7 +1,7 @@
 import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
 import { getNonce, removeSavedSubscription, saveSubscription } from "./helpers";
-import { MqttBrokerConfig } from "./models/MqttBrokerConfig";
+import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
 import moment = require("moment");
@@ -105,7 +105,7 @@ export class MqttConnectionView {
                         return;
                     }
                     console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`);
-                    await saveSubscription(data.value.profileName ,data.value.subscription);
+                    await saveSubscription(data.value.profileName, data.value.subscription);
                     break;
                 }
                 case "removeSavedSubscription": {
@@ -113,7 +113,14 @@ export class MqttConnectionView {
                         return;
                     }
                     console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`);
-                    await removeSavedSubscription(data.value.profileName ,data.value.subscription);
+                    await removeSavedSubscription(data.value.profileName, data.value.subscription);
+                    break;
+                }
+                case "exportMessages": {
+                    if (!data.value) {
+                        return;
+                    }
+                    console.log(`Saving message log for topic: ${data.value.topic}`);
                     break;
                 }
             }

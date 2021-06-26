@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { MqttBrokerConfig } from "../../src/models/MqttBrokerConfig";
+    import type { MqttBrokerConfig } from "../../src/interfaces/MqttBrokerConfig";
     import PublishSection from "./PublishSection.svelte";
     import SubscribeSection from "./SubscribeSection.svelte";
     import MessageList from "./MessageList.svelte";

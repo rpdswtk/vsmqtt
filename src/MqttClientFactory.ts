@@ -1,5 +1,5 @@
 import { AsyncClient, connect } from 'async-mqtt';
-import { MqttBrokerConfig } from './models/MqttBrokerConfig';
+import { MqttBrokerConfig } from './interfaces/MqttBrokerConfig';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 const { isAbsolutePath } = require('path-validation');
