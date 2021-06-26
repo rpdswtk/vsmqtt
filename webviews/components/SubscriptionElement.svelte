@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ColorManager } from "./ColorManager";
     import type { SubscriptionItem } from "./types";
-    import { subscriptions, savedSubscriptions } from './stores';
+    import { subscriptions, savedSubscriptions, messages } from './stores';
     import Icon from './Icon.svelte';
 
     export let subscription: SubscriptionItem;
@@ -46,6 +46,16 @@
     function mute() {
         subscription.muted = !subscription.muted;
     }
+
+    function exportLog() {
+        vscode.postMessage({
+            type: "exportMessages",
+            value: { 
+                topic: subscription.topic,
+                messages: $messages.filter((message) => message.topic === subscription.topic)
+            },
+        });
+    }
 </script>
 
 <svelte:window on:click={() => showMenu = false}/>
@@ -85,7 +95,7 @@
                 {#if !$savedSubscriptions.has(subscription.topic)}
                 <li on:click={() => handlePin()}>Pin</li>
                 {/if}
-                <li>Download</li>
+                <li on:click={() => exportLog()}>Export log</li>
             </ul>
         </div>
     {/if}
