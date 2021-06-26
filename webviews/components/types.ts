@@ -3,7 +3,7 @@ export interface SubscriptionItem {
     qos: number;
     color: string;
     messageCount: number;
-    muted: boolean;
+    muted?: boolean;
 }
 
 export interface MQTTMessage {

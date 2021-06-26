@@ -48,18 +48,26 @@
     }
 </script>
 
+<svelte:window on:click={() => showMenu = false}/>
+
 <div class="list-item">
     <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
     <div class="topic-label">Topic: </div>
     <div class="topic">{subscription.topic}</div>
     {#if !showMenu}
-        <div class="menu-icon" on:click={() => {showMenu = true}}>
+        <div class="menu-icon" on:click={(e) => {
+            e.stopPropagation();
+            showMenu = true;
+        }}>
             <Icon name="menu"></Icon>
         </div>
     {/if}
     {#if showMenu}
-        <div class="menu">
-            <div class="menu-icon close" on:click={() => {showMenu = false}}>
+        <div class="menu" on:click={(e) => e.stopPropagation()}>
+            <div class="menu-icon close" on:click={(e) => {
+                    e.stopPropagation();
+                    showMenu = false;
+                }}>
                 <Icon name="close"></Icon>
             </div>
             <ul class="menu-list">
