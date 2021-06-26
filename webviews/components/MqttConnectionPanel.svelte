@@ -25,9 +25,9 @@
                     brokerConfig = message.value.brokerConfig;
                     break;
                 case "onMqttMessage":
-                    $messages = [...$messages, message.value];
                     let subscription = $subscriptions.get(message.value.topic);
-                    if (subscription) {
+                    if (subscription && !subscription.muted) {
+                        $messages = [...$messages, message.value];
                         subscription.messageCount += 1;
                         $subscriptions.set(subscription.topic, subscription);
                         $subscriptions = $subscriptions;

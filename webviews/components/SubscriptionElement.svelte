@@ -7,7 +7,7 @@
     export let subscription: SubscriptionItem;
     export let profileName: string;
 
-    let showMenu = true;
+    let showMenu = false;
 
     function unsubscribe(subscriptionItem: SubscriptionItem) {
         $subscriptions.delete(subscriptionItem.topic);
@@ -20,7 +20,7 @@
     }
 
     function handlePin(pin=true) {
-        let type = pin ? "saveSubscription":  "removeSavedSubscription";
+        let type = pin ? "saveSubscription" : "removeSavedSubscription";
         let payload = {
             profileName: profileName,
             subscription: {
@@ -42,6 +42,10 @@
 
         $savedSubscriptions = $savedSubscriptions;
     }
+
+    function mute() {
+        subscription.muted = !subscription.muted;
+    }
 </script>
 
 <div class="list-item">
@@ -59,7 +63,14 @@
                 <Icon name="close"></Icon>
             </div>
             <ul class="menu-list">
-                <li>Mute</li>
+                <li on:click={() => {mute()}}>
+                    {#if !subscription.muted}
+                        Mute
+                    {/if}
+                    {#if subscription.muted}
+                        Unmute
+                    {/if}
+                </li>
                 {#if $savedSubscriptions.has(subscription.topic)}
                 <li on:click={() => handlePin(false)}>Unpin</li>
                 {/if}
@@ -71,9 +82,12 @@
         </div>
     {/if}
     <div class="qos">QoS {subscription.qos}</div>
-    <div class="pin-icon">
+    <div class="status-icons">
         {#if $savedSubscriptions.has(subscription.topic)}
-            <Icon name="pinned" hoverable={false}/>
+            <Icon name="pinned" title="Pinned" hoverable={false}/>
+        {/if}
+        {#if subscription.muted}
+            <Icon name="mute" title="Muted" hoverable={false}/>
         {/if}
     </div>
     <div class="msg-cnt">{subscription.messageCount}</div>
@@ -159,8 +173,10 @@
         cursor: pointer;
     }
 
-    .pin-icon {
+    .status-icons {
         grid-area: pin-icon;
         margin: 3px;
+        display: flex;
+        flex-direction: row;
     }
 </style>
