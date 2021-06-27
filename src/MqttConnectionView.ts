@@ -1,6 +1,6 @@
 import { AsyncClient } from "async-mqtt";
 import * as vscode from "vscode";
-import { getNonce, removeSavedSubscription, saveSubscription } from "./helpers";
+import { getNonce, removeSavedSubscription, saveMessageLog, saveSubscription } from "./helpers";
 import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig";
 import { MqttClientFactory } from "./MqttClientFactory";
 import { IPublishPacket } from 'mqtt-packet';
@@ -121,6 +121,7 @@ export class MqttConnectionView {
                         return;
                     }
                     console.log(`Saving message log for topic: ${data.value.topic}`);
+                    saveMessageLog(data.value.messages);
                     break;
                 }
             }

@@ -95,7 +95,7 @@
                 {#if !$savedSubscriptions.has(subscription.topic)}
                 <li on:click={() => handlePin()}>Pin</li>
                 {/if}
-                <li on:click={() => exportLog()}>Export log</li>
+                <li on:click={() => exportLog()}>Export csv</li>
             </ul>
         </div>
     {/if}

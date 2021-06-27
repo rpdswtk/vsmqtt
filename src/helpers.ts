@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { MqttBrokerConfig } from './interfaces/MqttBrokerConfig';
+import { MQTTMessage } from './interfaces/MqttMessage';
 import { MqttSubscription } from './interfaces/MqttSubscription';
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
     let config = await vscode.workspace.getConfiguration("vsmqtt");
@@ -62,6 +64,29 @@ export async function removeSavedSubscription(brokerProfileName: string, subscri
             brokerProfile.savedSubscriptions.splice(index,1);
             await config.update("brokerProfiles", brokerProfiles);
         }
+    }
+}
+
+export async function saveMessageLog(messages: MQTTMessage[]) {
+    var workspaceFolder = null;
+    if (vscode.workspace.workspaceFolders) {
+        workspaceFolder = vscode.workspace.workspaceFolders[0];
+    }
+    let uri = await vscode.window.showSaveDialog({defaultUri:  workspaceFolder?.uri, filters: {CommaSeparatedValues: ['csv']}});
+    if (uri) {
+        const csvWriter = createCsvWriter({
+            path: uri.fsPath,
+            header: [
+                {id: 'timestamp', title: 'TIMESTAMP'},
+                {id: 'topic', title: 'TOPIC'},
+                {id: 'payload', title: 'PAYLOAD'},
+                {id: 'retain', title: 'RETAIN'},
+                {id: 'qos', title: 'QOS'}
+            ]
+        });
+        csvWriter.writeRecords(messages).then(() =>{
+            vscode.window.showInformationMessage(uri?.fsPath + ' saved');
+        });
     }
 }
 
