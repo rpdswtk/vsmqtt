@@ -19,11 +19,11 @@ Existing features:
 * Browse details of received messages
 * Connect to multiple brokers simultaneously
 * Colors to differentiate messages by topics
+* Pin topics (pinned topics are saved to settings and are used to subscribe to automatically upon connection)
+* Export to csv
 
 Future features:
-
 * Support for websocket connection
-* Pin topics (pinned topics will be saved to profiles and will be used to subscribe to automatically upon connection)
 
 ## Extension Settings
 

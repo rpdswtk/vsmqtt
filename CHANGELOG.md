@@ -27,3 +27,10 @@ VSMQTT versions.
 ## [1.2.2] - 2021-04-19
 ### Changed
 - Fixed 'blank screen after subscribe' issue
+
+## [1.3.2] - 2021-04-19
+### Added
+- Pin, mute and export feature.
+
+### Changed
+- Minor fixes
