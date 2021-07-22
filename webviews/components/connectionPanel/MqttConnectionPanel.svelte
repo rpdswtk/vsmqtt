@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { MqttBrokerConfig } from "../../src/interfaces/MqttBrokerConfig";
+    import type { MqttBrokerConfig } from "../../../src/interfaces/MqttBrokerConfig";
     import PublishSection from "./PublishSection.svelte";
     import SubscribeSection from "./SubscribeSection.svelte";
     import MessageList from "./MessageList.svelte";
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
-    import { messages, selectedMessage, subscriptions, savedSubscriptions } from "./stores";
+    import { messages, selectedMessage, subscriptions, savedSubscriptions } from ".././stores";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;

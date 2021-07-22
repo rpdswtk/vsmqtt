@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { ColorManager } from "./ColorManager";
-    import { subscriptions, savedSubscriptions } from './stores';
+    import { ColorManager } from ".././ColorManager";
+    import { subscriptions, savedSubscriptions } from '.././stores';
     import { onMount } from "svelte";
     import SubscriptionElement from './SubscriptionElement.svelte';
 
