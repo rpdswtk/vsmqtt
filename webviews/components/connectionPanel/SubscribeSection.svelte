@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { ColorManager } from './ColorManager';
-    import { subscriptions } from './stores';
+    import { ColorManager } from '.././ColorManager';
+    import { subscriptions } from '.././stores';
 
     let subscribeTopic: string;
     let selectedQos: string = "0";

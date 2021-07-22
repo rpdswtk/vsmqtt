@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { selectedMessage } from "./stores";
+    import { selectedMessage } from ".././stores";
 </script>
 
 {#if $selectedMessage}

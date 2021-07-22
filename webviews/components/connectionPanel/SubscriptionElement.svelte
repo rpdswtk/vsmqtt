@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { ColorManager } from "./ColorManager";
-    import type { SubscriptionItem } from "./types";
-    import { subscriptions, savedSubscriptions, messages } from './stores';
+    import { ColorManager } from ".././ColorManager";
+    import type { SubscriptionItem } from ".././types";
+    import { subscriptions, savedSubscriptions, messages } from '.././stores';
     import Icon from './Icon.svelte';
 
     export let subscription: SubscriptionItem;
