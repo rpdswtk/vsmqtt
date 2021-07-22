@@ -1,7 +1,7 @@
 <script lang="ts">
     import { tick } from "svelte";
-    import { ColorManager } from "./ColorManager";
-    import { messages, selectedMessage } from './stores';
+    import { ColorManager } from ".././ColorManager";
+    import { messages, selectedMessage } from '.././stores';
 
     let autoScroll: boolean = true;
     let list: Element;

@@ -1,4 +1,4 @@
-import App from "../components/MqttConnectionPanel.svelte";
+import App from "../components/connectionPanel/MqttConnectionPanel.svelte";
 
 const app = new App({
   target: document.body,
