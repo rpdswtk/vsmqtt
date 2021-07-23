@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from './helpers';
 import { MqttConnectionView } from "./MqttConnectionView";
+import { MqttDashboardView } from './MqttDashboardView';
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider";
 
 export class VSMqttApp {
@@ -28,7 +29,7 @@ export class VSMqttApp {
 
     private _initCommands() {
         this._context.subscriptions.push(
-            vscode.commands.registerCommand('vsmqtt.connectToBroker', async (item) => {
+            vscode.commands.registerCommand('vsmqtt.connectToBroker', async (item: BrokerProfileTreeItem) => {
                 await this._connectToBroker(item);
             })
         );
@@ -46,7 +47,7 @@ export class VSMqttApp {
         );
 
         this._context.subscriptions.push(
-            vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item) => {
+            vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item: BrokerProfileTreeItem) => {
                 await this._deleteProfile(item);
             })
         );
@@ -56,24 +57,19 @@ export class VSMqttApp {
                 await this._profilesProvider.update();
             })
         );
+
+        this._context.subscriptions.push(
+            vscode.commands.registerCommand('vsmqtt.openMqttDashboard', async (item: BrokerProfileTreeItem) => {
+                await this._openDashboard(item);
+            })
+        );
     }
 
     private async _connectToBroker(treeItem: BrokerProfileTreeItem) {
-        if (treeItem) {
-            var brokerConfig = treeItem.brokerProfile;
-        } else {
-            let profiles = await loadBrokerProfiles();
-            if (!profiles) { return; }
-            let selectedProfileName = await vscode.window.showQuickPick(profiles?.map(profile => profile.name));
-            if (!selectedProfileName) { return; }
-            let selectedProfile = profiles.find((profile) => {
-                return profile.name === selectedProfileName;
-            });
-            if (!selectedProfile) { return; }
-            brokerConfig = selectedProfile;
+        let brokerConfig = await VSMqttApp._getBrokerConfig(treeItem);
+        if (brokerConfig) {
+            MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
         }
-
-        MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
     }
 
     private async _addProfile() {
@@ -118,5 +114,31 @@ export class VSMqttApp {
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
         MqttConnectionView.kill(treeItem.brokerProfile);
+    }
+
+    private async _openDashboard(treeItem: BrokerProfileTreeItem) {
+        let brokerConfig = await VSMqttApp._getBrokerConfig(treeItem);
+        if (brokerConfig) {
+            MqttDashboardView.createOrShow(this._context.extensionUri, brokerConfig);
+        }
+    }
+
+    private static async _getBrokerConfig(treeItem: BrokerProfileTreeItem | undefined) {
+        var brokerConfig = null;
+        if (treeItem) {
+            brokerConfig = treeItem.brokerProfile;
+        } else {
+            let profiles = await loadBrokerProfiles();
+            if (!profiles) { return; }
+            let selectedProfileName = await vscode.window.showQuickPick(profiles?.map(profile => profile.name));
+            if (!selectedProfileName) { return; }
+            let selectedProfile = profiles.find((profile) => {
+                return profile.name === selectedProfileName;
+            });
+            if (!selectedProfile) { return; }
+            brokerConfig = selectedProfile;
+        }
+
+        return brokerConfig;
     }
 }

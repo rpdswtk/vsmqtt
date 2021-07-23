@@ -79,6 +79,15 @@
                 }
             },
             {
+                "command": "vsmqtt.openMqttDashboard",
+                "category": "VSMqtt",
+                "title": "Open mqtt broker dashboard",
+                "icon": {
+                    "light": "resources/light/window.svg",
+                    "dark": "resources/dark/window.svg"
+                }
+            },
+            {
                 "command": "vsmqtt.addProfile",
                 "category": "VSMqtt",
                 "title": "Add broker profile",
@@ -123,17 +132,22 @@
                 {
                     "command": "vsmqtt.connectToBroker",
                     "when": "view == mqttProfiles",
-                    "group": "inline"
+                    "group": "inline@1"
                 },
                 {
                     "command": "vsmqtt.deleteProfile",
                     "when": "view == mqttProfiles",
-                    "group": "inline"
+                    "group": "inline@4"
+                },
+                {
+                    "command": "vsmqtt.openMqttDashboard",
+                    "when": "view == mqttProfiles",
+                    "group": "inline@2"
                 },
                 {
                     "command": "vsmqtt.editProfile",
                     "when": "view == mqttProfiles",
-                    "group": "inline"
+                    "group": "inline@3"
                 }
             ]
         },
