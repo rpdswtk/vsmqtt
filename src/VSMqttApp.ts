@@ -3,15 +3,18 @@ import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from './he
 import { MqttConnectionView } from "./MqttConnectionView";
 import { MqttDashboardView } from './MqttDashboardView';
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider";
+import { ViewManager } from './ViewManager';
 
 export class VSMqttApp {
 
     private _profilesProvider: MqttProfilesProvider;
     private _context: vscode.ExtensionContext;
+    private _viewManager: ViewManager;
 
     constructor(context: vscode.ExtensionContext) {
         this._profilesProvider = new MqttProfilesProvider();
         this._context = context;
+        this._viewManager = new ViewManager(this._context.extensionUri);
 
         context.subscriptions.push(
             vscode.window.registerTreeDataProvider(
@@ -68,7 +71,7 @@ export class VSMqttApp {
     private async _connectToBroker(treeItem: BrokerProfileTreeItem) {
         let brokerConfig = await VSMqttApp._getBrokerConfig(treeItem);
         if (brokerConfig) {
-            MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
+            this._viewManager.createOrShow(brokerConfig, MqttConnectionView.viewType);
         }
     }
 
@@ -113,13 +116,13 @@ export class VSMqttApp {
         }
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
-        MqttConnectionView.kill(treeItem.brokerProfile);
+        // TODO KILL
     }
 
     private async _openDashboard(treeItem: BrokerProfileTreeItem) {
         let brokerConfig = await VSMqttApp._getBrokerConfig(treeItem);
         if (brokerConfig) {
-            MqttDashboardView.createOrShow(this._context.extensionUri, brokerConfig);
+            this._viewManager.createOrShow(brokerConfig, MqttDashboardView.viewType);
         }
     }
 
