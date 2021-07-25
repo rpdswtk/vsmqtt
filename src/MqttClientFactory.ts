@@ -8,8 +8,8 @@ export class MqttClientFactory {
 
     private static clients: Map<string, AsyncClient> = new Map<string, AsyncClient>();
 
-    public static createClient(config: MqttBrokerConfig): AsyncClient {
-        var client = MqttClientFactory.clients.get(config.name);
+    public static createClient(config: MqttBrokerConfig, viewType: string): AsyncClient {
+        var client = MqttClientFactory.clients.get(MqttClientFactory.getId(config.name, viewType));
         if (client) {
             return client;
         }
@@ -29,16 +29,20 @@ export class MqttClientFactory {
         }
 
         client = connect(options);
-        MqttClientFactory.clients.set(options.name, client);
+        MqttClientFactory.clients.set(MqttClientFactory.getId(config.name, viewType), client);
         return client;
     }
 
-    public static disposeClient(config: MqttBrokerConfig) {
-        const client = MqttClientFactory.clients.get(config.name);
+    public static disposeClient(config: MqttBrokerConfig, viewType: string) {
+        const client = MqttClientFactory.clients.get(MqttClientFactory.getId(config.name, viewType));
         client?.removeAllListeners();
         client?.end();
         if (client) {
-            MqttClientFactory.clients.delete(config.name);
+            MqttClientFactory.clients.delete(MqttClientFactory.getId(config.name, viewType));
         }
+    }
+
+    private static getId(brokerProfileName: string, viewType: string): string {
+        return `${brokerProfileName}-${viewType}`;
     }
 }

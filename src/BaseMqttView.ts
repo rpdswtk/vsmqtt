@@ -8,23 +8,22 @@ import moment = require("moment");
 
 
 export abstract class BaseMqttView {
-    public static viewType: string;
     public brokerConfig: MqttBrokerConfig;
     public readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
     private _mqttClient?: AsyncClient;
-    private viewFileName: string;
+    private viewType: string;
     private _messageCount: number;
 
     protected abstract handleMessages(data: any): void;
 
-    public constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig, viewFileName: string, onDisposeListener: any) {
+    public constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig, viewType: string, onDisposeListener: any) {
         this._panel = panel;
         this._extensionUri = extensionUri;
         this.brokerConfig = brokerConfig;
         this._messageCount = 0;
-        this.viewFileName = viewFileName;
+        this.viewType = viewType;
 
         // Set the webview's initial html content
         this._update();
@@ -73,7 +72,7 @@ export abstract class BaseMqttView {
     }
 
     public dispose() {
-        //MqttClientFactory.disposeClient(this.brokerConfig);
+        MqttClientFactory.disposeClient(this.brokerConfig, this.viewType);
 
         // Clean up our resources
         this._panel.webview.onDidReceiveMessage(() => { });
@@ -94,7 +93,7 @@ export abstract class BaseMqttView {
     }
 
     private _initMqtt() {
-        this._mqttClient = MqttClientFactory.createClient(this.brokerConfig);
+        this._mqttClient = MqttClientFactory.createClient(this.brokerConfig, this.viewType);
 
         this._mqttClient.once('error', async () => {
             const result = await vscode.window.showErrorMessage(`Could not connect to ${this.brokerConfig.host}`, "Open settings.json");
@@ -137,11 +136,11 @@ export abstract class BaseMqttView {
     private _getHtmlForWebview(webview: vscode.Webview) {
         // // And the uri we use to load this script in the webview
         const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${this.viewFileName}.js`)
+            vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${this.viewType}.js`)
         );
 
         const stylesPageUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out",  `compiled/${this.viewFileName}.css`)
+            vscode.Uri.joinPath(this._extensionUri, "out",  `compiled/${this.viewType}.css`)
         );
 
         const stylesResetUri = webview.asWebviewUri(vscode.Uri.joinPath(
