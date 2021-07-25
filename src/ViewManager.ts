@@ -6,7 +6,7 @@ import { MqttDashboardView } from "./MqttDashboardView";
 
 export class ViewManager {
 
-    private static openViewTypes: Map<string, Map<string, BaseMqttView>> = new Map();
+    private static openViews: Map<string, BaseMqttView> = new Map();
 
     private static viewTypes = new Map<string, any>();
 
@@ -21,7 +21,7 @@ export class ViewManager {
         : undefined;
 
         // If we already have a panel, show it.
-        let existingView = ViewManager.openViewTypes.get(viewType)?.get(brokerConfig.name);
+        let existingView = ViewManager.openViews.get(ViewManager.getViewID(brokerConfig.name, viewType));
         if (existingView) {
             existingView._panel.reveal(column);
             return;
@@ -49,14 +49,15 @@ export class ViewManager {
         let newView = new selectedType(panel, this.extensionUri, brokerConfig, viewType, () => {
             ViewManager.onViewDisposed(brokerConfig, viewType);
         });
-        if (!ViewManager.openViewTypes.has(viewType)) {
-            ViewManager.openViewTypes.set(viewType, new Map());
-        }
 
-        ViewManager.openViewTypes.get(viewType)?.set(brokerConfig.name, newView);
+        ViewManager.openViews.set(ViewManager.getViewID(brokerConfig.name, viewType), newView);
     }
 
-    private static onViewDisposed(brokerconfig: MqttBrokerConfig,viewType: string) {
-        ViewManager.openViewTypes.get(viewType)?.delete(brokerconfig.name);
+    private static onViewDisposed(brokerconfig: MqttBrokerConfig, viewType: string) {
+        ViewManager.openViews.delete(ViewManager.getViewID(brokerconfig.name, viewType));
+    }
+
+    private static getViewID(brokerProfilename: string, viewType: string) {
+        return `${brokerProfilename}-${viewType}`;
     }
 }
