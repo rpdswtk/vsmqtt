@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - dev
+      - dashboard
 
   pull_request:
     branches:
