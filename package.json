@@ -277,6 +277,7 @@
     "dependencies": {
         "async-mqtt": "^2.6.1",
         "csv-writer": "^1.6.0",
+        "interactjs": "^1.10.11",
         "moment": "^2.29.1",
         "mqtt": "^4.2.8",
         "path-validation": "^0.2.3"
