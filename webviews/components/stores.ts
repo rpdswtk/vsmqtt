@@ -7,3 +7,5 @@ export const messages = writable(new Array<MQTTMessage>());
 export let selectedMessage = writable({} as MQTTMessage | undefined);
 export const subscriptions = writable(new Map<string, SubscriptionItem>());
 export const savedSubscriptions = writable(new Map<string, MqttSubscription>());
+
+export let editingDashboard = writable(false);
