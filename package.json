@@ -239,7 +239,7 @@
         "@rollup/plugin-typescript": "^8.2.3",
         "@tsconfig/svelte": "^1.0.10",
         "@types/glob": "^7.1.3",
-        "@types/mocha": "^8.2.3",
+        "@types/mocha": "^9.0.0",
         "@types/node": "^15.3.1",
         "@types/vscode": "^1.52.0",
         "@typescript-eslint/eslint-plugin": "^4.27.0",
