@@ -3,6 +3,7 @@
     import type { SubscriptionItem } from ".././types";
     import { subscriptions, savedSubscriptions, messages } from '.././stores';
     import Icon from './Icon.svelte';
+    import match from 'mqtt-match';
 
     export let subscription: SubscriptionItem;
     export let profileName: string;
@@ -52,7 +53,7 @@
             type: "exportMessages",
             value: { 
                 topic: subscription.topic,
-                messages: $messages.filter((message) => message.topic === subscription.topic)
+                messages: $messages.filter((message) => message.topic === subscription.topic || match(subscription.topic, message.topic))
             },
         });
     }
