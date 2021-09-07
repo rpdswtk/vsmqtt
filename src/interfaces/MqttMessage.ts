@@ -5,4 +5,5 @@ export interface MQTTMessage {
     retain: boolean;
     qos: number;
     timestamp: string;
+    color?: string;
 }

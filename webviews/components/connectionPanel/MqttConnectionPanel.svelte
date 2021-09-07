@@ -7,9 +7,24 @@
     import SubscriptionList from "./SubscriptionList.svelte";
     import MessageOverview from "./MessageOverview.svelte";
     import { messages, selectedMessage, subscriptions, savedSubscriptions } from ".././stores";
+    import match from 'mqtt-match';
+    import { ColorManager } from ".././ColorManager";
+    import type { SubscriptionItem } from "../types";
 
     let brokerConfig: MqttBrokerConfig;
     let connected: boolean = false;
+
+    function getSubscriptionorNull(topic: string): SubscriptionItem | undefined {
+        let subscription = $subscriptions.get(topic);
+        if (!subscription) {
+            let matchedTopic = Array.from($subscriptions.keys()).find((usedTopic) => match(usedTopic, topic));
+            if (matchedTopic) {
+                subscription = $subscriptions.get(matchedTopic);
+            }
+        }
+
+        return subscription;
+    }
 
     onMount(() => {
         brokerConfig = brokerProfile;
@@ -25,8 +40,10 @@
                     brokerConfig = message.value.brokerConfig;
                     break;
                 case "onMqttMessage":
-                    let subscription = $subscriptions.get(message.value.topic);
+                    let subscription = getSubscriptionorNull(message.value.topic);
+
                     if (subscription && !subscription.muted) {
+                        message.value.color = ColorManager.getColor(subscription.topic);
                         $messages = [...$messages, message.value];
                         subscription.messageCount += 1;
                         $subscriptions.set(subscription.topic, subscription);

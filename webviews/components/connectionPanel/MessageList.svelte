@@ -1,6 +1,5 @@
 <script lang="ts">
     import { tick } from "svelte";
-    import { ColorManager } from ".././ColorManager";
     import { messages, selectedMessage } from '.././stores';
 
     let autoScroll: boolean = true;
@@ -38,7 +37,7 @@
                     $selectedMessage = message;
                 }}
             >
-                <div class="color-marker" style="background-color: {ColorManager.getColor(message.topic)};"></div>
+                <div class="color-marker" style="background-color: {message.color}"></div>
                 <div class="topic">{message.topic}</div>
                 <div class="qos">QoS {message.qos}</div>
                 <div class="payload">{message.payload}</div>

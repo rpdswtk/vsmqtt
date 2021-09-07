@@ -265,6 +265,7 @@
         "csv-writer": "^1.6.0",
         "moment": "^2.29.1",
         "mqtt": "^4.2.8",
+        "mqtt-match": "^2.0.3",
         "path-validation": "^0.2.3"
     }
 }
