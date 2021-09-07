@@ -34,3 +34,8 @@ VSMQTT versions.
 
 ### Changed
 - Minor fixes
+
+## [1.3.3] - 2021-09-07
+
+### Changed
+- Wildcard bugfix
