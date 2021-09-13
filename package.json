@@ -237,7 +237,7 @@
         "@rollup/plugin-commonjs": "^20.0.0",
         "@rollup/plugin-node-resolve": "^13.0.0",
         "@rollup/plugin-typescript": "^8.2.5",
-        "@tsconfig/svelte": "^1.0.10",
+        "@tsconfig/svelte": "^2.0.1",
         "@types/glob": "^7.1.4",
         "@types/mocha": "^9.0.0",
         "@types/node": "^16.7.10",
