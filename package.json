@@ -243,7 +243,7 @@
         "@types/node": "^16.7.10",
         "@types/vscode": "^1.52.0",
         "@typescript-eslint/eslint-plugin": "^4.31.0",
-        "@typescript-eslint/parser": "^4.31.0",
+        "@typescript-eslint/parser": "^4.31.1",
         "concurrently": "^6.2.1",
         "eslint": "^7.32.0",
         "glob": "^7.1.7",
