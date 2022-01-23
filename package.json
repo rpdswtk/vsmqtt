@@ -245,7 +245,9 @@
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+        "test": "node ./out/test/runTest.js",
+        "install-broker": "npm install aedes-cli -g",
+        "start-broker": "aedes start --verbose"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^19.0.0",
