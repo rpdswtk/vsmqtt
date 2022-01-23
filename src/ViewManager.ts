@@ -53,6 +53,15 @@ export class ViewManager {
         ViewManager.openViews.set(ViewManager.getViewID(brokerConfig.name, viewType), newView);
     }
 
+    public static close(brokerProfile: MqttBrokerConfig, viewType: string) {
+        let view = ViewManager.openViews.get(ViewManager.getViewID(brokerProfile.name, viewType));
+        view?.dispose();
+    }
+
+    public static  getViewTypes(): Array<string> {
+        return Array.from(ViewManager.viewTypes.keys());
+    }
+
     private static onViewDisposed(brokerconfig: MqttBrokerConfig, viewType: string) {
         ViewManager.openViews.delete(ViewManager.getViewID(brokerconfig.name, viewType));
     }

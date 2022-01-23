@@ -116,7 +116,7 @@ export class VSMqttApp {
         }
         await removeBrokerProfile(treeItem.brokerProfile);
         this._profilesProvider.update();
-        // TODO KILL
+        ViewManager.getViewTypes().forEach(viewType => ViewManager.close(treeItem.brokerProfile, viewType));
     }
 
     private async _openDashboard(treeItem: BrokerProfileTreeItem) {
