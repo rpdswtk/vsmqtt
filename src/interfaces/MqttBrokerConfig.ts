@@ -12,5 +12,10 @@ export interface MqttBrokerConfig {
     password?: string;
     ca?: Buffer|string;
     caString?: string;
+    key?: Buffer|string;
+    keytring?: string;
+    cert?: Buffer|string;
+    certString?: string;
+    passphrase?: string;
     savedSubscriptions?: Array<MqttSubscription>;
 }

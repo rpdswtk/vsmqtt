@@ -194,7 +194,15 @@
                             },
                             "ca": {
                                 "type": "string",
-                                "description": "Path for cert file or cert string in PEM format"
+                                "description": "Absolute path for cert file or cert string in PEM format"
+                            },
+                            "key": {
+                                "type": "string",
+                                "description": "Absolute path for client cert file or cert string in PEM format"
+                            },
+                            "cert": {
+                                "type": "string",
+                                "description": "Absolute path for client key file or cert string in PEM format"
                             },
                             "savedSubscriptions": {
                                 "type": "array",
