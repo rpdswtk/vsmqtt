@@ -28,6 +28,30 @@ export class MqttClientFactory {
             }
         }
 
+        if (options.key) {
+            if (isAbsolutePath(options.key, "\\") || isAbsolutePath(options.key, "/")) {
+                try {
+                    options.key = fs.readFileSync(options.key);
+                } catch (error) {
+                    options.key = undefined;
+                    console.error(error);
+                    vscode.window.showErrorMessage("Could not open client key file");
+                }
+            }
+        }
+
+        if (options.cert) {
+            if (isAbsolutePath(options.cert, "\\") || isAbsolutePath(options.cert, "/")) {
+                try {
+                    options.cert = fs.readFileSync(options.cert);
+                } catch (error) {
+                    options.cert = undefined;
+                    console.error(error);
+                    vscode.window.showErrorMessage("Could not open client key file");
+                }
+            }
+        }
+
         client = connect(options);
         MqttClientFactory.clients.set(options.name, client);
         return client;
