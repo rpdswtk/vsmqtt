@@ -239,7 +239,8 @@
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+        "test": "node ./out/test/runTest.js",
+        "start-broker": "aedes -p 1883 --host 127.0.0.1 --very-verbose"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^20.0.0",
@@ -252,6 +253,7 @@
         "@types/vscode": "^1.52.0",
         "@typescript-eslint/eslint-plugin": "^4.31.0",
         "@typescript-eslint/parser": "^4.31.0",
+        "aedes-cli": "^0.5.0",
         "concurrently": "^7.0.0",
         "eslint": "^7.32.0",
         "glob": "^7.1.7",
