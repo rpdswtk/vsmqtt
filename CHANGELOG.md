@@ -38,3 +38,7 @@ VSMQTT versions.
 ## [1.3.3] - 2021-09-07
 ### Changed
 - Wildcard bugfix
+
+## [1.4.3] - 2022-04-07
+### Added
+- Client certificate support
