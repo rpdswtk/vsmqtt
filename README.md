@@ -31,17 +31,19 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 
 ### Properties:
 
-| name      | type   | description                                | required |
-|-----------|--------|--------------------------------------------|----------|
-| name      | string | Profile name                               |     -    |
-| host      | string | Broker host                                |     -    |
-| port      | number | Broker port                                |     -    |
-| username  | string | User name for broker                       |          |
-| password  | string | Password for broker                        |          |
-| protocol  | string | "mqtt", "mqtts", "tcp", "tls", "ws", "wss" |          |
-| ca        | string | Path for cert file or PEM string           |          |
-| clientId  | string | Client ID                                  |          |
-| keepalive | number | Keepalive interval in seconds.             |          |
+| name      | type   | description                                                       | required |
+|-----------|--------|-------------------------------------------------------------------|----------|
+| name      | string | Profile name                                                      |     -    |
+| host      | string | Broker host                                                       |     -    |
+| port      | number | Broker port                                                       |     -    |
+| username  | string | Client username                                                   |          |
+| password  | string | Client pasword                                                    |          |
+| protocol  | string | "mqtt", "mqtts", "tcp", "tls", "ws", "wss"                        |          |
+| ca        | string | Absolute path for cert file or cert string in PEM format          |          |
+| key       | string | Absolute path for client cert file or cert string in PEM format   |          |
+| cert      | string | Absolute path for client key file or cert string in PEM format    |          |
+| clientId  | string | Client ID                                                         |          |
+| keepalive | number | Keepalive interval in seconds.                                    |          |
 
 ### Examples:
 

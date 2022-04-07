@@ -182,15 +182,16 @@
                                 "default": "vsmqtt_client"
                             },
                             "keepalive": {
+                                "description": "Keepalive interval in seconds.",
                                 "type": "number"
                             },
                             "username": {
                                 "type": "string",
-                                "description": "Broker username"
+                                "description": "Client username"
                             },
                             "password": {
                                 "type": "string",
-                                "description": "Broker password"
+                                "description": "Client password"
                             },
                             "ca": {
                                 "type": "string",
