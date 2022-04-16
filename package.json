@@ -10,7 +10,7 @@
         "url": "https://github.com/rpdswtk/vsmqtt.git"
     },
     "engines": {
-        "vscode": "^1.52.0"
+        "vscode": "^1.66.0"
     },
     "categories": [
         "Other"
