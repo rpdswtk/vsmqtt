@@ -274,7 +274,7 @@
     "dependencies": {
         "async-mqtt": "^2.6.1",
         "csv-writer": "^1.6.0",
-        "moment": "^2.29.2",
+        "moment": "^2.29.3",
         "mqtt": "^4.2.8",
         "mqtt-match": "^3.0.0",
         "path-validation": "^0.2.3"
