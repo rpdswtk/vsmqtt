@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - master
-      - dev
-      - dashboard
+      - test
 
   pull_request:
     branches:
       - master
-      - dev
 
 jobs:
   build:
@@ -29,4 +27,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm install -g vsce
-      - run: vsce package
+      - run: npm run test
