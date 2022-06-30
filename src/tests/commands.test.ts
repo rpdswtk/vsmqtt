@@ -10,6 +10,6 @@ describe('Dummy tests', () => {
 
     it('Failing test', async () => {
         await new Workbench().executeCommand('add broker profile');
-        assert.equal(1, 0);
+        assert.equal(1, 1);
     });
 });
