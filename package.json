@@ -250,7 +250,7 @@
         "@tsconfig/svelte": "^2.0.1",
         "@types/glob": "^7.2.0",
         "@types/mocha": "^9.1.0",
-        "@types/node": "^17.0.23",
+        "@types/node": "^18.0.1",
         "@types/vscode": "^1.66.0",
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
