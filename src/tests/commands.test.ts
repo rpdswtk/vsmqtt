@@ -1,9 +1,10 @@
-const assert = require("assert");
+const expect = require('chai').expect;
 const path = require('path');
-var rimraf = require("rimraf");
+const rimraf = require("rimraf");
 import * as fs from 'node:fs';
-import { Workbench, InputBox, VSBrowser, TitleBar } from "vscode-extension-tester";
+import { Workbench, InputBox, VSBrowser } from "vscode-extension-tester";
 import {sleep} from './utils';
+import { EditorView } from 'vscode-extension-tester';
 
 describe('Commands', function () {
     const BROKER_PROFILE = {
@@ -12,7 +13,6 @@ describe('Commands', function () {
         port: 1883
     };
     const TEST_PROJECT_FOLDER = 'testProject';
-
     const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER);
 
     this.beforeAll(async function () {
@@ -26,10 +26,11 @@ describe('Commands', function () {
         rimraf(projectPath, function () { console.log("Test project folder removed"); });
     });
 
-    it('Add broker profile', async function () {
+    it('"Add broker profile" saves profile to settings.json', async function () {
         const workbench = new Workbench();
         await VSBrowser.instance.openResources(projectPath);
         await workbench.executeCommand('add broker profile');
+
         let input = await InputBox.create();
         await input.setText(BROKER_PROFILE.name);                                        
         await input.confirm();
@@ -44,8 +45,19 @@ describe('Commands', function () {
 
         const savedProfile = settings['vsmqtt.brokerProfiles'][0];
 
-        assert.equal(savedProfile.name, BROKER_PROFILE.name);
-        assert.equal(savedProfile.host, BROKER_PROFILE.host);
-        assert.equal(savedProfile.port, BROKER_PROFILE.port);
+        expect(savedProfile.name).to.equal(BROKER_PROFILE.name);
+        expect(savedProfile.host).to.equal(BROKER_PROFILE.host);
+        expect(savedProfile.port).to.equal(BROKER_PROFILE.port);
+    });
+
+    it('"Edit broker profile" opens settings.json', async function () {
+        const workbench = new Workbench();
+        await VSBrowser.instance.openResources(projectPath);
+        await workbench.executeCommand('edit broker profile');
+
+        const editorView = new EditorView();
+        const titles = await editorView.getOpenEditorTitles();
+
+        expect(titles).to.contain('settings.json');
     });
 });
