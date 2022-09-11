@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from './helpers';
+import { MqttBrokerConfig } from './interfaces/MqttBrokerConfig';
+import { MqttProfileQuickPickItem } from './interfaces/MqttProfileQuickPickItem';
 import { MqttConnectionView } from "./MqttConnectionView";
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider";
 
@@ -46,7 +48,7 @@ export class VSMqttApp {
         );
 
         this._context.subscriptions.push(
-            vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item) => {
+            vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item: BrokerProfileTreeItem) => {
                 await this._deleteProfile(item);
             })
         );
@@ -103,7 +105,15 @@ export class VSMqttApp {
     }
 
     private async _deleteProfile(treeItem: BrokerProfileTreeItem) {
-        const profileName = treeItem.brokerProfile.name;
+        let brokerProfile = treeItem?.brokerProfile;
+        if (!brokerProfile) {
+            const quickPickResult = await this._getBrokerProfileWithQuickPick();
+            if (quickPickResult) {
+                brokerProfile = quickPickResult as MqttBrokerConfig;
+            }
+        }
+
+        let profileName = brokerProfile?.name;
         const result = await vscode.window.showWarningMessage(
             `Are you sure you want to delete profile: ${profileName} ?`,
             {
@@ -112,11 +122,27 @@ export class VSMqttApp {
             "Yes",
             "No"
         );
+
         if (!result || result === "No") {
             return;
         }
-        await removeBrokerProfile(treeItem.brokerProfile);
+
+        await removeBrokerProfile(brokerProfile);
         this._profilesProvider.update();
-        MqttConnectionView.kill(treeItem.brokerProfile);
+        MqttConnectionView.kill(brokerProfile);
+    }
+
+    private async _getBrokerProfileWithQuickPick(): Promise<MqttBrokerConfig | undefined> {
+        const profiles = await loadBrokerProfiles();
+        const profileName = await vscode.window.showQuickPick(profiles!.map(profile => {
+             return {
+                label: profile.name,
+                description: '',
+                detail: `Host: ${profile.host} Port: ${profile.port}`,
+                ...profile
+            } as MqttProfileQuickPickItem;
+        }));
+
+        return profileName;
     }
 }

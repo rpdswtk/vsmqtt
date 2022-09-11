@@ -12,3 +12,6 @@ vsc-extension-quickstart.md
 **/*.ts
 node_modules
 rollup.config.js
+test-resources
+out/tests
+.github

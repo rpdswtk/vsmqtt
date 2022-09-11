@@ -2,17 +2,12 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es6",
-		"outDir": "out",
+		"outDir": "../../out/tests",
 		"lib": [
 			"es6"
 		],
 		"sourceMap": true,
-		"rootDir": "src",
+		"rootDir": ".",
 		"strict": true
 	},
-	"exclude": [
-		"node_modules",
-		".vscode-test",
-		"webviews"
-	],
 }
