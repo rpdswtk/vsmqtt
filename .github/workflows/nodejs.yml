@@ -11,9 +11,9 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-test:
 
-    runs-on: windows-latest
+    runs-on: [windows-latest, ubuntu-latest]
 
     strategy:
       matrix:
