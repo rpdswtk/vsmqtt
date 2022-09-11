@@ -2,8 +2,8 @@ const expect = require('chai').expect;
 const path = require('path');
 const rimraf = require("rimraf");
 import * as fs from 'node:fs';
-import { Workbench, InputBox, VSBrowser } from "vscode-extension-tester";
-import {sleep} from './utils';
+import { Workbench, InputBox, VSBrowser, ModalDialog } from "vscode-extension-tester";
+import { sleep } from './utils';
 import { EditorView } from 'vscode-extension-tester';
 
 describe('Commands', function () {
@@ -15,15 +15,23 @@ describe('Commands', function () {
     const TEST_PROJECT_FOLDER = 'testProject';
     const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER);
 
-    this.beforeAll(async function () {
+    this.beforeEach(async function () {
         if (!fs.existsSync(projectPath)) {
             fs.mkdirSync(projectPath);
             console.log("Test project folder created");
         }
     });
 
-    this.afterAll(async function () {
-        rimraf(projectPath, function () { console.log("Test project folder removed"); });
+    this.afterEach(async function () {
+        await rimraf(projectPath, function (error: any) {
+            if (!error) {
+                console.log("Test project folder removed"); 
+            } else {
+                console.log("Could not remove test project folder");
+                console.log(error);
+            }
+        });
+        await sleep(500);
     });
 
     it('"Add broker profile" saves profile to settings.json', async function () {
@@ -48,6 +56,8 @@ describe('Commands', function () {
         expect(savedProfile.name).to.equal(BROKER_PROFILE.name);
         expect(savedProfile.host).to.equal(BROKER_PROFILE.host);
         expect(savedProfile.port).to.equal(BROKER_PROFILE.port);
+
+        await workbench.executeCommand("close workspace");
     });
 
     it('"Edit broker profile" opens settings.json', async function () {
@@ -55,9 +65,49 @@ describe('Commands', function () {
         await VSBrowser.instance.openResources(projectPath);
         await workbench.executeCommand('edit broker profile');
 
+        await sleep(2000);
+
         const editorView = new EditorView();
+
         const titles = await editorView.getOpenEditorTitles();
 
         expect(titles).to.contain('settings.json');
+
+        await workbench.executeCommand("close workspace");
     });
+
+    it('"Remove broker profile" removed profile from settings.json', async function() {
+        const workbench = new Workbench();
+        await VSBrowser.instance.openResources(projectPath);
+
+        createSettingsWithProfile();
+
+        await workbench.executeCommand("remove broker profile");
+        const input = await InputBox.create();
+        await input.selectQuickPick(0);
+        const dialog = new ModalDialog();
+        await VSBrowser.instance.waitForWorkbench();
+        await dialog.pushButton("Yes");
+
+        await VSBrowser.instance.openResources(path.join(projectPath, '.vscode/settings.json'));
+        const settingsFile = await new EditorView().openEditor('settings.json');
+
+        const settingsText = await settingsFile.getText();
+
+        const settings = JSON.parse(settingsText);
+
+        expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([BROKER_PROFILE]);
+
+        console.log(settings["vsmqtt.brokerProfiles"]);
+
+        await workbench.executeCommand("close workspace");
+    });
+
+    const createSettingsWithProfile = () => {
+        const settings = {
+            "vsmqtt.brokerProfiles": [BROKER_PROFILE]
+        };
+        fs.mkdirSync(path.join(projectPath, '.vscode'));
+        fs.appendFileSync(path.join(projectPath, '.vscode/settings.json'), JSON.stringify(settings));
+    };
 });
