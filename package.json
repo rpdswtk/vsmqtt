@@ -240,7 +240,7 @@
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "npm run test-compile && extest setup-and-run out/tests/*.js",
+        "test": "npm run test-compile && extest setup-and-run out/tests/*.js -m .mocharc.js",
         "start-broker": "aedes -p 1883 --host 127.0.0.1 --very-verbose"
     },
     "devDependencies": {

@@ -20,9 +20,11 @@ describe('Commands', function () {
             fs.mkdirSync(projectPath);
             console.log("Test project folder created");
         }
+        await VSBrowser.instance.openResources(projectPath);
     });
 
     this.afterEach(async function () {
+        await new Workbench().executeCommand("close workspace");
         await rimraf(projectPath, function (error: any) {
             if (!error) {
                 console.log("Test project folder removed"); 
@@ -35,9 +37,7 @@ describe('Commands', function () {
     });
 
     it('"Add broker profile" saves profile to settings.json', async function () {
-        const workbench = new Workbench();
-        await VSBrowser.instance.openResources(projectPath);
-        await workbench.executeCommand('add broker profile');
+        await new Workbench().executeCommand('add broker profile');
 
         let input = await InputBox.create();
         await input.setText(BROKER_PROFILE.name);                                        
@@ -56,15 +56,10 @@ describe('Commands', function () {
         expect(savedProfile.name).to.equal(BROKER_PROFILE.name);
         expect(savedProfile.host).to.equal(BROKER_PROFILE.host);
         expect(savedProfile.port).to.equal(BROKER_PROFILE.port);
-
-        await workbench.executeCommand("close workspace");
     });
 
     it('"Edit broker profile" opens settings.json', async function () {
-        const workbench = new Workbench();
-        await VSBrowser.instance.openResources(projectPath);
-        await workbench.executeCommand('edit broker profile');
-
+        await new Workbench().executeCommand('edit broker profile');
         await sleep(2000);
 
         const editorView = new EditorView();
@@ -72,17 +67,12 @@ describe('Commands', function () {
         const titles = await editorView.getOpenEditorTitles();
 
         expect(titles).to.contain('settings.json');
-
-        await workbench.executeCommand("close workspace");
     });
 
     it('"Remove broker profile" removed profile from settings.json', async function() {
-        const workbench = new Workbench();
-        await VSBrowser.instance.openResources(projectPath);
-
         createSettingsWithProfile();
 
-        await workbench.executeCommand("remove broker profile");
+        await new Workbench().executeCommand("remove broker profile");
         const input = await InputBox.create();
         await input.selectQuickPick(0);
         const dialog = new ModalDialog();
@@ -97,10 +87,6 @@ describe('Commands', function () {
         const settings = JSON.parse(settingsText);
 
         expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([BROKER_PROFILE]);
-
-        console.log(settings["vsmqtt.brokerProfiles"]);
-
-        await workbench.executeCommand("close workspace");
     });
 
     const createSettingsWithProfile = () => {
