@@ -2,15 +2,17 @@ const expect = require('chai').expect;
 const path = require('path');
 const rimraf = require("rimraf");
 import * as fs from 'node:fs';
-import { Workbench, InputBox, VSBrowser, ModalDialog } from "vscode-extension-tester";
-import { sleep } from './utils';
+import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode-extension-tester";
+import sleep from './utils/sleep';
 import { EditorView } from 'vscode-extension-tester';
+import { startBroker, stopBroker } from './utils/mqtt';
 
 describe('Commands', function () {
     const BROKER_PROFILE = {
         name: "test_broker",
         host: "localhost",
-        port: 1883
+        port: 1883,
+        clientId: 'vsmqtt_e2e_test'
     };
     const TEST_PROJECT_FOLDER = 'testProject';
     const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER);
@@ -89,9 +91,29 @@ describe('Commands', function () {
         expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([BROKER_PROFILE]);
     });
 
-    const createSettingsWithProfile = () => {
+    it('"Connect to mqtt broker" connects to broker', async function () {
+        createSettingsWithProfile();
+        startBroker();
+
+        await new Workbench().executeCommand("Connect to mqtt broker");
+        const input = await InputBox.create();
+        await input.selectQuickPick(0);
+
+
+        const webview = await new EditorView().openEditor('VSMQTT');
+        webview.wait();
+        const mqttView = new WebView();
+        await mqttView.switchToFrame();
+        const connectionState = await mqttView.findWebElement(By.className('state'));
+        expect(await connectionState.getText()).to.equal('Connected');
+        await mqttView.switchBack();
+
+        stopBroker();
+    });
+
+    const createSettingsWithProfile = (propertyOverrides = {}) => {
         const settings = {
-            "vsmqtt.brokerProfiles": [BROKER_PROFILE]
+            "vsmqtt.brokerProfiles": [{...BROKER_PROFILE, ...propertyOverrides}]
         };
         fs.mkdirSync(path.join(projectPath, '.vscode'));
         fs.appendFileSync(path.join(projectPath, '.vscode/settings.json'), JSON.stringify(settings));
