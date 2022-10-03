@@ -42,3 +42,7 @@ VSMQTT versions.
 ## [1.4.3] - 2022-04-07
 ### Added
 - Client certificate support
+
+## [1.4.4] - 2022-10-02
+### Changed
+- Fixed remove broker profile command
