@@ -20,7 +20,6 @@ describe('Commands', function () {
     this.beforeEach(async function () {
         if (!fs.existsSync(projectPath)) {
             fs.mkdirSync(projectPath);
-            console.log("Test project folder created");
         }
         await VSBrowser.instance.openResources(projectPath);
     });
@@ -28,9 +27,7 @@ describe('Commands', function () {
     this.afterEach(async function () {
         await new Workbench().executeCommand("close workspace");
         await rimraf(projectPath, function (error: any) {
-            if (!error) {
-                console.log("Test project folder removed"); 
-            } else {
+            if (error) {
                 console.log("Could not remove test project folder");
                 console.log(error);
             }
