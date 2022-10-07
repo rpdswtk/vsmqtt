@@ -75,6 +75,12 @@ export class VSMqttApp {
             brokerConfig = selectedProfile;
         }
 
+        if (brokerConfig.promptCredentials) {
+            const { username, password } = await this._showPromptForCredentials();
+            brokerConfig.username = username;
+            brokerConfig.password = password;
+        }
+
         MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig);
     }
 
@@ -144,5 +150,12 @@ export class VSMqttApp {
         }));
 
         return profileName;
+    }
+
+    private async _showPromptForCredentials() : Promise<{username?: string, password?: string}> {
+        let username = await vscode.window.showInputBox({ prompt: "Username" });
+        let password = await vscode.window.showInputBox({ prompt: "Password" });
+
+        return {username, password};
     }
 }

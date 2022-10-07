@@ -2,15 +2,17 @@ const expect = require('chai').expect;
 const path = require('path');
 const rimraf = require("rimraf");
 import * as fs from 'node:fs';
-import { Workbench, InputBox, VSBrowser, ModalDialog } from "vscode-extension-tester";
-import { sleep } from './utils';
+import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode-extension-tester";
+import sleep from './utils/sleep';
 import { EditorView } from 'vscode-extension-tester';
+import { startBroker, stopBroker } from './utils/mqtt';
 
 describe('Commands', function () {
     const BROKER_PROFILE = {
         name: "test_broker",
         host: "localhost",
-        port: 1883
+        port: 1883,
+        clientId: 'vsmqtt_e2e_test'
     };
     const TEST_PROJECT_FOLDER = 'testProject';
     const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER);
@@ -40,7 +42,8 @@ describe('Commands', function () {
         await new Workbench().executeCommand('add broker profile');
 
         let input = await InputBox.create();
-        await input.setText(BROKER_PROFILE.name);                                        
+        await input.wait();
+        await input.setText(BROKER_PROFILE.name);
         await input.confirm();
         await input.setText(BROKER_PROFILE.host);
         await input.confirm();
@@ -74,7 +77,12 @@ describe('Commands', function () {
 
         await new Workbench().executeCommand("remove broker profile");
         const input = await InputBox.create();
+        await sleep(2000);
+
         await input.selectQuickPick(0);
+
+        await sleep(2000);
+
         const dialog = new ModalDialog();
         await VSBrowser.instance.waitForWorkbench();
         await dialog.pushButton("Yes");
@@ -89,9 +97,46 @@ describe('Commands', function () {
         expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([BROKER_PROFILE]);
     });
 
-    const createSettingsWithProfile = () => {
+    it('"Connect to mqtt broker" connects to broker', async function () {
+        createSettingsWithProfile();
+        startBroker();
+
+        await new Workbench().executeCommand("Connect to mqtt broker");
+        const input = await InputBox.create();
+        await input.selectQuickPick(0);
+
+        const webview = await new EditorView().openEditor('VSMQTT');
+        webview.wait();
+        const mqttView = new WebView();
+        await mqttView.switchToFrame();
+
+        const connectionState = await mqttView.findWebElement(By.className('state'));
+        expect(await connectionState.getText()).to.equal('Connected');
+        await mqttView.switchBack();
+
+        stopBroker();
+    });
+
+    it('"Connect to mqtt broker" prompts for password', async function () {
+        createSettingsWithProfile({ promptCredentials: true });
+        await new Workbench().executeCommand("Connect to mqtt broker");
+        const input = await InputBox.create();
+        await input.selectQuickPick(0);
+
+        await sleep(2000);
+
+        expect(await (await input.getMessage()).startsWith('Username'), 'Should be username').to.be.true;
+        await input.setText('user');
+        await input.confirm();
+
+        await input.wait();
+        expect(await (await input.getMessage()).startsWith('Password'), 'Should be password').to.be.true;
+        await input.cancel();
+    });
+
+    const createSettingsWithProfile = (propertyOverrides = {}) => {
         const settings = {
-            "vsmqtt.brokerProfiles": [BROKER_PROFILE]
+            "vsmqtt.brokerProfiles": [{...BROKER_PROFILE, ...propertyOverrides}]
         };
         fs.mkdirSync(path.join(projectPath, '.vscode'));
         fs.appendFileSync(path.join(projectPath, '.vscode/settings.json'), JSON.stringify(settings));

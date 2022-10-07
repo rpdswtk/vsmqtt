@@ -18,4 +18,5 @@ export interface MqttBrokerConfig {
     certString?: string;
     passphrase?: string;
     savedSubscriptions?: Array<MqttSubscription>;
+    promptCredentials?: boolean;
 }

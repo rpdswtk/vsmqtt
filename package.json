@@ -193,6 +193,10 @@
                                 "type": "string",
                                 "description": "Client password"
                             },
+                            "promptCredentials": {
+                                "type": "boolean",
+                                "description": "Ask for username and password"
+                            },
                             "ca": {
                                 "type": "string",
                                 "description": "Absolute path for cert file or cert string in PEM format"
@@ -241,7 +245,7 @@
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "npm run test-compile && extest setup-and-run out/tests/*.js -m .mocharc.js",
-        "start-broker": "aedes -p 1883 --host 127.0.0.1 --very-verbose"
+        "start-broker": "aedes -p 1883 --host 127.0.0.1 --very-verbose --credentials ./src/tests/aedes-credentials.json"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^20.0.0",
