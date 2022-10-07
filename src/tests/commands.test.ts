@@ -38,11 +38,12 @@ describe('Commands', function () {
         await sleep(500);
     });
 
-    it('"Add broker profile" saves profile to settings.json', async function () {
+    it.only('"Add broker profile" saves profile to settings.json', async function () {
         await new Workbench().executeCommand('add broker profile');
 
         let input = await InputBox.create();
-        await input.setText(BROKER_PROFILE.name);                                        
+        await input.wait();
+        await input.setText(BROKER_PROFILE.name);
         await input.confirm();
         await input.setText(BROKER_PROFILE.host);
         await input.confirm();
