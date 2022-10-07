@@ -77,6 +77,8 @@ describe('Commands', function () {
 
         await new Workbench().executeCommand("remove broker profile");
         const input = await InputBox.create();
+        await sleep(2000);
+
         await input.selectQuickPick(0);
 
         await sleep(2000);
