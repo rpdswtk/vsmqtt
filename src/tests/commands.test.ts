@@ -78,6 +78,9 @@ describe('Commands', function () {
         await new Workbench().executeCommand("remove broker profile");
         const input = await InputBox.create();
         await input.selectQuickPick(0);
+
+        await sleep(2000);
+
         const dialog = new ModalDialog();
         await VSBrowser.instance.waitForWorkbench();
         await dialog.pushButton("Yes");
@@ -118,11 +121,14 @@ describe('Commands', function () {
         const input = await InputBox.create();
         await input.selectQuickPick(0);
 
-        expect(await input.getTitle()).to.equal('Username');
+        await sleep(2000);
+
+        expect(await (await input.getMessage()).startsWith('Username'), 'Should be username').to.be.true;
         await input.setText('user');
         await input.confirm();
 
-        expect(await input.getTitle()).to.equal('Password');
+        await input.wait();
+        expect(await (await input.getMessage()).startsWith('Password'), 'Should be password').to.be.true;
         await input.cancel();
     });
 
