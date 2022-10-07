@@ -99,16 +99,30 @@ describe('Commands', function () {
         const input = await InputBox.create();
         await input.selectQuickPick(0);
 
-
         const webview = await new EditorView().openEditor('VSMQTT');
         webview.wait();
         const mqttView = new WebView();
         await mqttView.switchToFrame();
+
         const connectionState = await mqttView.findWebElement(By.className('state'));
         expect(await connectionState.getText()).to.equal('Connected');
         await mqttView.switchBack();
 
         stopBroker();
+    });
+
+    it('"Connect to mqtt broker" prompts for password', async function () {
+        createSettingsWithProfile({ promptCredentials: true });
+        await new Workbench().executeCommand("Connect to mqtt broker");
+        const input = await InputBox.create();
+        await input.selectQuickPick(0);
+
+        expect(await input.getTitle()).to.equal('Username');
+        await input.setText('user');
+        await input.confirm();
+
+        expect(await input.getTitle()).to.equal('Password');
+        await input.cancel();
     });
 
     const createSettingsWithProfile = (propertyOverrides = {}) => {

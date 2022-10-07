@@ -11,4 +11,5 @@ export const startBroker = () => {
 
 export const stopBroker = () => {
   aedes.close();
+  server.unref();
 };
