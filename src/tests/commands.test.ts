@@ -141,6 +141,7 @@ describe('Commands', function () {
 
     const createSettingsWithProfile = (propertyOverrides = {}) => {
         const settings = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             "vsmqtt.brokerProfiles": [{...BROKER_PROFILE, ...propertyOverrides}]
         };
         fs.mkdirSync(path.join(projectPath, '.vscode'));
