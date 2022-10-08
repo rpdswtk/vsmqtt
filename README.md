@@ -2,6 +2,7 @@
 
 [![](https://img.shields.io/visual-studio-marketplace/v/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
 [![](https://img.shields.io/visual-studio-marketplace/i/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
+![Open VSX Downloads](https://img.shields.io/open-vsx/dt/rpdswtk/vsmqtt?color=c160ef&label=Open%20VSX%20installs)
 
 Vsmqtt is a simple MQTT client integrated in vscode.
 
