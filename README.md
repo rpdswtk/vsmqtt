@@ -38,6 +38,7 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | port      | number | Broker port                                                       |     -    |
 | username  | string | Client username                                                   |          |
 | password  | string | Client pasword                                                    |          |
+| promptCredentials  | boolean | Ask for username and password before connecting to the broker |          |
 | protocol  | string | "mqtt", "mqtts", "tcp", "tls", "ws", "wss"                        |          |
 | ca        | string | Absolute path for cert file or cert string in PEM format          |          |
 | key       | string | Absolute path for client cert file or cert string in PEM format   |          |

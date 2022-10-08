@@ -46,3 +46,7 @@ VSMQTT versions.
 ## [1.4.4] - 2022-10-02
 ### Changed
 - Fixed remove broker profile command
+
+## [1.4.5] - 2022-10-08
+### Added
+- Added propmt for username and password option
