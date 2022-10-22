@@ -5,7 +5,6 @@ import * as fs from 'node:fs';
 import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode-extension-tester";
 import sleep from './utils/sleep';
 import { EditorView } from 'vscode-extension-tester';
-import { startBroker, stopBroker } from './utils/mqtt';
 
 describe('Commands', function () {
     const BROKER_PROFILE = {
@@ -103,7 +102,6 @@ describe('Commands', function () {
     describe("Connect to mqtt broker", () => {
         it('connects to broker', async function () {
             createSettingsWithProfile();
-            startBroker();
     
             await new Workbench().executeCommand("Connect to mqtt broker");
             const input = await InputBox.create();
@@ -118,7 +116,6 @@ describe('Commands', function () {
             expect(await connectionState.getText()).to.equal('Connected');
             await mqttView.switchBack();
     
-            stopBroker();
         });
 
         it('prompts for password', async function () {
