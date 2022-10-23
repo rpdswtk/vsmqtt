@@ -100,7 +100,7 @@ describe('Commands', function () {
     });
 
     describe("Connect to mqtt broker", () => {
-        it.only('connects to broker', async function () {
+        it('connects to broker', async function () {
             createSettingsWithProfile();
     
             await new Workbench().executeCommand("Connect to mqtt broker");
@@ -113,7 +113,7 @@ describe('Commands', function () {
             await mqttView.switchToFrame();
     
             const connectionState = await mqttView.findWebElement(By.className('state'));
-            expect(await connectionState.getText()).to.equal('Connected --');
+            expect(await connectionState.getText()).to.equal('Connected');
             await mqttView.switchBack();
         });
 
