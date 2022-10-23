@@ -100,12 +100,12 @@ describe('Commands', function () {
     });
 
     describe("Connect to mqtt broker", () => {
-        it('connects to broker', async function () {
+        it.only('connects to broker', async function () {
             createSettingsWithProfile();
     
             await new Workbench().executeCommand("Connect to mqtt broker");
             const input = await InputBox.create();
-            await input.selectQuickPick(0);
+            //await input.selectQuickPick(0);
     
             const webview = await new EditorView().openEditor('VSMQTT');
             webview.wait();
