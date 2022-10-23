@@ -7,8 +7,9 @@ const startBroker = () => {
     console.log('server started and listening on port ', PORT);
   });
 
-  process.on('message', ({ code }) => {
-    process.exit(code);
+  process.on('message', ({ testsCompleted }) => {
+    process.exit(testsCompleted ? 0 : 1);
   });
 };
+
 startBroker();
