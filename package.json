@@ -244,7 +244,7 @@
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "concurrently --kill-others --success second \"npm run start-broker\" \"npm run test-compile && extest setup-and-run out/tests/*.js -m .mocharc.js\"",
+        "test": "node src\tests\runTests.js",
         "start-broker": "node ./src/tests/utils/broker.js"
     },
     "devDependencies": {
