@@ -52,7 +52,12 @@ export class MqttClientFactory {
             }
         }
 
-        client = connect(options);
+        if (options.insecure) {
+            client = connect({ ...options, checkServerIdentity: () => { return undefined; } });
+        } else {
+            client = connect(options);
+        }
+
         MqttClientFactory.clients.set(options.name, client);
         return client;
     }
