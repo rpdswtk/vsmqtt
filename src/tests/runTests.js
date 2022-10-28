@@ -1,5 +1,8 @@
-import spawn from "cross-spawn"
-import { fork } from "child_process"
+/* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line no-undef
+const spawn = require("cross-spawn")
+// eslint-disable-next-line no-undef
+const fork = require("child_process").fork
 
 const broker = fork("out/tests/utils/broker.js")
 const tests = spawn(
@@ -14,7 +17,7 @@ tests.on("close", (code) => {
   }
 })
 
-tests.on("error", (code) => {
+tests.on("error", (_code) => {
   gracefullyCloseBroker(false)
 })
 
