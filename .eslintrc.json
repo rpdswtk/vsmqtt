@@ -41,6 +41,7 @@
         "build",
         "dist",
         "public",
-        "out"
+        "out",
+        "rollup.config.js"
     ]
 }
