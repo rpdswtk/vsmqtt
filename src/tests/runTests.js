@@ -9,16 +9,20 @@ const tests = spawn(
 
 
 tests.on('close', (code) => {
-    console.log('CLOSED ', code);
-    gracefullyCloseBroker(code);
+    if (code === 0) {
+        gracefullyCloseBroker(true);
+    }
 });
 
 
 tests.on('error', (code) => {
-    console.log('ERROR ', code);
-    gracefullyCloseBroker(code);
+    gracefullyCloseBroker(false);
 });
 
-const gracefullyCloseBroker = (code) => {
-    broker.send({code});
+const gracefullyCloseBroker = (testsCompleted) => {
+    broker.send({testsCompleted});
 };
+
+broker.on('close', (code) => {
+    process.exit(code);
+});

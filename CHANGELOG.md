@@ -50,3 +50,7 @@ VSMQTT versions.
 ## [1.4.5] - 2022-10-08
 ### Added
 - Added propmt for username and password option
+
+## [1.4.6] - 2022-10-24
+### Added
+- Added insecure option
