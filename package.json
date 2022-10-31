@@ -3,7 +3,7 @@
     "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "VSMqtt is a simple MQTT client integrated in vscode.",
-    "version": "1.4.5",
+    "version": "1.4.6",
     "icon": "logo.png",
     "repository": {
         "type": "git",
@@ -226,6 +226,10 @@
                                         }
                                     }
                                 }
+                            },
+                            "insecure": {
+                                "type":"boolean",
+                                "description": "Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only."
                             }
                         }
                     },
