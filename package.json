@@ -3,7 +3,7 @@
     "publisher": "rpdswtk",
     "displayName": "VSMqtt",
     "description": "VSMqtt is a simple MQTT client integrated in vscode.",
-    "version": "1.4.5",
+    "version": "1.4.6",
     "icon": "logo.png",
     "repository": {
         "type": "git",
@@ -226,6 +226,10 @@
                                         }
                                     }
                                 }
+                            },
+                            "insecure": {
+                                "type":"boolean",
+                                "description": "Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only."
                             }
                         }
                     },
@@ -244,8 +248,8 @@
         "test-watch": "tsc -watch -p ./",
         "pretest": "npm run test-compile && npm run lint",
         "lint": "eslint src --ext ts",
-        "test": "concurrently \"npm run start-broker\" \"npm run test-compile && extest setup-and-run out/tests/*.js -m .mocharc.js\" -k",
-        "start-broker": "aedes -p 1883 --host 127.0.0.1"
+        "test": "node src\/tests\/runTests.js",
+        "start-broker": "node ./src/tests/utils/broker.js"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^20.0.0",
@@ -260,7 +264,7 @@
         "@typescript-eslint/parser": "^5.19.0",
         "aedes-cli": "^0.5.0",
         "chai": "^4.3.6",
-        "concurrently": "^7.0.0",
+        "concurrently": "^7.5.0",
         "eslint": "^8.13.0",
         "glob": "^8.0.3",
         "mocha": "^9.2.0",
