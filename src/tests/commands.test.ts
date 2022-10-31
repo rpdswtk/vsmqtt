@@ -115,7 +115,6 @@ describe('Commands', function () {
             const connectionState = await mqttView.findWebElement(By.className('state'));
             expect(await connectionState.getText()).to.equal('Connected');
             await mqttView.switchBack();
-    
         });
 
         it('prompts for password', async function () {
