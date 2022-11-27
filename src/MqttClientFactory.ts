@@ -16,6 +16,10 @@ export class MqttClientFactory {
         }
 
         let options = Object.assign({}, config);
+
+        if (!options.protocol) {
+            options.protocol = 'mqtt';
+        }
  
         if (options.ca) {
             if (isAbsolutePath(options.ca, "\\") || isAbsolutePath(options.ca, "/")) {
