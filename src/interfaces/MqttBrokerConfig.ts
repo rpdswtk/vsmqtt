@@ -4,7 +4,7 @@ export interface MqttBrokerConfig {
   name: string
   host: string
   port: number
-  protocol?: string
+  protocol?: "wss" | "ws" | "mqtt" | "mqtts" | "tcp" | "ssl" | "wx" | "wxs"
   clientId?: string
   path?: string
   keepalive?: number

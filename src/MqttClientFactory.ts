@@ -1,10 +1,11 @@
 import { AsyncClient, connect } from "async-mqtt"
 import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
-
 import * as fs from "fs"
 import * as vscode from "vscode"
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { isAbsolutePath } = require("path-validation")
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(global as any).WebSocket = require("ws") // WebSocket is not defined bugfix (mqttjs is using global websocket)
 
 export class MqttClientFactory {
   private static clients: Map<string, AsyncClient> = new Map<
@@ -19,6 +20,10 @@ export class MqttClientFactory {
     }
 
     const options = Object.assign({}, config)
+
+    if (!options.protocol) {
+      options.protocol = "mqtt"
+    }
 
     if (options.ca) {
       if (isAbsolutePath(options.ca, "\\") || isAbsolutePath(options.ca, "/")) {
@@ -70,10 +75,10 @@ export class MqttClientFactory {
         },
       })
     } else {
-      client = connect(options)
+      client = connect(options.host, options)
     }
-
     MqttClientFactory.clients.set(options.name, client)
+
     return client
   }
 

@@ -155,6 +155,29 @@ describe("Commands", function () {
       ).to.be.true
       await input.cancel()
     })
+
+    it("connects to broker using websocket", async function () {
+      createSettingsWithProfile({
+        host: "ws://localhost",
+        port: 8083,
+        protocol: "ws",
+      })
+
+      await new Workbench().executeCommand("Connect to mqtt broker")
+      const input = await InputBox.create()
+      await input.selectQuickPick(0)
+
+      const webview = await new EditorView().openEditor("VSMQTT")
+      webview.wait()
+      const mqttView = new WebView()
+      await mqttView.switchToFrame()
+
+      const connectionState = await mqttView.findWebElement(
+        By.className("state")
+      )
+      expect(await connectionState.getText()).to.equal("Connected")
+      await mqttView.switchBack()
+    })
   })
 
   const createSettingsWithProfile = (propertyOverrides = {}) => {
