@@ -3,6 +3,7 @@ import { MqttBrokerConfig } from './interfaces/MqttBrokerConfig';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 const { isAbsolutePath } = require('path-validation');
+(global as any).WebSocket = require('ws'); // WebSocket is not defined bugfix (mqttjs is using global websocket)
 
 export class MqttClientFactory {
 
@@ -15,7 +16,7 @@ export class MqttClientFactory {
         }
 
         let options = Object.assign({}, config);
-
+ 
         if (options.ca) {
             if (isAbsolutePath(options.ca, "\\") || isAbsolutePath(options.ca, "/")) {
                 try {
@@ -55,10 +56,10 @@ export class MqttClientFactory {
         if (options.insecure) {
             client = connect({ ...options, checkServerIdentity: () => { return undefined; } });
         } else {
-            client = connect(options);
+            client = connect(options.host, options);
         }
-
         MqttClientFactory.clients.set(options.name, client);
+
         return client;
     }
 

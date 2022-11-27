@@ -174,12 +174,17 @@
                                     "tls",
                                     "ws",
                                     "wss"
-                                ]
+                                ],
+                                "default": "mqtt"
                             },
                             "clientId": {
                                 "type": "string",
                                 "description": "Client ID",
                                 "default": "vsmqtt_client"
+                            },
+                            "path": {
+                                "type": "string",
+                                "description": "Broker path"
                             },
                             "keepalive": {
                                 "description": "Keepalive interval in seconds.",
