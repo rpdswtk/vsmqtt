@@ -134,7 +134,7 @@ describe('Commands', function () {
             await input.cancel();
         });
 
-        it.only('connects to broker using websocket', async function () {
+        it('connects to broker using websocket', async function () {
             createSettingsWithProfile({
                 host: "ws://localhost",
                 port: 8083,
