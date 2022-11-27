@@ -5,9 +5,11 @@
     "../src/interfaces"
   ],
   "exclude": [
-    "../node_modules/*"
+    "../node_modules/*",
+    "../src/interfaces/MqttProfileQuickPickItem.ts"
   ],
   "compilerOptions": {
     "strict": true,
-  }
+    "types": ["node", "svelte"]
+  },
 }
