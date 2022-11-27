@@ -42,7 +42,6 @@
         "dist",
         "public",
         "out",
-        "rollup.config.js",
-        "webviews"
+        "rollup.config.js"
     ]
 }

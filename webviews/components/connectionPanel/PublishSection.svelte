@@ -20,6 +20,7 @@
 
 <textarea rows="5" placeholder="Payload" bind:value={publishText} />
 
+<!-- svelte-ignore missing-declaration -->
 <button
     on:click={() => {
         if (publishTopic) {
