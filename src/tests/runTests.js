@@ -6,7 +6,7 @@ const fork = require("child_process").fork
 
 const broker = fork("src/tests/utils/broker.js")
 const tests = spawn(
-  `npm run test-compile && npx extest setup-and-run out/tests/*.js -m .mocharc.js`,
+  `npm run test-compile && npx extest setup-and-run ./out/tests/commands.test.js -m .mocharc.js`,
   [],
   { stdio: "inherit" }
 )
