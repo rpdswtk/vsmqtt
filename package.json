@@ -294,7 +294,7 @@
         "async-mqtt": "^2.6.2",
         "csv-writer": "^1.6.0",
         "moment": "^2.29.3",
-        "mqtt": "^4.2.8",
+        "mqtt": "^4.3.7",
         "mqtt-match": "^3.0.0",
         "path-validation": "^0.2.3"
     }
