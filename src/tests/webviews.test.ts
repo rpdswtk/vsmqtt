@@ -213,6 +213,8 @@ describe("Webviews", function () {
 
       expect(subscriptionElements).to.length(0)
       expect(messageListItems).to.length(0)
+
+      await mqttView.switchBack()
     })
   })
 })
