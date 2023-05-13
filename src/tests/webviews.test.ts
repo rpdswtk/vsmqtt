@@ -98,6 +98,8 @@ describe("Webviews", function () {
       await payloadInput.sendKeys("hello")
       await publishButton.click()
 
+      await sleep(500)
+
       const subscriptionElementMessageCount = await mqttView.findWebElement(
         By.css(".list-item .msg-cnt")
       )
