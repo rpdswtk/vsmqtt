@@ -11,6 +11,16 @@ const TEST_PROJECT_FOLDER = "testProject"
 
 export const initWorkspace = async (dirname: string) => {
   const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
+
+  if (fs.existsSync(projectPath)) {
+    await rimraf(projectPath, function (error: any) {
+      if (error) {
+        console.log("Could not remove test project folder")
+        console.log(error)
+      }
+    })
+  }
+
   if (!fs.existsSync(projectPath)) {
     fs.mkdirSync(projectPath)
   }
