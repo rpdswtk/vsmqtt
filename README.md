@@ -4,6 +4,8 @@
 [![](https://img.shields.io/visual-studio-marketplace/i/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
 ![Open VSX Downloads](https://img.shields.io/open-vsx/dt/rpdswtk/vsmqtt?color=c160ef&label=Open%20VSX%20installs)
 
+<a href="https://www.buymeacoffee.com/rpdswtk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 Vsmqtt is a simple MQTT client integrated in vscode.
 
 ![Alt Text](screen.gif)
