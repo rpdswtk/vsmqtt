@@ -10,24 +10,33 @@ import { BROKER_PROFILE } from "./constants"
 const TEST_PROJECT_FOLDER = "testProject"
 
 export const initWorkspace = async (dirname: string) => {
+  console.log("Initializing workspace")
   const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
+  console.log("Project path: ", projectPath)
 
   if (!fs.existsSync(projectPath)) {
+    console.log("Creating folder...")
     fs.mkdirSync(projectPath)
   }
 
+  console.log("Folder created")
   return await VSBrowser.instance.openResources(projectPath)
 }
 
 export const cleanWorkspace = async (dirname: string) => {
+  console.log("Cleaning workspace")
   const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
+  console.log("Project path: ", projectPath)
+
   await new Workbench().executeCommand("close workspace")
-  await rimraf(projectPath, function (error: any) {
+  console.log("Removing folder...")
+  await rimraf(projectPath, function (error: Error) {
     if (error) {
       console.log("Could not remove test project folder")
       console.log(error)
     }
   })
+  console.log("Folder removed")
   return await sleep(500)
 }
 
