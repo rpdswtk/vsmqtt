@@ -60,4 +60,6 @@ export const createSettingsWithProfile = async (
     path.join(projectPath, ".vscode/settings.json"),
     JSON.stringify(settings)
   )
+  console.log("settings file created")
+  await sleep(1000)
 }
