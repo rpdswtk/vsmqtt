@@ -57,19 +57,6 @@ describe("Commands", function () {
     })
   })
 
-  describe("Edit broker profile", () => {
-    it("opens settings.json", async function () {
-      await new Workbench().executeCommand("edit broker profile")
-      await sleep(2000)
-
-      const editorView = new EditorView()
-
-      const titles = await editorView.getOpenEditorTitles()
-
-      expect(titles).to.contain("settings.json")
-    })
-  })
-
   describe("Remove broker profile", () => {
     it("removes profile from settings.json", async function () {
       createSettingsWithProfile(projectPath)
@@ -98,6 +85,19 @@ describe("Commands", function () {
       expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([
         BROKER_PROFILE,
       ])
+    })
+  })
+
+  describe("Edit broker profile", () => {
+    it("opens settings.json", async function () {
+      await new Workbench().executeCommand("edit broker profile")
+      await sleep(2000)
+
+      const editorView = new EditorView()
+
+      const titles = await editorView.getOpenEditorTitles()
+
+      expect(titles).to.contain("settings.json")
     })
   })
 
