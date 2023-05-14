@@ -59,7 +59,7 @@ describe("Commands", function () {
 
   describe("Remove broker profile", () => {
     it("removes profile from settings.json", async function () {
-      createSettingsWithProfile(projectPath)
+      await createSettingsWithProfile(projectPath)
 
       await new Workbench().executeCommand("remove broker profile")
       const input = await InputBox.create()
@@ -103,7 +103,7 @@ describe("Commands", function () {
 
   describe("Connect to mqtt broker", () => {
     it("connects to broker", async function () {
-      createSettingsWithProfile(projectPath)
+      await createSettingsWithProfile(projectPath)
 
       await new Workbench().executeCommand("Connect to mqtt broker")
       const input = await InputBox.create()
@@ -122,7 +122,7 @@ describe("Commands", function () {
     })
 
     it("prompts for password", async function () {
-      createSettingsWithProfile(projectPath, { promptCredentials: true })
+      await createSettingsWithProfile(projectPath, { promptCredentials: true })
       await new Workbench().executeCommand("Connect to mqtt broker")
       const input = await InputBox.create()
       await input.selectQuickPick(0)
@@ -145,7 +145,7 @@ describe("Commands", function () {
     })
 
     it("connects to broker using websocket", async function () {
-      createSettingsWithProfile(projectPath, {
+      await createSettingsWithProfile(projectPath, {
         host: "ws://localhost",
         port: 8083,
         protocol: "ws",

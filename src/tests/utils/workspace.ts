@@ -12,15 +12,6 @@ const TEST_PROJECT_FOLDER = "testProject"
 export const initWorkspace = async (dirname: string) => {
   const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
 
-  if (fs.existsSync(projectPath)) {
-    await rimraf(projectPath, function (error: any) {
-      if (error) {
-        console.log("Could not remove test project folder")
-        console.log(error)
-      }
-    })
-  }
-
   if (!fs.existsSync(projectPath)) {
     fs.mkdirSync(projectPath)
   }
@@ -40,7 +31,7 @@ export const cleanWorkspace = async (dirname: string) => {
   return await sleep(500)
 }
 
-export const createSettingsWithProfile = (
+export const createSettingsWithProfile = async (
   projectPath: string,
   propertyOverrides = {}
 ) => {
@@ -48,6 +39,11 @@ export const createSettingsWithProfile = (
     // eslint-disable-next-line @typescript-eslint/naming-convention
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
   }
+
+  if (!fs.existsSync(projectPath)) {
+    fs.mkdirSync(projectPath)
+  }
+
   fs.mkdirSync(path.join(projectPath, ".vscode"))
   fs.appendFileSync(
     path.join(projectPath, ".vscode/settings.json"),
