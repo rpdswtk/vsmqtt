@@ -1,9 +1,10 @@
-import * as vscode from 'vscode';
-import { VSMqttApp } from './VSMqttApp';
-
+import * as vscode from "vscode"
+import { VSMqttApp } from "./VSMqttApp"
 
 export function activate(context: vscode.ExtensionContext) {
-	new VSMqttApp(context);
+  new VSMqttApp(context)
 }
 
-export function deactivate() { }
+export function deactivate() {
+  // do nothing
+}
