@@ -1,28 +1,28 @@
-const spawn = require('cross-spawn');
-const fork = require('child_process').fork;
+const spawn = require("cross-spawn")
+const fork = require("child_process").fork
 
-const broker = fork('src\/tests\/utils\/broker.js');
+const broker = fork('src\\tests\\utils\\broker.js');
 const tests = spawn(
-    `npm run test-compile && npx extest setup-and-run out/tests/*.js -m .mocharc.js`,
-    [], { stdio: 'inherit' }
-);
+  `npm run test-compile && npx extest setup-and-run`,
+  ['out/tests/*.js', '-m', '.mocharc.js' ],
+  { stdio: "inherit" }
+)
 
+tests.on("close", (code) => {
+  if (code === 0) {
+    gracefullyCloseBroker(true)
+  }
+})
 
-tests.on('close', (code) => {
-    if (code === 0) {
-        gracefullyCloseBroker(true);
-    }
-});
-
-
-tests.on('error', (code) => {
-    gracefullyCloseBroker(false);
-});
+tests.on("error", (_code) => {
+  gracefullyCloseBroker(false)
+})
 
 const gracefullyCloseBroker = (testsCompleted) => {
-    broker.send({testsCompleted});
-};
+  broker.send({ testsCompleted })
+}
 
-broker.on('close', (code) => {
-    process.exit(code);
-});
+broker.on("close", (code) => {
+  // eslint-disable-next-line no-undef
+  process.exit(code)
+})

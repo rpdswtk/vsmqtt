@@ -54,3 +54,10 @@ VSMQTT versions.
 ## [1.4.6] - 2022-10-24
 ### Added
 - Added insecure option
+
+## [1.4.7] - 2022-11-27
+### Added
+- Added path option
+
+### Changed
+- Websocket fixes
