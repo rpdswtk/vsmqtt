@@ -20,14 +20,15 @@ import {
 } from "./utils/workspace"
 
 describe("Commands", function () {
-  const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER)
+  let projectPath: string //path.join(__dirname, TEST_PROJECT_FOLDER)
 
   this.beforeEach(async function () {
-    await initWorkspace(__dirname)
+    projectPath = await initWorkspace(__dirname)
   })
 
   this.afterEach(async function () {
-    await cleanWorkspace(__dirname)
+    //await cleanWorkspace(__dirname)
+    await new Workbench().executeCommand("close workspace")
   })
 
   describe("Add broker profile", () => {

@@ -19,7 +19,7 @@ import {
 import sleep from "./utils/sleep"
 
 describe("Webviews", function () {
-  const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER)
+  let projectPath: string
 
   const openview = async () => {
     createSettingsWithProfile(projectPath)
@@ -37,11 +37,11 @@ describe("Webviews", function () {
   }
 
   this.beforeEach(async function () {
-    await initWorkspace(__dirname)
+    projectPath = await initWorkspace(__dirname)
   })
 
   this.afterEach(async function () {
-    await cleanWorkspace(__dirname)
+    await new Workbench().executeCommand("close workspace")
   })
 
   it("Renders each section", async function () {

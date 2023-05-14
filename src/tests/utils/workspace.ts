@@ -6,12 +6,14 @@ import * as path from "node:path"
 import { VSBrowser, Workbench } from "vscode-extension-tester"
 import sleep from "./sleep"
 import { BROKER_PROFILE } from "./constants"
+import { randomUUID } from "node:crypto"
 
 const TEST_PROJECT_FOLDER = "testProject"
 
 export const initWorkspace = async (dirname: string) => {
   console.log("Initializing workspace")
-  const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
+  const folder = TEST_PROJECT_FOLDER + randomUUID()
+  const projectPath = path.join(dirname, folder)
   console.log("Project path: ", projectPath)
 
   if (!fs.existsSync(projectPath)) {
@@ -20,7 +22,8 @@ export const initWorkspace = async (dirname: string) => {
   }
 
   console.log("Folder created")
-  return await VSBrowser.instance.openResources(projectPath)
+  await VSBrowser.instance.openResources(projectPath)
+  return projectPath
 }
 
 export const cleanWorkspace = async (dirname: string) => {
@@ -49,9 +52,6 @@ export const createSettingsWithProfile = async (
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
   }
 
-  if (!fs.existsSync(projectPath)) {
-    fs.mkdirSync(projectPath)
-  }
   console.log("Creating .vscode folder")
   fs.mkdirSync(path.join(projectPath, ".vscode"))
 
