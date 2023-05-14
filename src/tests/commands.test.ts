@@ -73,9 +73,12 @@ describe("Commands", function () {
       await VSBrowser.instance.waitForWorkbench()
       await dialog.pushButton("Yes")
 
+      console.log("Opening settings.json")
       await VSBrowser.instance.openResources(
         path.join(projectPath, ".vscode/settings.json")
       )
+
+      console.log("Opening editor")
       const settingsFile = await new EditorView().openEditor("settings.json")
 
       const settingsText = await settingsFile.getText()

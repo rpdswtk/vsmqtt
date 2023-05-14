@@ -52,8 +52,10 @@ export const createSettingsWithProfile = async (
   if (!fs.existsSync(projectPath)) {
     fs.mkdirSync(projectPath)
   }
-
+  console.log("Creating .vscode folder")
   fs.mkdirSync(path.join(projectPath, ".vscode"))
+
+  console.log("Creating settings.json")
   fs.appendFileSync(
     path.join(projectPath, ".vscode/settings.json"),
     JSON.stringify(settings)
