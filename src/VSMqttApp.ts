@@ -11,6 +11,7 @@ import {
   BrokerProfileTreeItem,
   MqttProfilesProvider,
 } from "./MqttProfilesProvider"
+import { randomBytes } from "node:crypto"
 
 export class VSMqttApp {
   private _profilesProvider: MqttProfilesProvider
@@ -141,7 +142,7 @@ export class VSMqttApp {
       name,
       host,
       port: parseInt(port),
-      clientId: "vsmqtt_client",
+      clientId: `vsmqtt_client_${randomBytes(2).toString("hex")}`,
     })
     this._profilesProvider.update()
   }
