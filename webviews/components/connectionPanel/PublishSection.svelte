@@ -8,7 +8,7 @@
 <h2>Publish</h2>
 
 <div class="publish-options">
-    <input type="text" placeholder="Topic" bind:value={publishTopic} />
+    <input id="topic-input" type="text" placeholder="Topic" bind:value={publishTopic} />
     <select bind:value={selectedQos}>
         <option value="0">QoS 0</option>
         <option value="1">QoS 1</option>
@@ -18,10 +18,11 @@
     <input type="checkbox" class="checkbox" bind:checked={retain} />
 </div>
 
-<textarea rows="5" placeholder="Payload" bind:value={publishText} />
+<textarea id="payload-input" rows="5" placeholder="Payload" bind:value={publishText} />
 
 <!-- svelte-ignore missing-declaration -->
 <button
+    id="publish-button"
     on:click={() => {
         if (publishTopic) {
             vscode.postMessage({
