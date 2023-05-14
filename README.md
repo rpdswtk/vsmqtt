@@ -37,6 +37,7 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | name      | string | Profile name                                                      |     -    |
 | host      | string | Broker host                                                       |     -    |
 | port      | number | Broker port                                                       |     -    |
+| path      | string | Broker path                                                       |     -    |
 | username  | string | Client username                                                   |          |
 | password  | string | Client pasword                                                    |          |
 | promptCredentials  | boolean | Ask for username and password before connecting to the broker |          |
@@ -69,6 +70,18 @@ Connecting to TLS protected broker:
     "port": 8883,
     "protocol": "mqtts",
     "ca": "/path_to_crt"
+}
+```
+
+Connecting to broker using websocket:
+```json
+{
+    "name": "broker.emqx.io",
+    "host": "ws://broker.emqx.io",
+    "port": 8083,
+    "clientId": "vsmqtt_client_test",
+    "protocol":"ws",
+    "path": "/mqtt"
 }
 ```
 

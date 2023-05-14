@@ -3,7 +3,7 @@
 </script>
 
 {#if $selectedMessage}
-    <div class="list-item">
+    <div class="message-details">
         <div class="timestamp">{$selectedMessage.timestamp}</div>
         <div class="topic">{$selectedMessage.topic}</div>
         <div class="qos">QoS {$selectedMessage.qos}</div>
@@ -15,7 +15,7 @@
 {/if}
 
 <style>
-    .list-item {
+    .message-details {
         display: grid;
         grid-template-rows: min-content min-content auto;
         grid-template-columns: auto 5em 3em;
