@@ -57,10 +57,12 @@
             },
         });
     }
+
 </script>
 
 <svelte:window on:click={() => showMenu = false}/>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="list-item">
     <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};"></div>
     <div class="topic-label">Topic: </div>
