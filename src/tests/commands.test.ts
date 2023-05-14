@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const expect = require("chai").expect
 const path = require("path")
-const rimraf = require("rimraf")
 import * as fs from "node:fs"
 import {
   Workbench,
@@ -13,33 +12,18 @@ import {
 } from "vscode-extension-tester"
 import sleep from "./utils/sleep"
 import { EditorView } from "vscode-extension-tester"
+import { BROKER_PROFILE } from "./utils/constants"
+import { createSettingsWithProfile, initWorkspace } from "./utils/workspace"
 
 describe("Commands", function () {
-  const BROKER_PROFILE = {
-    name: "test_broker",
-    host: "localhost",
-    port: 1883,
-    clientId: "vsmqtt_e2e_test",
-  }
-  const TEST_PROJECT_FOLDER = "testProject"
-  const projectPath = path.join(__dirname, TEST_PROJECT_FOLDER)
+  let projectPath: string
 
   this.beforeEach(async function () {
-    if (!fs.existsSync(projectPath)) {
-      fs.mkdirSync(projectPath)
-    }
-    await VSBrowser.instance.openResources(projectPath)
+    projectPath = await initWorkspace(__dirname)
   })
 
   this.afterEach(async function () {
     await new Workbench().executeCommand("close workspace")
-    await rimraf(projectPath, function (error: Error) {
-      if (error) {
-        console.log("Could not remove test project folder")
-        console.log(error)
-      }
-    })
-    await sleep(500)
   })
 
   describe("Add broker profile", () => {
@@ -69,22 +53,9 @@ describe("Commands", function () {
     })
   })
 
-  describe("Edit broker profile", () => {
-    it("opens settings.json", async function () {
-      await new Workbench().executeCommand("edit broker profile")
-      await sleep(2000)
-
-      const editorView = new EditorView()
-
-      const titles = await editorView.getOpenEditorTitles()
-
-      expect(titles).to.contain("settings.json")
-    })
-  })
-
   describe("Remove broker profile", () => {
     it("removes profile from settings.json", async function () {
-      createSettingsWithProfile()
+      await createSettingsWithProfile(projectPath)
 
       await new Workbench().executeCommand("remove broker profile")
       const input = await InputBox.create()
@@ -98,9 +69,12 @@ describe("Commands", function () {
       await VSBrowser.instance.waitForWorkbench()
       await dialog.pushButton("Yes")
 
+      console.log("Opening settings.json")
       await VSBrowser.instance.openResources(
         path.join(projectPath, ".vscode/settings.json")
       )
+
+      console.log("Opening editor")
       const settingsFile = await new EditorView().openEditor("settings.json")
 
       const settingsText = await settingsFile.getText()
@@ -113,9 +87,22 @@ describe("Commands", function () {
     })
   })
 
+  describe("Edit broker profile", () => {
+    it("opens settings.json", async function () {
+      await new Workbench().executeCommand("edit broker profile")
+      await sleep(2000)
+
+      const editorView = new EditorView()
+
+      const titles = await editorView.getOpenEditorTitles()
+
+      expect(titles).to.contain("settings.json")
+    })
+  })
+
   describe("Connect to mqtt broker", () => {
     it("connects to broker", async function () {
-      createSettingsWithProfile()
+      await createSettingsWithProfile(projectPath)
 
       await new Workbench().executeCommand("Connect to mqtt broker")
       const input = await InputBox.create()
@@ -134,7 +121,7 @@ describe("Commands", function () {
     })
 
     it("prompts for password", async function () {
-      createSettingsWithProfile({ promptCredentials: true })
+      await createSettingsWithProfile(projectPath, { promptCredentials: true })
       await new Workbench().executeCommand("Connect to mqtt broker")
       const input = await InputBox.create()
       await input.selectQuickPick(0)
@@ -157,7 +144,7 @@ describe("Commands", function () {
     })
 
     it("connects to broker using websocket", async function () {
-      createSettingsWithProfile({
+      await createSettingsWithProfile(projectPath, {
         host: "ws://localhost",
         port: 8083,
         protocol: "ws",
@@ -179,16 +166,4 @@ describe("Commands", function () {
       await mqttView.switchBack()
     })
   })
-
-  const createSettingsWithProfile = (propertyOverrides = {}) => {
-    const settings = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
-    }
-    fs.mkdirSync(path.join(projectPath, ".vscode"))
-    fs.appendFileSync(
-      path.join(projectPath, ".vscode/settings.json"),
-      JSON.stringify(settings)
-    )
-  }
 })

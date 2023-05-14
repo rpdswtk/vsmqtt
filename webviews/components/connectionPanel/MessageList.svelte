@@ -28,7 +28,7 @@
 <div class="root">
     <h2 class="title">Messages</h2>
 
-    <div class="list" bind:this={list}>
+    <div class="message-list" bind:this={list}>
         {#each $messages as message}
             <div
                 class="list-item"
@@ -82,7 +82,7 @@
         grid-row-end: 2;
     }
 
-    .list {
+    .message-list {
         grid-row-start: 2;
         grid-row-end: 3;
         height: 100%;
