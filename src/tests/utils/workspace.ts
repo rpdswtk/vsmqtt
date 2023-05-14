@@ -1,18 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const rimraf = require("rimraf")
-
 import * as fs from "node:fs"
 import * as path from "node:path"
-import { VSBrowser, Workbench } from "vscode-extension-tester"
+import { VSBrowser } from "vscode-extension-tester"
 import sleep from "./sleep"
 import { BROKER_PROFILE } from "./constants"
-import { randomUUID } from "node:crypto"
+import { randomBytes } from "node:crypto"
 
-const TEST_PROJECT_FOLDER = "testProject"
+const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
 export const initWorkspace = async (dirname: string) => {
   console.log("Initializing workspace")
-  const folder = TEST_PROJECT_FOLDER + randomUUID()
+  const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
   console.log("Project path: ", projectPath)
 
@@ -24,23 +21,6 @@ export const initWorkspace = async (dirname: string) => {
   console.log("Folder created")
   await VSBrowser.instance.openResources(projectPath)
   return projectPath
-}
-
-export const cleanWorkspace = async (dirname: string) => {
-  console.log("Cleaning workspace")
-  const projectPath = path.join(dirname, TEST_PROJECT_FOLDER)
-  console.log("Project path: ", projectPath)
-
-  await new Workbench().executeCommand("close workspace")
-  console.log("Removing folder...")
-  await rimraf(projectPath, function (error: Error) {
-    if (error) {
-      console.log("Could not remove test project folder")
-      console.log(error)
-    }
-  })
-  console.log("Folder removed")
-  return await sleep(500)
 }
 
 export const createSettingsWithProfile = async (

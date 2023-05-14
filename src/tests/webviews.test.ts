@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { expect } from "chai"
-const path = require("path")
 
 import {
   By,
@@ -10,12 +8,7 @@ import {
   WebView,
   Workbench,
 } from "vscode-extension-tester"
-import { TEST_PROJECT_FOLDER } from "./utils/constants"
-import {
-  cleanWorkspace,
-  createSettingsWithProfile,
-  initWorkspace,
-} from "./utils/workspace"
+import { createSettingsWithProfile, initWorkspace } from "./utils/workspace"
 import sleep from "./utils/sleep"
 
 describe("Webviews", function () {

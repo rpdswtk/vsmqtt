@@ -12,22 +12,17 @@ import {
 } from "vscode-extension-tester"
 import sleep from "./utils/sleep"
 import { EditorView } from "vscode-extension-tester"
-import { BROKER_PROFILE, TEST_PROJECT_FOLDER } from "./utils/constants"
-import {
-  cleanWorkspace,
-  createSettingsWithProfile,
-  initWorkspace,
-} from "./utils/workspace"
+import { BROKER_PROFILE } from "./utils/constants"
+import { createSettingsWithProfile, initWorkspace } from "./utils/workspace"
 
 describe("Commands", function () {
-  let projectPath: string //path.join(__dirname, TEST_PROJECT_FOLDER)
+  let projectPath: string
 
   this.beforeEach(async function () {
     projectPath = await initWorkspace(__dirname)
   })
 
   this.afterEach(async function () {
-    //await cleanWorkspace(__dirname)
     await new Workbench().executeCommand("close workspace")
   })
 
