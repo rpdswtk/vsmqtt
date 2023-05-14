@@ -35,7 +35,7 @@
 <h2>Subscribe</h2>
 <form on:submit|preventDefault={subscribe}>
     <div class="subscription-options">
-        <input type="text" bind:value={subscribeTopic} placeholder="Topic" />
+        <input id="subscribe-topic-input" type="text" bind:value={subscribeTopic} placeholder="Topic" />
         <select bind:value={selectedQos}>
             <option value="0">QoS 0</option>
             <option value="1">QoS 1</option>
