@@ -263,7 +263,7 @@
         "@types/chai": "^4.3.4",
         "@types/glob": "^7.2.0",
         "@types/mocha": "^9.1.0",
-        "@types/node": "^18.11.4",
+        "@types/node": "^18.14.6",
         "@types/vscode": "^1.66.0",
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
@@ -293,7 +293,7 @@
     "dependencies": {
         "async-mqtt": "^2.6.2",
         "csv-writer": "^1.6.0",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "mqtt": "^4.2.8",
         "mqtt-match": "^3.0.0",
         "path-validation": "^0.2.3"
