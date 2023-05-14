@@ -179,8 +179,7 @@
                             },
                             "clientId": {
                                 "type": "string",
-                                "description": "Client ID",
-                                "default": "vsmqtt_client"
+                                "description": "Client ID"
                             },
                             "path": {
                                 "type": "string",
