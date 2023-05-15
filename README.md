@@ -12,8 +12,6 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 
 ## Features
 
-Existing features:
-
 * Create and use multiple mqtt profiles
 * Connect to broker
 * Support for secure connection
@@ -24,8 +22,6 @@ Existing features:
 * Colors to differentiate messages by topics
 * Pin topics (pinned topics are saved to settings and are used to subscribe to automatically upon connection)
 * Export to csv
-
-Future features:
 * Support for websocket connection
 
 ## Extension Settings

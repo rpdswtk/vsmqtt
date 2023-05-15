@@ -61,3 +61,8 @@ VSMQTT versions.
 
 ### Changed
 - Websocket fixes
+
+## [1.4.8] - 2023-05-15
+
+### Changed
+- Client id random prefix
