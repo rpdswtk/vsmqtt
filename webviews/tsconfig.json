@@ -12,4 +12,5 @@
     "strict": true,
     "types": ["node", "svelte"]
   },
+  "verbatimModuleSyntax": true
 }
