@@ -267,7 +267,7 @@
         "chai": "^4.3.7",
         "concurrently": "^7.5.0",
         "eslint": "^8.41.0",
-        "eslint-config-prettier": "^8.5.0",
+        "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^4.2.1",
         "glob": "^8.1.0",
         "mocha": "^10.2.0",
