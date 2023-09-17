@@ -45,7 +45,8 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | cert      | string | Absolute path for client key file or cert string in PEM format    |          |
 | clientId  | string | Client ID                                                         |          |
 | keepalive | number | Keepalive interval in seconds.                                    |          |
-| insecure  | number | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
+| insecure  | boolean | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
+| rejectUnauthorized | boolean | Skip server certificate validation |          |
 
 ### Examples:
 

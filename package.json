@@ -10,7 +10,7 @@
         "url": "https://github.com/rpdswtk/vsmqtt.git"
     },
     "engines": {
-        "vscode": "^1.66.0"
+        "vscode": "^1.74.0"
     },
     "categories": [
         "Other"
@@ -19,14 +19,6 @@
         "mqtt",
         "client",
         "mqtt-client"
-    ],
-    "activationEvents": [
-        "onCommand:vsmqtt.refreshProfileList",
-        "onCommand:vsmqtt.addProfile",
-        "onCommand:vsmqtt.editProfile",
-        "onCommand:vsmqtt.deleteProfile",
-        "onCommand:vsmqtt.connectToBroker",
-        "onView:mqttProfiles"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -234,6 +226,10 @@
                             "insecure": {
                                 "type": "boolean",
                                 "description": "Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only."
+                            },
+                            "rejectUnauthorized ": {
+                                "type": "boolean",
+                                "description": "Skip server certificate validation"
                             }
                         }
                     },
@@ -260,7 +256,7 @@
         "@rollup/plugin-node-resolve": "^15.0.1",
         "@rollup/plugin-typescript": "^11.1.1",
         "@tsconfig/svelte": "^2.0.1",
-        "@types/chai": "^4.3.4",
+        "@types/chai": "^4.3.5",
         "@types/glob": "^7.2.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "^20.2.5",
@@ -268,7 +264,7 @@
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
         "aedes": "^0.49.0",
-        "chai": "^4.3.6",
+        "chai": "^4.3.7",
         "concurrently": "^7.5.0",
         "eslint": "^8.41.0",
         "eslint-config-prettier": "^9.0.0",
