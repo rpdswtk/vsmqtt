@@ -77,6 +77,7 @@ export class MqttClientFactory {
     } else {
       client = connect(options.host, options)
     }
+
     MqttClientFactory.clients.set(options.name, client)
 
     return client

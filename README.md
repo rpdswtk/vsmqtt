@@ -12,8 +12,6 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 
 ## Features
 
-Existing features:
-
 * Create and use multiple mqtt profiles
 * Connect to broker
 * Support for secure connection
@@ -24,8 +22,6 @@ Existing features:
 * Colors to differentiate messages by topics
 * Pin topics (pinned topics are saved to settings and are used to subscribe to automatically upon connection)
 * Export to csv
-
-Future features:
 * Support for websocket connection
 
 ## Extension Settings
@@ -49,7 +45,8 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | cert      | string | Absolute path for client key file or cert string in PEM format    |          |
 | clientId  | string | Client ID                                                         |          |
 | keepalive | number | Keepalive interval in seconds.                                    |          |
-| insecure  | number | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
+| insecure  | boolean | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
+| rejectUnauthorized | boolean | Skip server certificate validation |          |
 
 ### Examples:
 
