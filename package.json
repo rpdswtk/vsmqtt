@@ -10,7 +10,7 @@
         "url": "https://github.com/rpdswtk/vsmqtt.git"
     },
     "engines": {
-        "vscode": "^1.66.0"
+        "vscode": "^1.74.0"
     },
     "categories": [
         "Other"
@@ -19,14 +19,6 @@
         "mqtt",
         "client",
         "mqtt-client"
-    ],
-    "activationEvents": [
-        "onCommand:vsmqtt.refreshProfileList",
-        "onCommand:vsmqtt.addProfile",
-        "onCommand:vsmqtt.editProfile",
-        "onCommand:vsmqtt.deleteProfile",
-        "onCommand:vsmqtt.connectToBroker",
-        "onView:mqttProfiles"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -234,6 +226,10 @@
                             "insecure": {
                                 "type": "boolean",
                                 "description": "Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only."
+                            },
+                            "rejectUnauthorized ": {
+                                "type": "boolean",
+                                "description": "Skip server certificate validation"
                             }
                         }
                     },
