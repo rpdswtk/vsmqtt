@@ -20,4 +20,5 @@ export interface MqttBrokerConfig {
   savedSubscriptions?: Array<MqttSubscription>
   promptCredentials?: boolean
   insecure?: boolean
+  rejectUnauthorized?: boolean
 }
