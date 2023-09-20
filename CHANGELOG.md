@@ -66,3 +66,8 @@ VSMQTT versions.
 
 ### Changed
 - Client id random prefix
+
+## [1.4.9] - 2023-09-20
+
+### Added
+- rejectUnauthorized option
