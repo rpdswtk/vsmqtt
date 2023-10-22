@@ -1,13 +1,8 @@
 import { AsyncClient } from "async-mqtt"
 import * as vscode from "vscode"
-import {
-  getNonce,
-  removeSavedSubscription,
-  saveMessageLog,
-  saveSubscription,
-} from "./helpers"
-import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
-import { MqttClientFactory } from "./MqttClientFactory"
+import { getNonce, getUri, removeSavedSubscription, saveMessageLog, saveSubscription } from "../helpers"
+import { MqttBrokerConfig } from "../interfaces/MqttBrokerConfig"
+import { MqttClientFactory } from "../MqttClientFactory"
 import { IPublishPacket } from "mqtt-packet"
 import moment = require("moment")
 
@@ -20,19 +15,11 @@ export class MqttConnectionView {
   private _disposables: vscode.Disposable[] = []
   private _mqttClient?: AsyncClient
 
-  private static _openViews: Map<string, MqttConnectionView> = new Map<
-    string,
-    MqttConnectionView
-  >()
+  private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>()
   private _messageCount: number
 
-  public static createOrShow(
-    extensionUri: vscode.Uri,
-    brokerConfig: MqttBrokerConfig
-  ) {
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined
+  public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig): void {
+    const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 
     // If we already have a panel, show it.
     const existingView = MqttConnectionView._openViews.get(brokerConfig.name)
@@ -51,10 +38,9 @@ export class MqttConnectionView {
         enableScripts: true,
         retainContextWhenHidden: true,
 
-        // And restrict the webview to only loading content from our extension's `media` directory.
         localResourceRoots: [
           vscode.Uri.joinPath(extensionUri, "media"),
-          vscode.Uri.joinPath(extensionUri, "out/compiled"),
+          vscode.Uri.joinPath(extensionUri, "webview-ui/build"),
         ],
       }
     )
@@ -65,7 +51,7 @@ export class MqttConnectionView {
     )
   }
 
-  public static kill(brokerConfig: MqttBrokerConfig) {
+  public static kill(brokerConfig: MqttBrokerConfig): void {
     MqttConnectionView._openViews.get(brokerConfig.name)?.dispose()
   }
 
@@ -73,22 +59,18 @@ export class MqttConnectionView {
     panel: vscode.WebviewPanel,
     extensionUri: vscode.Uri,
     brokerConfig: MqttBrokerConfig
-  ) {
+  ): void {
     MqttConnectionView._openViews.set(
       brokerConfig.name,
       new MqttConnectionView(panel, extensionUri, brokerConfig)
     )
   }
 
-  public static reveal(brokerConfig: MqttBrokerConfig) {
+  public static reveal(brokerConfig: MqttBrokerConfig): void {
     MqttConnectionView._openViews.get(brokerConfig.name)?._panel.reveal()
   }
 
-  private constructor(
-    panel: vscode.WebviewPanel,
-    extensionUri: vscode.Uri,
-    brokerConfig: MqttBrokerConfig
-  ) {
+  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
     this._panel = panel
     this._extensionUri = extensionUri
     this.brokerConfig = brokerConfig
@@ -106,20 +88,17 @@ export class MqttConnectionView {
           console.log(
             `Publishing to topic: ${data.value.topic} QoS: ${data.value.qos} Retain: ${data.value.retain}`
           )
-          await this._mqttClient?.publish(
-            data.value.topic,
-            data.value.payload,
-            { qos: data.value.qos, retain: data.value.retain }
-          )
+          await this._mqttClient?.publish(data.value.topic, data.value.payload, {
+            qos: data.value.qos,
+            retain: data.value.retain,
+          })
           break
         }
         case "subscribe": {
           if (!data.value) {
             return
           }
-          console.log(
-            `Subscribing to topic: ${data.value.topic} QoS: ${data.value.qos}`
-          )
+          console.log(`Subscribing to topic: ${data.value.topic} QoS: ${data.value.qos}`)
           this._mqttClient?.subscribe(data.value.topic, {
             qos: data.value.qos,
           })
@@ -137,28 +116,16 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
-          console.log(
-            `Saving subscription: ${JSON.stringify(data.value.subscription)}`
-          )
-          await saveSubscription(
-            data.value.profileName,
-            data.value.subscription
-          )
+          console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`)
+          await saveSubscription(data.value.profileName, data.value.subscription)
           break
         }
         case "removeSavedSubscription": {
           if (!data.value) {
             return
           }
-          console.log(
-            `Removing saved subscription: ${JSON.stringify(
-              data.value.subscription
-            )}`
-          )
-          await removeSavedSubscription(
-            data.value.profileName,
-            data.value.subscription
-          )
+          console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`)
+          await removeSavedSubscription(data.value.profileName, data.value.subscription)
           break
         }
         case "exportMessages": {
@@ -177,7 +144,7 @@ export class MqttConnectionView {
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
   }
 
-  public dispose() {
+  public dispose(): void {
     MqttConnectionView._openViews.delete(this.brokerConfig.name)
     MqttClientFactory.disposeClient(this.brokerConfig)
 
@@ -211,17 +178,13 @@ export class MqttConnectionView {
       )
 
       if (result) {
-        await vscode.commands.executeCommand(
-          "workbench.action.openWorkspaceSettingsFile"
-        )
+        await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile")
       }
     })
 
     this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
       const timestamp = moment().format("YYYY-MM-DD h:mm:ss.SSS")
-      console.log(
-        `${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`
-      )
+      console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`)
       this._panel?.webview.postMessage({
         type: "onMqttMessage",
         value: {
@@ -252,58 +215,37 @@ export class MqttConnectionView {
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     // // And the uri we use to load this script in the webview
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        "out",
-        "compiled/MqttConnectionPanel.js"
-      )
-    )
+    const scriptUri = getUri(webview, this._extensionUri, ["webview-ui", "build", "bundle.js"])
 
-    const stylesPageUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        "out",
-        "compiled/MqttConnectionPanel.css"
-      )
-    )
+    const stylesUri = getUri(webview, this._extensionUri, ["webview-ui", "build", "bundle.css"])
 
-    const stylesResetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
-    )
+    const stylesResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "reset.css"))
 
-    const stylesMainUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
-    )
+    const stylesMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css"))
 
     // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce()
 
-    return `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <!--
-                    Use a content security policy to only allow loading images from https or from our extension directory,
-                    and only allow scripts that have a specific nonce.
-                -->
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
-                  webview.cspSource
-                }; img-src ${
-      webview.cspSource
-    } https:; script-src 'nonce-${nonce}';">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="${stylesResetUri}" rel="stylesheet">
-                <link href="${stylesMainUri}" rel="stylesheet">
-                <link href="${stylesPageUri}" rel="stylesheet">
-                <script nonce="${nonce}">
-                    const vscode = acquireVsCodeApi();
-                    const brokerProfile = ${JSON.stringify(this.brokerConfig)};
-                </script>
-            </head>
-            <body>
-                <script nonce="${nonce}" src="${scriptUri}"></script>
-            </body>
-            </html>`
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>Hello World</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
+          webview.cspSource
+        }; script-src 'nonce-${nonce}';">
+        <script nonce="${nonce}">
+          const brokerProfile = ${JSON.stringify(this.brokerConfig)};
+        </script>
+        <link href="${stylesResetUri}" rel="stylesheet">
+        <link href="${stylesMainUri}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="${stylesUri}">
+        <script defer nonce="${nonce}" src="${scriptUri}"></script>
+      </head>
+      <body>
+      </body>
+    </html>`
   }
 }

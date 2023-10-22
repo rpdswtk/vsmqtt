@@ -3,17 +3,14 @@ import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
 import { MQTTMessage } from "./interfaces/MqttMessage"
 import { MqttSubscription } from "./interfaces/MqttSubscription"
 import csvWriter = require("csv-writer")
+import { Uri, Webview } from "vscode"
 const createCsvWriter = csvWriter.createObjectCsvWriter
 
-export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
+export async function saveBrokerProfile(newProfile: MqttBrokerConfig): Promise<void> {
   const config = await vscode.workspace.getConfiguration("vsmqtt")
-  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>(
-    "brokerProfiles"
-  )
+  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles")
   if (brokerProfiles) {
-    const index = brokerProfiles?.findIndex(
-      (profile) => profile.name === newProfile.name
-    )
+    const index = brokerProfiles?.findIndex((profile) => profile.name === newProfile.name)
     if (index !== undefined && index !== -1) {
       brokerProfiles[index] = newProfile
     } else {
@@ -23,15 +20,11 @@ export async function saveBrokerProfile(newProfile: MqttBrokerConfig) {
   }
 }
 
-export async function removeBrokerProfile(brokerProfile: MqttBrokerConfig) {
+export async function removeBrokerProfile(brokerProfile: MqttBrokerConfig): Promise<void> {
   const config = await vscode.workspace.getConfiguration("vsmqtt")
-  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>(
-    "brokerProfiles"
-  )
+  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles")
   if (brokerProfiles) {
-    const index = brokerProfiles?.findIndex(
-      (profile) => profile.name === brokerProfile.name
-    )
+    const index = brokerProfiles?.findIndex((profile) => profile.name === brokerProfile.name)
     if (index !== undefined && index !== -1) {
       brokerProfiles.splice(index, 1)
       await config.update("brokerProfiles", brokerProfiles)
@@ -39,34 +32,24 @@ export async function removeBrokerProfile(brokerProfile: MqttBrokerConfig) {
   }
 }
 
-export async function loadBrokerProfiles(): Promise<
-  MqttBrokerConfig[] | undefined
-> {
+export async function loadBrokerProfiles(): Promise<MqttBrokerConfig[] | undefined> {
   const config = await vscode.workspace.getConfiguration("vsmqtt")
-  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>(
-    "brokerProfiles"
-  )
+  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles")
   return brokerProfiles
 }
 
 export async function saveSubscription(
   brokerProfileName: string,
   subscription: MqttSubscription
-) {
+): Promise<void> {
   const config = await vscode.workspace.getConfiguration("vsmqtt")
-  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>(
-    "brokerProfiles"
-  )
-  const brokerProfile = brokerProfiles?.find(
-    (profile) => profile.name === brokerProfileName
-  )
+  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles")
+  const brokerProfile = brokerProfiles?.find((profile) => profile.name === brokerProfileName)
   if (brokerProfile) {
     if (!brokerProfile.savedSubscriptions) {
       brokerProfile.savedSubscriptions = []
     }
-    const index = brokerProfile.savedSubscriptions.findIndex(
-      (s) => s.topic === subscription.topic
-    )
+    const index = brokerProfile.savedSubscriptions.findIndex((s) => s.topic === subscription.topic)
     if (index === -1) {
       brokerProfile.savedSubscriptions.push(subscription)
     } else {
@@ -79,18 +62,12 @@ export async function saveSubscription(
 export async function removeSavedSubscription(
   brokerProfileName: string,
   subscription: MqttSubscription
-) {
+): Promise<void> {
   const config = await vscode.workspace.getConfiguration("vsmqtt")
-  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>(
-    "brokerProfiles"
-  )
-  const brokerProfile = brokerProfiles?.find(
-    (profile) => profile.name === brokerProfileName
-  )
+  const brokerProfiles = await config.get<Array<MqttBrokerConfig>>("brokerProfiles")
+  const brokerProfile = brokerProfiles?.find((profile) => profile.name === brokerProfileName)
   if (brokerProfile && brokerProfile.savedSubscriptions) {
-    const index = brokerProfile.savedSubscriptions.findIndex(
-      (s) => s.topic === subscription.topic
-    )
+    const index = brokerProfile.savedSubscriptions.findIndex((s) => s.topic === subscription.topic)
     if (index > -1) {
       brokerProfile.savedSubscriptions.splice(index, 1)
       await config.update("brokerProfiles", brokerProfiles)
@@ -98,7 +75,7 @@ export async function removeSavedSubscription(
   }
 }
 
-export async function saveMessageLog(messages: MQTTMessage[]) {
+export async function saveMessageLog(messages: MQTTMessage[]): Promise<void> {
   let workspaceFolder = null
   if (vscode.workspace.workspaceFolders) {
     workspaceFolder = vscode.workspace.workspaceFolders[0]
@@ -125,12 +102,15 @@ export async function saveMessageLog(messages: MQTTMessage[]) {
   }
 }
 
-export function getNonce() {
+export function getNonce(): string {
   let text = ""
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   for (let i = 0; i < 32; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
   return text
+}
+
+export function getUri(webview: Webview, extensionUri: Uri, pathList: string[]): vscode.Uri {
+  return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList))
 }

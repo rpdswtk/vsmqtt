@@ -6,3 +6,6 @@ export const BROKER_PROFILE = {
 }
 
 export const TEST_PROJECT_FOLDER = "testProject"
+
+export const PORT = 1883
+export const WEBSOCKET_PORT = 8083

@@ -1,19 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const expect = require("chai").expect
-const path = require("path")
+import { expect } from "chai"
+import * as path from "path"
 import * as fs from "node:fs"
-import {
-  Workbench,
-  InputBox,
-  VSBrowser,
-  ModalDialog,
-  WebView,
-  By,
-} from "vscode-extension-tester"
-import sleep from "./utils/sleep"
+import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode-extension-tester"
+import sleep from "./utils/sleep.js"
 import { EditorView } from "vscode-extension-tester"
-import { BROKER_PROFILE } from "./utils/constants"
-import { createSettingsWithProfile, initWorkspace } from "./utils/workspace"
+import { BROKER_PROFILE, WEBSOCKET_PORT } from "./utils/constants.js"
+import { createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 
 describe("Commands", function () {
   let projectPath: string
@@ -40,9 +32,7 @@ describe("Commands", function () {
       await input.confirm()
 
       await sleep(2000)
-      const rawData = fs.readFileSync(
-        path.join(projectPath, ".vscode/settings.json")
-      )
+      const rawData = fs.readFileSync(path.join(projectPath, ".vscode/settings.json"))
       const settings = JSON.parse(rawData.toString())
 
       const savedProfile = settings["vsmqtt.brokerProfiles"][0]
@@ -70,9 +60,7 @@ describe("Commands", function () {
       await dialog.pushButton("Yes")
 
       console.log("Opening settings.json")
-      await VSBrowser.instance.openResources(
-        path.join(projectPath, ".vscode/settings.json")
-      )
+      await VSBrowser.instance.openResources(path.join(projectPath, ".vscode/settings.json"))
 
       console.log("Opening editor")
       const settingsFile = await new EditorView().openEditor("settings.json")
@@ -81,9 +69,7 @@ describe("Commands", function () {
 
       const settings = JSON.parse(settingsText)
 
-      expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([
-        BROKER_PROFILE,
-      ])
+      expect(settings["vsmqtt.brokerProfiles"]).to.not.deep.include.members([BROKER_PROFILE])
     })
   })
 
@@ -113,9 +99,7 @@ describe("Commands", function () {
       const mqttView = new WebView()
       await mqttView.switchToFrame()
 
-      const connectionState = await mqttView.findWebElement(
-        By.className("state")
-      )
+      const connectionState = await mqttView.findWebElement(By.className("state"))
       expect(await connectionState.getText()).to.equal("Connected")
       await mqttView.switchBack()
     })
@@ -128,25 +112,19 @@ describe("Commands", function () {
 
       await sleep(2000)
 
-      expect(
-        await (await input.getMessage()).startsWith("Username"),
-        "Should be username"
-      ).to.be.true
+      expect(await (await input.getMessage()).startsWith("Username"), "Should be username").to.be.true
       await input.setText("user")
       await input.confirm()
 
       await input.wait()
-      expect(
-        await (await input.getMessage()).startsWith("Password"),
-        "Should be password"
-      ).to.be.true
+      expect(await (await input.getMessage()).startsWith("Password"), "Should be password").to.be.true
       await input.cancel()
     })
 
     it("connects to broker using websocket", async function () {
       await createSettingsWithProfile(projectPath, {
         host: "ws://localhost",
-        port: 8083,
+        port: WEBSOCKET_PORT,
         protocol: "ws",
       })
 
@@ -159,9 +137,7 @@ describe("Commands", function () {
       const mqttView = new WebView()
       await mqttView.switchToFrame()
 
-      const connectionState = await mqttView.findWebElement(
-        By.className("state")
-      )
+      const connectionState = await mqttView.findWebElement(By.className("state"))
       expect(await connectionState.getText()).to.equal("Connected")
       await mqttView.switchBack()
     })
