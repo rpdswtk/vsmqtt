@@ -1,3 +1,4 @@
 module.exports = {
-    timeout: 100000
+  timeout: 100000,
+  reporter: "mochawesome",
 }

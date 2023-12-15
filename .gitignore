@@ -5,3 +5,4 @@ node_modules
 *.vsix
 test-resources
 .eslintcache
+mochawesome-report

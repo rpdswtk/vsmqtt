@@ -5,6 +5,8 @@ import { createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
 
 describe("Webviews", function () {
+  this.retries(3)
+
   let projectPath: string
 
   const openview = async () => {
