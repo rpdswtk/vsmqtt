@@ -1,13 +1,11 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es6",
-		"outDir": "../../out/tests",
-		"lib": [
-			"es6"
-		],
-		"sourceMap": true,
-		"rootDir": ".",
-		"strict": true
-	},
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "../../out/tests",
+    "lib": ["es6"],
+    "sourceMap": true,
+    "rootDir": ".",
+    "strict": true
+  }
 }

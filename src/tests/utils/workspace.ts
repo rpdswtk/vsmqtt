@@ -1,13 +1,13 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
 import { VSBrowser } from "vscode-extension-tester"
-import sleep from "./sleep"
-import { BROKER_PROFILE } from "./constants"
+import sleep from "./sleep.js"
+import { BROKER_PROFILE } from "./constants.js"
 import { randomBytes } from "node:crypto"
 
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
-export const initWorkspace = async (dirname: string) => {
+export const initWorkspace = async (dirname: string): Promise<string> => {
   console.log("Initializing workspace")
   const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
@@ -26,9 +26,8 @@ export const initWorkspace = async (dirname: string) => {
 export const createSettingsWithProfile = async (
   projectPath: string,
   propertyOverrides = {}
-) => {
+): Promise<void> => {
   const settings = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
   }
 
@@ -36,10 +35,7 @@ export const createSettingsWithProfile = async (
   fs.mkdirSync(path.join(projectPath, ".vscode"))
 
   console.log("Creating settings.json")
-  fs.appendFileSync(
-    path.join(projectPath, ".vscode/settings.json"),
-    JSON.stringify(settings)
-  )
+  fs.appendFileSync(path.join(projectPath, ".vscode/settings.json"), JSON.stringify(settings))
   console.log("settings file created")
   await sleep(1000)
 }

@@ -2,17 +2,13 @@ import * as vscode from "vscode"
 import { loadBrokerProfiles } from "./helpers"
 import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
 
-export class MqttProfilesProvider
-  implements vscode.TreeDataProvider<BrokerProfileTreeItem>
-{
-  private _onDidChangeTreeData: vscode.EventEmitter<
-    BrokerProfileTreeItem | undefined | void
-  > = new vscode.EventEmitter<BrokerProfileTreeItem | undefined | void>()
-  readonly onDidChangeTreeData: vscode.Event<
-    BrokerProfileTreeItem | undefined | null | void
-  > = this._onDidChangeTreeData.event
+export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfileTreeItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<BrokerProfileTreeItem | undefined | void> =
+    new vscode.EventEmitter<BrokerProfileTreeItem | undefined | void>()
+  readonly onDidChangeTreeData: vscode.Event<BrokerProfileTreeItem | undefined | null | void> =
+    this._onDidChangeTreeData.event
 
-  update() {
+  update(): void {
     this._onDidChangeTreeData.fire()
   }
 
@@ -20,9 +16,7 @@ export class MqttProfilesProvider
     return element
   }
 
-  async getChildren(
-    _element?: BrokerProfileTreeItem
-  ): Promise<BrokerProfileTreeItem[] | undefined> {
+  async getChildren(_element?: BrokerProfileTreeItem): Promise<BrokerProfileTreeItem[] | undefined> {
     try {
       const profiles = await loadBrokerProfiles()
       if (profiles) {
@@ -38,10 +32,7 @@ export class MqttProfilesProvider
 }
 
 export class BrokerProfileTreeItem extends vscode.TreeItem {
-  constructor(
-    public readonly label: string,
-    public readonly brokerProfile: MqttBrokerConfig
-  ) {
+  constructor(public readonly label: string, public readonly brokerProfile: MqttBrokerConfig) {
     super(label)
   }
 }

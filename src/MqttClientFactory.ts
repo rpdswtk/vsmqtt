@@ -8,10 +8,7 @@ const { isAbsolutePath } = require("path-validation")
 ;(global as any).WebSocket = require("ws") // WebSocket is not defined bugfix (mqttjs is using global websocket)
 
 export class MqttClientFactory {
-  private static clients: Map<string, AsyncClient> = new Map<
-    string,
-    AsyncClient
-  >()
+  private static clients: Map<string, AsyncClient> = new Map<string, AsyncClient>()
 
   public static createClient(config: MqttBrokerConfig): AsyncClient {
     let client = MqttClientFactory.clients.get(config.name)
@@ -38,10 +35,7 @@ export class MqttClientFactory {
     }
 
     if (options.key) {
-      if (
-        isAbsolutePath(options.key, "\\") ||
-        isAbsolutePath(options.key, "/")
-      ) {
+      if (isAbsolutePath(options.key, "\\") || isAbsolutePath(options.key, "/")) {
         try {
           options.key = fs.readFileSync(options.key)
         } catch (error) {
@@ -53,10 +47,7 @@ export class MqttClientFactory {
     }
 
     if (options.cert) {
-      if (
-        isAbsolutePath(options.cert, "\\") ||
-        isAbsolutePath(options.cert, "/")
-      ) {
+      if (isAbsolutePath(options.cert, "\\") || isAbsolutePath(options.cert, "/")) {
         try {
           options.cert = fs.readFileSync(options.cert)
         } catch (error) {
@@ -83,7 +74,7 @@ export class MqttClientFactory {
     return client
   }
 
-  public static disposeClient(config: MqttBrokerConfig) {
+  public static disposeClient(config: MqttBrokerConfig): void {
     const client = MqttClientFactory.clients.get(config.name)
     client?.removeAllListeners()
     client?.end()

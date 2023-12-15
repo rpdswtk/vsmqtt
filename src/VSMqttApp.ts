@@ -1,17 +1,10 @@
 import * as vscode from "vscode"
-import {
-  loadBrokerProfiles,
-  removeBrokerProfile,
-  saveBrokerProfile,
-} from "./helpers"
+import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from "./helpers"
 import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
 import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
-import { MqttConnectionView } from "./MqttConnectionView"
-import {
-  BrokerProfileTreeItem,
-  MqttProfilesProvider,
-} from "./MqttProfilesProvider"
-import { randomBytes } from "node:crypto"
+import { MqttConnectionView } from "./panels/MqttConnectionView"
+import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
+import { randomBytes } from "crypto"
 
 export class VSMqttApp {
   private _profilesProvider: MqttProfilesProvider
@@ -21,12 +14,7 @@ export class VSMqttApp {
     this._profilesProvider = new MqttProfilesProvider()
     this._context = context
 
-    context.subscriptions.push(
-      vscode.window.registerTreeDataProvider(
-        "mqttProfiles",
-        this._profilesProvider
-      )
-    )
+    context.subscriptions.push(vscode.window.registerTreeDataProvider("mqttProfiles", this._profilesProvider))
 
     vscode.workspace.onDidChangeConfiguration(() => {
       this._profilesProvider.update()
@@ -37,12 +25,9 @@ export class VSMqttApp {
 
   private _initCommands() {
     this._context.subscriptions.push(
-      vscode.commands.registerCommand(
-        "vsmqtt.connectToBroker",
-        async (item) => {
-          await this._connectToBroker(item)
-        }
-      )
+      vscode.commands.registerCommand("vsmqtt.connectToBroker", async (item) => {
+        await this._connectToBroker(item)
+      })
     )
 
     this._context.subscriptions.push(
@@ -53,19 +38,14 @@ export class VSMqttApp {
 
     this._context.subscriptions.push(
       vscode.commands.registerCommand("vsmqtt.editProfile", async () => {
-        await vscode.commands.executeCommand(
-          "workbench.action.openWorkspaceSettingsFile"
-        )
+        await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile")
       })
     )
 
     this._context.subscriptions.push(
-      vscode.commands.registerCommand(
-        "vsmqtt.deleteProfile",
-        async (item: BrokerProfileTreeItem) => {
-          await this._deleteProfile(item)
-        }
-      )
+      vscode.commands.registerCommand("vsmqtt.deleteProfile", async (item: BrokerProfileTreeItem) => {
+        await this._deleteProfile(item)
+      })
     )
 
     this._context.subscriptions.push(
@@ -86,9 +66,7 @@ export class VSMqttApp {
         return
       }
 
-      const selectedProfileName = await vscode.window.showQuickPick(
-        profiles?.map((profile) => profile.name)
-      )
+      const selectedProfileName = await vscode.window.showQuickPick(profiles?.map((profile) => profile.name))
 
       if (!selectedProfileName) {
         return
@@ -175,9 +153,7 @@ export class VSMqttApp {
     MqttConnectionView.kill(brokerProfile)
   }
 
-  private async _getBrokerProfileWithQuickPick(): Promise<
-    MqttBrokerConfig | undefined
-  > {
+  private async _getBrokerProfileWithQuickPick(): Promise<MqttBrokerConfig | undefined> {
     const profiles = await loadBrokerProfiles()
     if (profiles) {
       const profileName = await vscode.window.showQuickPick(

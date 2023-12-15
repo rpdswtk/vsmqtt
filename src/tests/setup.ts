@@ -1,8 +1,7 @@
-import path = require("path")
-import { TEST_PROJECT_FOLDER } from "./utils/constants"
+import * as path from "path"
+import { TEST_PROJECT_FOLDER } from "./utils/constants.js"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { rimraf } = require("rimraf")
+import { rimraf } from "rimraf"
 
 const removeTestFolders = async () => {
   console.log("Removing project folders")

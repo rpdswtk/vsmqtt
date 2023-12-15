@@ -1,0 +1,7 @@
+node_modules
+build
+public
+out
+cmd
+webview-ui/*
+svelte.config.js

@@ -13,21 +13,22 @@
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/out/**/*.js"
 			],
+			"preLaunchTask": "${defaultBuildTask}"
 		},
 		{
-			"name": "Debug UI Tests",
-			"type": "node",
+			"name": "Extension Tests",
+			"type": "extensionHost",
 			"request": "launch",
-			"program": "${workspaceFolder}/node_modules/vscode-extension-tester/out/cli.js",
 			"args": [
-				"setup-and-run",
-				"${workspaceFolder}/out/tests/*.js",
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
 			],
-			"console": "integratedTerminal",
-			"runtimeExecutable": "node",
-			"internalConsoleOptions": "neverOpen"
+			"outFiles": [
+				"${workspaceFolder}/out/test/**/*.js"
+			],
+			"preLaunchTask": "${defaultBuildTask}"
 		}
 	]
 }
