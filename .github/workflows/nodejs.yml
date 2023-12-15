@@ -30,3 +30,13 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm run test:ci
         if: runner.os != 'Linux'
+
+
+      name: Test Report
+        uses: phoenix-actions/test-reporting@v8
+        id: test-report               # Set ID reference for step
+        if: runner.os == 'Linux' && (success() || failure()) # run this step even if previous step failed
+        with:
+          name: JEST Tests            # Name of the check run which will be created
+          path: mochawesome-report/mochawesome.json    # Path to test results
+          reporter: mocha-json        # Format of test results
