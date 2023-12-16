@@ -36,3 +36,4 @@ vsc-extension-quickstart.md
 test-resources
 .github
 cmd/*
+mochawesome-report

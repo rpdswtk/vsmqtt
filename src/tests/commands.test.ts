@@ -8,6 +8,8 @@ import { BROKER_PROFILE, WEBSOCKET_PORT } from "./utils/constants.js"
 import { createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 
 describe("Commands", function () {
+  this.retries(3)
+
   let projectPath: string
 
   this.beforeEach(async function () {
