@@ -4,3 +4,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    labels:
+      - "dependencies"
+      - "app"
+  - package-ecosystem: "npm"
+    directory: "/webview-ui"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "webview"
