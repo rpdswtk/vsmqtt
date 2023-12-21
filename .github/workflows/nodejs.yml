@@ -30,12 +30,3 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm run test:ci
         if: runner.os != 'Linux'
-
-      - name: Test Report ${{ runner.os }}
-        uses: phoenix-actions/test-reporting@v8
-        id: test-report
-        if: success() || failure()
-        with:
-          name: Test report ${{ runner.os }}
-          path: mochawesome-report/mochawesome.json
-          reporter: mochawesome-json
