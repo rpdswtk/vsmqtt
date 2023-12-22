@@ -279,7 +279,7 @@
     "prettier": "^2.2.1",
     "rimraf": "^5.0.5",
     "typescript": "^4.1.3",
-    "vscode-extension-tester": "^5.10.0",
+    "vscode-extension-tester": "^6.0.0",
     "vscode-test": "^1.5.0"
   },
   "dependencies": {
