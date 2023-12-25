@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "2.0.0",
     "@types/vscode-webview": "^1.57.4",
