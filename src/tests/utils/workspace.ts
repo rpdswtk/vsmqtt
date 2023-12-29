@@ -1,6 +1,6 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
-import { VSBrowser } from "vscode-extension-tester"
+import { VSBrowser, Workbench } from "vscode-extension-tester"
 import sleep from "./sleep.js"
 import { BROKER_PROFILE } from "./constants.js"
 import { randomBytes } from "node:crypto"
@@ -38,4 +38,10 @@ export const createSettingsWithProfile = async (
   fs.appendFileSync(path.join(projectPath, ".vscode/settings.json"), JSON.stringify(settings))
   console.log("settings file created")
   await sleep(1000)
+}
+
+export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
+  if (currentTest?.state === "passed") {
+    await new Workbench().executeCommand("close workspace")
+  }
 }
