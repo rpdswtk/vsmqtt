@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - run: npm run install:all
+      - run: npm run ci:all
       - run: xvfb-run -a npm run test:ci
         if: runner.os == 'Linux'
       - run: npm run test:ci
