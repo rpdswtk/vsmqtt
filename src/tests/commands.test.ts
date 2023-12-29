@@ -5,11 +5,9 @@ import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode
 import sleep from "./utils/sleep.js"
 import { EditorView } from "vscode-extension-tester"
 import { BROKER_PROFILE, WEBSOCKET_PORT } from "./utils/constants.js"
-import { createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
+import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 
 describe("Commands", function () {
-  this.retries(3)
-
   let projectPath: string
 
   this.beforeEach(async function () {
@@ -17,10 +15,12 @@ describe("Commands", function () {
   })
 
   this.afterEach(async function () {
-    await new Workbench().executeCommand("close workspace")
+    closeWorkSpace(this.currentTest)
   })
 
   describe("Add broker profile", () => {
+    this.retries(3)
+
     it("saves profile to settings.json", async function () {
       await new Workbench().executeCommand("add broker profile")
 
@@ -46,6 +46,8 @@ describe("Commands", function () {
   })
 
   describe("Remove broker profile", () => {
+    this.retries(3)
+
     it("removes profile from settings.json", async function () {
       await createSettingsWithProfile(projectPath)
 
@@ -54,8 +56,6 @@ describe("Commands", function () {
       await sleep(2000)
 
       await input.selectQuickPick(0)
-
-      await sleep(2000)
 
       const dialog = new ModalDialog()
       await VSBrowser.instance.waitForWorkbench()
@@ -76,6 +76,8 @@ describe("Commands", function () {
   })
 
   describe("Edit broker profile", () => {
+    this.retries(3)
+
     it("opens settings.json", async function () {
       await new Workbench().executeCommand("edit broker profile")
       await sleep(2000)
@@ -89,6 +91,8 @@ describe("Commands", function () {
   })
 
   describe("Connect to mqtt broker", () => {
+    this.retries(3)
+
     it("connects to broker", async function () {
       await createSettingsWithProfile(projectPath)
 

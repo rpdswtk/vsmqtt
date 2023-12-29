@@ -1,7 +1,7 @@
 import { expect } from "chai"
 
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
-import { createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
+import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
 
 describe("Webviews", function () {
@@ -29,7 +29,7 @@ describe("Webviews", function () {
   })
 
   this.afterEach(async function () {
-    await new Workbench().executeCommand("close workspace")
+    closeWorkSpace(this.currentTest)
   })
 
   it("Renders each section", async function () {
