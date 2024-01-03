@@ -23,6 +23,7 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 * Pin topics (pinned topics are saved to settings and are used to subscribe to automatically upon connection)
 * Export to csv
 * Support for websocket connection
+* Clear retained messages
 
 ## Extension Settings
 
