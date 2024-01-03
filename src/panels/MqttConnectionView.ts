@@ -136,6 +136,13 @@ export class MqttConnectionView {
           saveMessageLog(data.value.messages)
           break
         }
+        case "clearRetainedTopic": {
+          console.log(`Clearing retained topic: ${data.value.topic}`)
+          await this._mqttClient?.publish(data.value.topic, "", {
+            retain: true,
+          })
+          break
+        }
       }
     })
 
