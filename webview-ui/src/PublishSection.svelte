@@ -1,30 +1,13 @@
 <script lang="ts">
   import { vscode } from "./utilities/vscode"
+  import VSCodeBindableWrapper from "./VSCodeBindableWrapper.svelte"
 
   let publishText: string
   let publishTopic: string
-  let selectedQos = "0"
+  let selectedQos: string
   let retain: boolean
-</script>
 
-<h2>Publish</h2>
-
-<div class="publish-options">
-  <input id="topic-input" type="text" placeholder="Topic" bind:value={publishTopic} />
-  <select bind:value={selectedQos}>
-    <option value="0">QoS 0</option>
-    <option value="1">QoS 1</option>
-    <option value="2">QoS 2</option>
-  </select>
-  <h3 class="input-label">Retain:</h3>
-  <input type="checkbox" class="checkbox" bind:checked={retain} />
-</div>
-
-<textarea id="payload-input" rows="5" placeholder="Payload" bind:value={publishText} />
-
-<button
-  id="publish-button"
-  on:click={() => {
+  const publish = () => {
     if (publishTopic) {
       vscode.postMessage({
         type: "publish",
@@ -36,37 +19,32 @@
         },
       })
     }
-  }}>Publish</button>
-
-<style>
-  textarea {
-    resize: none;
-    margin-bottom: 5px;
   }
+</script>
 
-  .publish-options {
-    display: flex;
-    height: 30px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-  }
+<h2>Publish</h2>
 
-  input[type="text"] {
-    width: 50%;
-    margin-right: 5px;
-  }
-
-  input[type="checkbox"] {
-    width: 25px;
-    height: 25px;
-  }
-
-  select {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-
-  .input-label {
-    margin-top: 6px;
-  }
-</style>
+<form on:submit|preventDefault={publish}>
+  <div class="d-flex">
+    <VSCodeBindableWrapper bind:value={publishTopic}>
+      <vscode-text-field id="topic-input">Topic</vscode-text-field>
+    </VSCodeBindableWrapper>
+    <div class="dropdown-container">
+      <label for="my-dropdown">QoS</label>
+      <VSCodeBindableWrapper bind:value={selectedQos}>
+        <vscode-dropdown>
+          <vscode-option value="0">0</vscode-option>
+          <vscode-option value="1">1</vscode-option>
+          <vscode-option value="2">2</vscode-option>
+        </vscode-dropdown>
+      </VSCodeBindableWrapper>
+    </div>
+    <VSCodeBindableWrapper bind:value={retain}>
+      <vscode-checkbox>Retain</vscode-checkbox>
+    </VSCodeBindableWrapper>
+  </div>
+  <VSCodeBindableWrapper bind:value={publishText}>
+    <vscode-text-area id="payload-input">Payload</vscode-text-area>
+  </VSCodeBindableWrapper>
+  <vscode-button id="publish-button" type="submit">Publish</vscode-button>
+</form>

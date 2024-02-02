@@ -226,10 +226,6 @@ export class MqttConnectionView {
 
     const stylesUri = getUri(webview, this._extensionUri, ["webview-ui", "build", "bundle.css"])
 
-    const stylesResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "reset.css"))
-
-    const stylesMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css"))
-
     // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce()
 
@@ -237,7 +233,6 @@ export class MqttConnectionView {
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <title>Hello World</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
@@ -246,8 +241,6 @@ export class MqttConnectionView {
         <script nonce="${nonce}">
           const brokerProfile = ${JSON.stringify(this.brokerConfig)};
         </script>
-        <link href="${stylesResetUri}" rel="stylesheet">
-        <link href="${stylesMainUri}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="${stylesUri}">
         <script defer nonce="${nonce}" src="${scriptUri}"></script>
       </head>

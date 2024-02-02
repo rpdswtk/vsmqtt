@@ -2,11 +2,12 @@
   import { vscode } from "./utilities/vscode"
   import { ColorManager } from "./utilities/ColorManager"
   import { subscriptions } from "./utilities/stores"
+  import VSCodeBindableWrapper from "./VSCodeBindableWrapper.svelte"
 
   let subscribeTopic: string
-  let selectedQos = "0"
+  let selectedQos: string
 
-  function subscribe() {
+  const subscribe = () => {
     if (!subscribeTopic) {
       return
     }
@@ -33,34 +34,19 @@
 <h2>Subscribe</h2>
 <form on:submit|preventDefault={subscribe}>
   <div class="subscription-options">
-    <input id="subscribe-topic-input" type="text" bind:value={subscribeTopic} placeholder="Topic" />
-    <select bind:value={selectedQos}>
-      <option value="0">QoS 0</option>
-      <option value="1">QoS 1</option>
-      <option value="2">QoS 2</option>
-    </select>
+    <VSCodeBindableWrapper bind:value={subscribeTopic}>
+      <vscode-text-field id="subscribe-topic-input">Topic</vscode-text-field>
+    </VSCodeBindableWrapper>
+    <div class="dropdown-container">
+      <label for="my-dropdown">QoS</label>
+      <VSCodeBindableWrapper bind:value={selectedQos}>
+        <vscode-dropdown>
+          <vscode-option value="0">0</vscode-option>
+          <vscode-option value="1">1</vscode-option>
+          <vscode-option value="2">2</vscode-option>
+        </vscode-dropdown>
+      </VSCodeBindableWrapper>
+    </div>
   </div>
-  <button type="submit">Subscribe</button>
+  <vscode-button type="submit">Subscribe</vscode-button>
 </form>
-
-<style>
-  .subscription-options {
-    display: flex;
-    height: 30px;
-    margin-bottom: 1px;
-    margin-top: 5px;
-  }
-
-  input {
-    width: 50%;
-    margin-right: 5px;
-  }
-
-  select {
-    margin-left: 5px;
-  }
-
-  button {
-    margin-bottom: 0;
-  }
-</style>
