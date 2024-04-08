@@ -19,7 +19,7 @@
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "2.0.0",
     "@types/vscode-webview": "^1.57.4",
-    "@typescript-eslint/parser": "^6.18.0",
+    "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^8.56.0",
     "eslint-plugin-svelte": "^2.34.0",
     "rollup": "^2.79.1",
