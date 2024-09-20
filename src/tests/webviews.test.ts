@@ -1,6 +1,6 @@
 import { expect } from "chai"
 
-import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
+import { By, EditorView, InputBox, Key, VSBrowser, WebView, Workbench } from "vscode-extension-tester"
 import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
 

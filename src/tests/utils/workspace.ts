@@ -20,6 +20,7 @@ export const initWorkspace = async (dirname: string): Promise<string> => {
 
   console.log("Folder created")
   await VSBrowser.instance.openResources(projectPath)
+  await VSBrowser.instance.waitForWorkbench()
   return projectPath
 }
 
