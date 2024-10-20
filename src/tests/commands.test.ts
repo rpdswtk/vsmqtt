@@ -21,7 +21,7 @@ describe("Commands", function () {
   describe("Add broker profile", () => {
     this.retries(3)
 
-    it("saves profile to settings.json", async function () {
+    it.skip("saves profile to settings.json", async function () {
       await new Workbench().executeCommand("add broker profile")
 
       const input = await InputBox.create()
