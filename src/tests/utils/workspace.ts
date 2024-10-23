@@ -20,7 +20,6 @@ export const initWorkspace = async (dirname: string): Promise<string> => {
 
   console.log("Folder created")
   await VSBrowser.instance.openResources(projectPath)
-  await VSBrowser.instance.waitForWorkbench()
   return projectPath
 }
 
@@ -44,5 +43,6 @@ export const createSettingsWithProfile = async (
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
   if (currentTest?.state === "passed") {
     await new Workbench().executeCommand("close workspace")
+    console.log("Workspace closed")
   }
 }
