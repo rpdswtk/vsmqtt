@@ -29,7 +29,7 @@ describe("Webviews", function () {
   })
 
   this.afterEach(async function () {
-    closeWorkSpace(this.currentTest)
+    await closeWorkSpace(this.currentTest)
   })
 
   it("Renders each section", async function () {
@@ -48,6 +48,7 @@ describe("Webviews", function () {
     const TOPIC = "testTopic"
 
     it("Subscribes to topic", async function () {
+      console.log("HELLO")
       const mqttView = await openview()
       const subscribeTopicInput = await mqttView.findWebElement(By.id("subscribe-topic-input"))
 
@@ -56,7 +57,13 @@ describe("Webviews", function () {
 
       const subscriptionElementTopic = await mqttView.findWebElement(By.css(".list-item .topic"))
 
-      expect(await subscriptionElementTopic.getText()).to.equal(TOPIC)
+      const topic = await subscriptionElementTopic.getAttribute("innerText")
+
+      console.log(subscriptionElementTopic)
+      console.log("topic: ", topic)
+      console.log("--------------------")
+
+      expect(topic).to.equal(TOPIC)
 
       await mqttView.switchBack()
     })
