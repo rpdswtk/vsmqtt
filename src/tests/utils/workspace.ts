@@ -47,9 +47,7 @@ export const createSettingsWithProfile = async (
   await input.setText(path.join(projectPath, ".vscode/settings.json"))
   await input.confirm()
 
-  if (await input.isDisplayed()) {
-    await input.confirm()
-  }
+  await input.confirm()
 
   console.log("settings file created")
 }
