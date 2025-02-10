@@ -8,7 +8,7 @@ describe("Webviews", function () {
   let projectPath: string
 
   const openview = async () => {
-    createSettingsWithProfile(projectPath)
+    await createSettingsWithProfile(projectPath)
 
     await new Workbench().executeCommand("Connect to mqtt broker")
     const input = await InputBox.create()
@@ -30,7 +30,7 @@ describe("Webviews", function () {
     await closeWorkSpace(this.currentTest)
   })
 
-  it.only("Renders each section", async function () {
+  it("Renders each section", async function () {
     const mqttView = await openview()
 
     expect(await mqttView.findWebElement(By.className("state"))).to.exist

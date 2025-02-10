@@ -1,7 +1,6 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
-import { VSBrowser, Workbench } from "vscode-extension-tester"
-import sleep from "./sleep.js"
+import { EditorView, InputBox, TextEditor, VSBrowser, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE } from "./constants.js"
 import { randomBytes } from "node:crypto"
 
@@ -27,17 +26,32 @@ export const createSettingsWithProfile = async (
   projectPath: string,
   propertyOverrides = {}
 ): Promise<void> => {
+  console.log("Creating settings.json")
+
   const settings = {
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
   }
 
-  console.log("Creating .vscode folder")
-  fs.mkdirSync(path.join(projectPath, ".vscode"))
+  await new Workbench().executeCommand("Create: New File...")
+  const input = await InputBox.create(100000)
+  await input.selectQuickPick("Text File")
 
-  console.log("Creating settings.json")
-  fs.appendFileSync(path.join(projectPath, ".vscode/settings.json"), JSON.stringify(settings))
+  const editor = await new EditorView()
+
+  const textEditor = (await editor.openEditor("Untitled-1")) as TextEditor
+
+  await textEditor.setText(JSON.stringify(settings))
+
+  await textEditor.save()
+
+  await input.setText(path.join(projectPath, ".vscode/settings.json"))
+  await input.confirm()
+
+  if (await input.isDisplayed()) {
+    await input.confirm()
+  }
+
   console.log("settings file created")
-  await sleep(1000)
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
