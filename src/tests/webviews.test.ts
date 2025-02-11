@@ -1,5 +1,4 @@
 import { expect } from "chai"
-
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
 import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
@@ -15,7 +14,7 @@ describe("Webviews", function () {
     await input.selectQuickPick(0)
 
     const webview = await new EditorView().openEditor("VSMQTT")
-    webview.wait(10000)
+    await webview.wait(10000)
     const mqttView = new WebView()
     await mqttView.switchToFrame()
 
@@ -46,7 +45,6 @@ describe("Webviews", function () {
     const TOPIC = "testTopic"
 
     it("Subscribes to topic", async function () {
-      console.log("HELLO")
       const mqttView = await openview()
       const subscribeTopicInput = await mqttView.findWebElement(By.id("subscribe-topic-input"))
 
