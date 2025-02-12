@@ -1,6 +1,6 @@
 import { expect } from "chai"
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
-import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
+import { closeWorkSpace, createSettingsWithProfile, initWorkspace, openWorkSpace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
 
 describe("Webviews", function () {
@@ -8,6 +8,7 @@ describe("Webviews", function () {
 
   const openview = async () => {
     await createSettingsWithProfile(projectPath)
+    await openWorkSpace(projectPath)
 
     await new Workbench().executeCommand("Connect to mqtt broker")
     const input = await InputBox.create()

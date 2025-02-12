@@ -8,8 +8,8 @@ import sleep from "./sleep.js"
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
 export const initWorkspace = async (dirname: string): Promise<string> => {
+  await sleep(2000)
   console.log("Initializing workspace")
-  //await new Workbench().executeCommand("close workspace")
   const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
   console.log("Project path: ", projectPath)
@@ -53,18 +53,16 @@ export const createSettingsWithProfile = async (
   await input.confirm()
 
   console.log("settings file created")
-
-  //await new Workbench().executeCommand("Reload window")
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
-  if (currentTest?.state === "passed") {
+  if (currentTest?.state === "passed" || currentTest?.state === "failed") {
     await new Workbench().executeCommand("close workspace")
     console.log("Workspace closed")
   }
 }
 
-const openWorkSpace = async (projectPath: string) => {
+export const openWorkSpace = async (projectPath: string): Promise<void> => {
   console.log("CLOSE ALL")
   await new EditorView().closeAllEditors()
 
