@@ -1,13 +1,14 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
-import { VSBrowser, Workbench } from "vscode-extension-tester"
-import sleep from "./sleep.js"
+import { EditorView, InputBox, TextEditor, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE } from "./constants.js"
 import { randomBytes } from "node:crypto"
+import sleep from "./sleep.js"
 
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
 export const initWorkspace = async (dirname: string): Promise<string> => {
+  await sleep(2000)
   console.log("Initializing workspace")
   const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
@@ -19,7 +20,8 @@ export const initWorkspace = async (dirname: string): Promise<string> => {
   }
 
   console.log("Folder created")
-  await VSBrowser.instance.openResources(projectPath)
+  await openWorkSpace(projectPath)
+  await sleep(5000)
   return projectPath
 }
 
@@ -27,21 +29,51 @@ export const createSettingsWithProfile = async (
   projectPath: string,
   propertyOverrides = {}
 ): Promise<void> => {
+  console.log("Creating settings.json")
+
   const settings = {
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
   }
 
-  console.log("Creating .vscode folder")
-  fs.mkdirSync(path.join(projectPath, ".vscode"))
+  await new Workbench().executeCommand("Create: New File...")
+  const input = await InputBox.create(100000)
+  await input.selectQuickPick("Text File")
 
-  console.log("Creating settings.json")
-  fs.appendFileSync(path.join(projectPath, ".vscode/settings.json"), JSON.stringify(settings))
-  console.log("settings file created")
-  await sleep(1000)
+  const editor = await new EditorView()
+
+  const textEditor = (await editor.openEditor("Untitled-1")) as TextEditor
+
+  await textEditor.setText(JSON.stringify(settings))
+
+  await textEditor.save()
+
+  await input.setText(path.join(projectPath, ".vscode/settings.json"))
+  await input.confirm()
+
+  await input.confirm()
+
+  console.log("Settings file created")
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
-  if (currentTest?.state === "passed") {
+  if (currentTest?.state === "passed" || currentTest?.state === "failed") {
     await new Workbench().executeCommand("close workspace")
+    console.log("Workspace closed")
   }
+}
+
+export const openWorkSpace = async (projectPath: string): Promise<void> => {
+  await new EditorView().closeAllEditors()
+  console.log("Opening project folder: ", projectPath)
+
+  const prompt = await new Workbench().openCommandPrompt()
+
+  const input = await InputBox.create()
+
+  await prompt.setText(">workbench.action.files.openFolder")
+  await prompt.confirm()
+
+  await input.setText(projectPath)
+  await input.confirm()
+  console.log("Project folder opened")
 }

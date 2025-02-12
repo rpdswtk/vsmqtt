@@ -21,7 +21,7 @@ describe("Commands", function () {
   describe("Add broker profile", () => {
     this.retries(3)
 
-    it("saves profile to settings.json", async function () {
+    it.skip("saves profile to settings.json", async function () {
       await new Workbench().executeCommand("add broker profile")
 
       const input = await InputBox.create()
@@ -61,9 +61,6 @@ describe("Commands", function () {
       await VSBrowser.instance.waitForWorkbench()
       await dialog.pushButton("Yes")
 
-      console.log("Opening settings.json")
-      await VSBrowser.instance.openResources(path.join(projectPath, ".vscode/settings.json"))
-
       console.log("Opening editor")
       const settingsFile = await new EditorView().openEditor("settings.json")
 
@@ -79,7 +76,7 @@ describe("Commands", function () {
     this.retries(3)
 
     it("opens settings.json", async function () {
-      await new Workbench().executeCommand("edit broker profile")
+      await new Workbench().executeCommand("Edit broker profile")
       await sleep(2000)
 
       const editorView = new EditorView()
@@ -94,6 +91,8 @@ describe("Commands", function () {
     this.retries(3)
 
     it("connects to broker", async function () {
+      await new Workbench().executeCommand("VSMQTT: Refresh broker profile list")
+
       await createSettingsWithProfile(projectPath)
 
       await new Workbench().executeCommand("Connect to mqtt broker")

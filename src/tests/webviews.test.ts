@@ -1,23 +1,21 @@
 import { expect } from "chai"
-
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
-import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
+import { closeWorkSpace, createSettingsWithProfile, initWorkspace, openWorkSpace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
 
 describe("Webviews", function () {
-  this.retries(3)
-
   let projectPath: string
 
   const openview = async () => {
-    createSettingsWithProfile(projectPath)
+    await createSettingsWithProfile(projectPath)
+    await openWorkSpace(projectPath)
 
     await new Workbench().executeCommand("Connect to mqtt broker")
     const input = await InputBox.create()
     await input.selectQuickPick(0)
 
     const webview = await new EditorView().openEditor("VSMQTT")
-    webview.wait()
+    await webview.wait(10000)
     const mqttView = new WebView()
     await mqttView.switchToFrame()
 
@@ -29,7 +27,7 @@ describe("Webviews", function () {
   })
 
   this.afterEach(async function () {
-    closeWorkSpace(this.currentTest)
+    await closeWorkSpace(this.currentTest)
   })
 
   it("Renders each section", async function () {
@@ -56,7 +54,9 @@ describe("Webviews", function () {
 
       const subscriptionElementTopic = await mqttView.findWebElement(By.css(".list-item .topic"))
 
-      expect(await subscriptionElementTopic.getText()).to.equal(TOPIC)
+      const topic = await subscriptionElementTopic.getAttribute("innerText")
+
+      expect(topic).to.equal(TOPIC)
 
       await mqttView.switchBack()
     })
@@ -81,12 +81,17 @@ describe("Webviews", function () {
       const subscriptionElementTopic = await mqttView.findWebElement(By.css(".list-item .topic"))
       const messageListItem = await mqttView.findWebElement(By.css(".message-list .list-item"))
 
-      expect(await subscriptionElementMessageCount.getText()).to.equal("1")
-      expect(await subscriptionElementTopic.getText()).to.equal(TOPIC)
+      expect(await subscriptionElementMessageCount.getAttribute("innerText")).to.equal("1")
+      expect(await subscriptionElementTopic.getAttribute("innerText")).to.equal(TOPIC)
 
-      expect(await messageListItem.findElement(By.className("topic")).getText()).to.equal(TOPIC)
-      expect(await messageListItem.findElement(By.className("payload")).getText()).to.equal("hello")
-      expect(await messageListItem.findElement(By.className("qos")).getText()).to.equal("QoS 0")
+      const topic = await messageListItem.findElement(By.className("topic")).getAttribute("innerText")
+      expect(topic).to.equal(TOPIC)
+
+      const payload = await messageListItem.findElement(By.className("payload")).getAttribute("innerText")
+      expect(payload).to.equal("hello")
+
+      const qos = await messageListItem.findElement(By.className("qos")).getAttribute("innerText")
+      expect(qos).to.equal("QoS 0")
 
       await mqttView.switchBack()
     })
@@ -114,12 +119,17 @@ describe("Webviews", function () {
       await sleep(500)
 
       const messageOverview = await mqttView.findWebElement(By.className("message-details"))
-      expect(await messageOverview.findElement(By.className("topic")).getText()).to.equal(TOPIC)
+
+      const topic = await messageOverview.findElement(By.className("topic")).getAttribute("innerText")
+      expect(topic).to.equal(TOPIC)
+
       expect(await messageOverview.findElement(By.className("timestamp"))).to.exist
-      expect(await messageOverview.findElement(By.className("qos")).getText()).to.equal("QoS 0")
-      expect(await messageOverview.findElement(By.className("payload")).getAttribute("value")).to.equal(
-        "hello"
-      )
+
+      const qos = await messageOverview.findElement(By.className("qos")).getAttribute("innerText")
+      expect(qos).to.equal("QoS 0")
+
+      const payload = await messageOverview.findElement(By.className("payload")).getAttribute("value")
+      expect(payload).to.equal("hello")
 
       await mqttView.switchBack()
     })
