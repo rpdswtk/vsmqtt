@@ -52,7 +52,7 @@ export const createSettingsWithProfile = async (
 
   await input.confirm()
 
-  console.log("settings file created")
+  console.log("Settings file created")
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
@@ -63,8 +63,8 @@ export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> =>
 }
 
 export const openWorkSpace = async (projectPath: string): Promise<void> => {
-  console.log("CLOSE ALL")
   await new EditorView().closeAllEditors()
+  console.log("Opening project folder: ", projectPath)
 
   const prompt = await new Workbench().openCommandPrompt()
 
@@ -75,4 +75,5 @@ export const openWorkSpace = async (projectPath: string): Promise<void> => {
 
   await input.setText(projectPath)
   await input.confirm()
+  console.log("Project folder opened")
 }
