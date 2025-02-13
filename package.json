@@ -20,7 +20,7 @@
     "client",
     "mqtt-client"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "viewsWelcome": [
       {
@@ -245,7 +245,7 @@
     "ci:all": "npm ci && cd webview-ui && npm ci",
     "start:webview": "cd webview-ui && npm run dev",
     "build:webview": "cd webview-ui && npm run build",
-    "vscode:prepublish": "npm run compile && npm run build:webview",
+    "vscode:prepublish": "npm run package && npm run build:webview",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "watch:all": "concurrently \"npm run watch\" \"cd webview-ui && npm run watch\"",
@@ -257,7 +257,9 @@
     "pretest": "npm run test-compile && npm run build:webview && npm run lint && npm run start-broker",
     "posttest": "npm run stop-broker",
     "start-broker": "npm run stop-broker || pm2 start cmd/broker.js",
-    "stop-broker": "pm2 delete broker"
+    "stop-broker": "pm2 delete broker",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "clean": ""
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
@@ -279,9 +281,12 @@
     "pm2": "^5.4.3",
     "prettier": "^2.2.1",
     "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.2",
     "typescript": "^5.6.2",
     "vscode-extension-tester": "^8.11.0",
-    "vscode-test": "^1.5.0"
+    "vscode-test": "^1.5.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   },
   "dependencies": {
     "async-mqtt": "^2.6.3",
