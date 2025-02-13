@@ -1,6 +1,3 @@
-# This file contains all the files/directories that should
-# be ignored (i.e. not included) in the final packaged extension.
-
 # Ignore extension configs
 .vscode/**
 
@@ -32,6 +29,10 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.prettierignore
+**/.eslintignore
+
+node_modules/**
+out/**
 
 test-resources
 .github
