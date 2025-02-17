@@ -276,7 +276,7 @@
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "glob": "^7.1.6",
+    "glob": "^11.0.1",
     "mocha": "^10.2.0",
     "pm2": "^5.4.3",
     "prettier": "^2.2.1",
