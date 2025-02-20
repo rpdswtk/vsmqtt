@@ -1,4 +1,4 @@
-import { AsyncClient, connect } from "async-mqtt"
+import { MqttClient, connect } from "mqtt"
 import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
 import * as fs from "fs"
 import * as vscode from "vscode"
@@ -8,9 +8,9 @@ const { isAbsolutePath } = require("path-validation")
 ;(global as any).WebSocket = require("ws") // WebSocket is not defined bugfix (mqttjs is using global websocket)
 
 export class MqttClientFactory {
-  private static clients: Map<string, AsyncClient> = new Map<string, AsyncClient>()
+  private static clients: Map<string, MqttClient> = new Map<string, MqttClient>()
 
-  public static createClient(config: MqttBrokerConfig): AsyncClient {
+  public static createClient(config: MqttBrokerConfig): MqttClient {
     let client = MqttClientFactory.clients.get(config.name)
     if (client) {
       return client
@@ -58,16 +58,7 @@ export class MqttClientFactory {
       }
     }
 
-    if (options.insecure) {
-      client = connect({
-        ...options,
-        checkServerIdentity: () => {
-          return undefined
-        },
-      })
-    } else {
-      client = connect(options.host, options)
-    }
+    client = connect(options.host, options)
 
     MqttClientFactory.clients.set(options.name, client)
 
