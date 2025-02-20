@@ -58,6 +58,10 @@ export class MqttClientFactory {
       }
     }
 
+    if (options.insecure) {
+      options.rejectUnauthorized = false
+    }
+
     if (options.host) {
       client = connect(options.host, options)
     } else {
