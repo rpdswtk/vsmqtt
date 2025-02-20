@@ -76,3 +76,8 @@ VSMQTT versions.
 
 ### Added
 - Clear retained message button
+
+## [1.6.0] - 2024-01-03
+
+### Added
+- Add unix socket support
