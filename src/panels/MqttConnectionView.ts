@@ -1,4 +1,4 @@
-import { AsyncClient } from "async-mqtt"
+import { MqttClient } from "mqtt"
 import * as vscode from "vscode"
 import { getNonce, getUri, removeSavedSubscription, saveMessageLog, saveSubscription } from "../helpers"
 import { MqttBrokerConfig } from "../interfaces/MqttBrokerConfig"
@@ -13,7 +13,7 @@ export class MqttConnectionView {
   public readonly _panel: vscode.WebviewPanel
   private readonly _extensionUri: vscode.Uri
   private _disposables: vscode.Disposable[] = []
-  private _mqttClient?: AsyncClient
+  private _mqttClient?: MqttClient
 
   private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>()
   private _messageCount: number

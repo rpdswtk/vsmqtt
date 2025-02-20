@@ -48,6 +48,7 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | keepalive | number | Keepalive interval in seconds.                                    |          |
 | insecure  | boolean | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
 | rejectUnauthorized | boolean | Skip server certificate validation |          |
+| unixSocket | boolean | Connect to unix socket |          |
 
 ### Examples:
 
@@ -82,6 +83,16 @@ Connecting to broker using websocket:
     "clientId": "vsmqtt_client_test",
     "protocol":"ws",
     "path": "/mqtt"
+}
+```
+
+Connecting to unix socket
+```json
+{
+    "name": "unix connection",
+    "protocol": "mqtt",
+    "path": "/var/run/mosquitto/mosquitto.sock",
+    "unixSocket": true
 }
 ```
 

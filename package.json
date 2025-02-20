@@ -138,9 +138,7 @@
             "type": "object",
             "title": "Broker profile objects",
             "required": [
-              "name",
-              "host",
-              "port"
+              "name"
             ],
             "properties": {
               "name": {
@@ -230,6 +228,10 @@
               "rejectUnauthorized ": {
                 "type": "boolean",
                 "description": "Skip server certificate validation"
+              },
+              "unixSocket ": {
+                "type": "boolean",
+                "description": "Connect to unix socket"
               }
             }
           },
@@ -287,7 +289,7 @@
     "ws": "^8.14.2"
   },
   "dependencies": {
-    "async-mqtt": "^2.6.3",
+    "mqtt": "^4.3.7",
     "csv-writer": "^1.6.0",
     "moment": "^2.29.4",
     "mqtt-packet": "^9.0.1",
