@@ -58,7 +58,11 @@ export class MqttClientFactory {
       }
     }
 
-    client = connect(options.host, options)
+    if (options.host) {
+      client = connect(options.host, options)
+    } else {
+      client = connect(options)
+    }
 
     MqttClientFactory.clients.set(options.name, client)
 

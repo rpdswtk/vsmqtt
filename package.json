@@ -228,6 +228,10 @@
               "rejectUnauthorized ": {
                 "type": "boolean",
                 "description": "Skip server certificate validation"
+              },
+              "unixSocket ": {
+                "type": "boolean",
+                "description": "Connect to unix socket"
               }
             }
           },
