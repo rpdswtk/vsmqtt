@@ -289,9 +289,9 @@
     "ws": "^8.14.2"
   },
   "dependencies": {
-    "mqtt": "^4.3.7",
     "csv-writer": "^1.6.0",
     "moment": "^2.29.4",
+    "mqtt": "^4.3.7",
     "mqtt-packet": "^9.0.1",
     "path-validation": "^0.2.3"
   }
