@@ -264,7 +264,7 @@
     "clean": ""
   },
   "devDependencies": {
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^5.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^22.13.4",
     "@types/vscode": "^1.46.0",
@@ -272,7 +272,7 @@
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "aedes": "^0.50.0",
-    "chai": "^4.3.10",
+    "chai": "^5.2.0",
     "concurrently": "^8.2.2",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^9.1.0",
