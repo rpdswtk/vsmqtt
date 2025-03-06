@@ -10,6 +10,7 @@
     "lint": "eslint --ext .js,.svelte src"
   },
   "dependencies": {
+    "@vscode-elements/elements": "^1.13.1",
     "mqtt-match": "^3.0.0"
   },
   "devDependencies": {

@@ -1,11 +1,47 @@
 <script lang="ts">
-  import { tick } from "svelte"
+  import { onDestroy, tick } from "svelte"
   import { messages, selectedMessage } from "./utilities/stores"
+  import { vscode } from "./utilities/vscode"
+  import "@vscode-elements/elements/dist/vscode-context-menu/index.js"
+  import type { VscodeContextMenu } from "@vscode-elements/elements/dist/vscode-context-menu/index.js"
+  import { onMount } from "svelte"
 
   let autoScroll = true
   let list: Element
+  let contextMenu: VscodeContextMenu
 
-  function scrollToBottom() {
+  const handleContextMenuSelect = (_: CustomEvent) => {
+    vscode.postMessage({
+      type: "openMessage",
+      value: $selectedMessage,
+    })
+  }
+
+  const showContextMenu = async (x: number, y: number) => {
+    contextMenu.show = true
+    await tick()
+    let element = contextMenu as HTMLElement
+    element.style.left = `${x}px`
+    element.style.top = `${y}px`
+
+    let windowWidth = window.innerWidth
+
+    await tick()
+
+    if (x + element.clientWidth >= windowWidth) {
+      element.style.left = `${x - element.clientWidth}px`
+    }
+
+    console.log("client ", element.clientWidth)
+    console.log("window ", windowWidth)
+  }
+
+  const handleRightClick = (event: MouseEvent) => {
+    event.preventDefault()
+    showContextMenu(event.clientX, event.clientY)
+  }
+
+  const scrollToBottom = () => {
     if (list.scrollHeight - list.scrollTop >= list.clientHeight * 3) {
       list.scroll({ top: list.scrollHeight, left: 0, behavior: "auto" })
     } else {
@@ -17,18 +53,38 @@
     }
   }
 
-  messages.subscribe(async () => {
-    await tick()
-    if (autoScroll) {
-      scrollToBottom()
-    }
+  onMount(() => {
+    messages.subscribe(async () => {
+      await tick()
+      if (autoScroll) {
+        scrollToBottom()
+      }
+    })
+
+    contextMenu.data = [
+      {
+        label: "Open in editor",
+        value: "openMessage",
+      },
+    ]
+
+    contextMenu.addEventListener("vsc-context-menu-select", handleContextMenuSelect)
+  })
+
+  onDestroy(() => {
+    contextMenu.removeEventListener("vsc-context-menu-select", null)
   })
 </script>
+
+<vscode-context-menu
+  class="context-menu"
+  bind:this={contextMenu}
+  on:contextmenu={(event) => event.preventDefault()}></vscode-context-menu>
 
 <div class="root">
   <h2 class="title">Messages</h2>
 
-  <div class="message-list" bind:this={list}>
+  <div class="message-list" bind:this={list} on:contextmenu={(e) => e.preventDefault()}>
     {#each $messages as message}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
@@ -36,6 +92,18 @@
         class:selected={$selectedMessage === message}
         on:click={() => {
           $selectedMessage = message
+        }}
+        on:dblclick={() => {
+          $selectedMessage = message
+          vscode.postMessage({
+            type: "openMessage",
+            value: $selectedMessage,
+          })
+        }}
+        on:contextmenu={(event) => {
+          event.preventDefault()
+          $selectedMessage = message
+          handleRightClick(event)
         }}>
         <div class="color-marker" style="background-color: {message.color}" />
         <div class="topic">{message.topic}</div>
@@ -70,6 +138,12 @@
 </div>
 
 <style>
+  .context-menu {
+    position: absolute;
+    z-index: 2;
+    width: fit-content;
+  }
+
   .root {
     display: grid;
     grid-template-rows: min-content auto min-content;

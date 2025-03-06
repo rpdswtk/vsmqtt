@@ -1,6 +1,13 @@
 import { MqttClient } from "mqtt"
 import * as vscode from "vscode"
-import { getNonce, getUri, removeSavedSubscription, saveMessageLog, saveSubscription } from "../helpers"
+import {
+  getNonce,
+  getUri,
+  openMqttMessageInEditor,
+  removeSavedSubscription,
+  saveMessageLog,
+  saveSubscription,
+} from "../helpers"
 import { MqttBrokerConfig } from "../interfaces/MqttBrokerConfig"
 import { MqttClientFactory } from "../MqttClientFactory"
 import { IPublishPacket } from "mqtt-packet"
@@ -141,6 +148,11 @@ export class MqttConnectionView {
           await this._mqttClient?.publish(data.value.topic, "", {
             retain: true,
           })
+          break
+        }
+        case "openMessage": {
+          console.log(`Opening message: ${data.value.topic}`)
+          await openMqttMessageInEditor(data.value.payload)
           break
         }
       }
