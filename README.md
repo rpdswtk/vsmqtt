@@ -24,6 +24,7 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 * Export to csv
 * Support for websocket connection
 * Clear retained messages
+* Right click on message to open in text edior
 
 ## Extension Settings
 
