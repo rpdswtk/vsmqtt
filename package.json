@@ -274,7 +274,7 @@
     "aedes": "^0.50.0",
     "chai": "^4.3.10",
     "concurrently": "^8.2.2",
-    "eslint": "^7.19.0",
+    "eslint": "^9.25.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "mocha": "^10.2.0",
