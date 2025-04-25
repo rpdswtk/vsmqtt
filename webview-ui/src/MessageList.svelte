@@ -72,14 +72,12 @@
   })
 
   onDestroy(() => {
-    contextMenu.removeEventListener("vsc-context-menu-select", null)
+    contextMenu.removeEventListener("vsc-context-menu-select", handleContextMenuSelect)
   })
 </script>
 
-<vscode-context-menu
-  class="context-menu"
-  bind:this={contextMenu}
-  on:contextmenu={(event) => event.preventDefault()}></vscode-context-menu>
+<vscode-context-menu class="context-menu" bind:this={contextMenu} on:contextmenu|preventDefault
+></vscode-context-menu>
 
 <div class="root">
   <h2 class="title">Messages</h2>

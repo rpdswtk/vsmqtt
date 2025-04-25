@@ -3,6 +3,10 @@
   import { selectedMessage } from "./utilities/stores"
 
   const clearRetainedTopic = () => {
+    if (!$selectedMessage) {
+      return
+    }
+
     vscode.postMessage({
       type: "clearRetainedTopic",
       value: {
