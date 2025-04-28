@@ -269,7 +269,7 @@
     "@types/node": "^22.13.4",
     "@types/vscode": "^1.46.0",
     "@types/ws": "^8.5.8",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^4.14.1",
     "aedes": "^0.50.0",
     "chai": "^4.3.10",
