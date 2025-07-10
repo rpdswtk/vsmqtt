@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { vscode } from "./utilities/vscode"
   import { ColorManager } from "./utilities/ColorManager"
   import { subscriptions } from "./utilities/stores"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
 
   let subscribeTopic: string
   let selectedQos = "0"
@@ -11,13 +11,7 @@
       return
     }
 
-    vscode.postMessage({
-      type: "subscribe",
-      value: {
-        topic: subscribeTopic,
-        qos: parseInt(selectedQos),
-      },
-    })
+    ExtensionHostBridge.subscribeToTopic(subscribeTopic, parseInt(selectedQos))
 
     $subscriptions = $subscriptions.set(subscribeTopic, {
       topic: subscribeTopic,

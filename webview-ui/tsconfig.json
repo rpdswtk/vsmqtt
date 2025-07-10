@@ -1,9 +1,12 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "ignoreDeprecations": "5.0"
+    "ignoreDeprecations": "5.0",
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["../src/common/*"]
+    }
   }
 }

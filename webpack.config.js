@@ -3,6 +3,7 @@
 
 const path = require("path")
 const webpack = require("webpack")
+const hq = require("alias-hq")
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -23,7 +24,7 @@ const config = {
   resolve: {
     mainFields: ["browser", "module", "main"],
     extensions: [".ts", ".js"],
-    alias: {},
+    alias: hq.get("webpack"),
     fallback: {},
   },
   module: {

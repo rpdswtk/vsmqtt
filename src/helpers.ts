@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
-import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
-import { MQTTMessage } from "./interfaces/MqttMessage"
-import { MqttSubscription } from "./interfaces/MqttSubscription"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+import MQTTMessage from "@common/interfaces/MqttMessage"
+import MqttSubscription from "@common/interfaces/MqttSubscription"
 import csvWriter = require("csv-writer")
 import { Uri, Webview } from "vscode"
 const createCsvWriter = csvWriter.createObjectCsvWriter

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import type { MqttBrokerConfig } from "../../src/interfaces/MqttBrokerConfig"
+  import type MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
   import PublishSection from "./PublishSection.svelte"
   import SubscribeSection from "./SubscribeSection.svelte"
   import MessageList from "./MessageList.svelte"
@@ -10,6 +10,7 @@
   import match from "mqtt-match"
   import { ColorManager } from "./utilities/ColorManager"
   import type { SubscriptionItem } from "./types"
+  import ExtensionMessages from "@common/constants/ExtensionMessages"
 
   let brokerConfig: MqttBrokerConfig
   let connected: boolean
@@ -37,13 +38,10 @@
     window.addEventListener("message", (event) => {
       const message = event.data
       switch (message.type) {
-        case "onMqttConnectionChange":
+        case ExtensionMessages.onMqttConnectionChange:
           connected = message.value.connected
           break
-        case "onMqttProfileChange":
-          brokerConfig = message.value.brokerConfig
-          break
-        case "onMqttMessage": {
+        case ExtensionMessages.onMqttMessage: {
           let subscription = getSubscriptionorNull(message.value.topic)
 
           if (subscription && !subscription.muted) {

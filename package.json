@@ -249,7 +249,7 @@
     "build:webview": "cd webview-ui && npm run build",
     "vscode:prepublish": "npm run package && npm run build:webview",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "watch": "webpack --mode development --watch",
     "watch:all": "concurrently \"npm run watch\" \"cd webview-ui && npm run watch\"",
     "lint": "eslint src --ext ts",
     "lint:all": "npm run lint && cd webview-ui && npm run lint",
@@ -289,6 +289,7 @@
     "ws": "^8.14.2"
   },
   "dependencies": {
+    "alias-hq": "^6.2.4",
     "csv-writer": "^1.6.0",
     "moment": "^2.29.4",
     "mqtt": "^4.3.7",

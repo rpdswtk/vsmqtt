@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { vscode } from "./utilities/vscode"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
 
   let publishText: string
   let publishTopic: string
@@ -26,15 +26,7 @@
   id="publish-button"
   on:click={() => {
     if (publishTopic) {
-      vscode.postMessage({
-        type: "publish",
-        value: {
-          topic: publishTopic,
-          payload: publishText,
-          qos: parseInt(selectedQos),
-          retain: retain,
-        },
-      })
+      ExtensionHostBridge.publishMessage(publishTopic, publishText, parseInt(selectedQos), retain)
     }
   }}>Publish</button>
 

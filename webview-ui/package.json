@@ -14,8 +14,11 @@
     "mqtt-match": "^3.0.0"
   },
   "devDependencies": {
+    "alias-hq": "^6.2.4",
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-sucrase": "^5.0.2",
     "@rollup/plugin-typescript": "^12.1.2",
     "@tsconfig/svelte": "5.0.4",
     "@types/vscode-webview": "^1.57.4",

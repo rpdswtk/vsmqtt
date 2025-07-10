@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from "./helpers"
-import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
 import { MqttConnectionView } from "./panels/MqttConnectionView"
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
