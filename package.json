@@ -283,13 +283,13 @@
     "rimraf": "^5.0.5",
     "ts-loader": "^9.5.2",
     "typescript": "^5.6.2",
-    "vscode-extension-tester": "^8.11.0",
+    "vscode-extension-tester": "^8.16.2",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "ws": "^8.14.2"
+    "ws": "^8.14.2",
+    "alias-hq": "^6.2.4"
   },
   "dependencies": {
-    "alias-hq": "^6.2.4",
     "csv-writer": "^1.6.0",
     "moment": "^2.29.4",
     "mqtt": "^4.3.7",
