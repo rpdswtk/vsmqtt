@@ -1,18 +1,13 @@
 import { MqttClient } from "mqtt"
 import * as vscode from "vscode"
-import {
-  getNonce,
-  getUri,
-  openMqttMessageInEditor,
-  removeSavedSubscription,
-  saveMessageLog,
-  saveSubscription,
-} from "../helpers"
+import { openMqttMessageInEditor, saveMessageLog } from "../helpers"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import { MqttClientFactory } from "../MqttClientFactory"
 import { IPublishPacket } from "mqtt-packet"
-import moment = require("moment")
+import * as moment from "moment"
 import ExtensionMessages from "@common/constants/ExtensionMessages"
+import { SubscriptionManager } from "SubscriptionManager"
+import { getNonce, getUri } from "webViewUtils"
 
 export class MqttConnectionView {
   public static readonly viewType = "mqtt-connection"
@@ -125,7 +120,7 @@ export class MqttConnectionView {
             return
           }
           console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`)
-          await saveSubscription(data.value.profileName, data.value.subscription)
+          await SubscriptionManager.saveSubscription(data.value.profileName, data.value.subscription)
           break
         }
         case ExtensionMessages.removeSavedSubscription: {
@@ -133,7 +128,7 @@ export class MqttConnectionView {
             return
           }
           console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`)
-          await removeSavedSubscription(data.value.profileName, data.value.subscription)
+          await SubscriptionManager.removeSavedSubscription(data.value.profileName, data.value.subscription)
           break
         }
         case ExtensionMessages.exportMessages: {

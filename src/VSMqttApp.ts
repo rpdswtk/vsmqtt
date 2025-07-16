@@ -1,10 +1,10 @@
 import * as vscode from "vscode"
-import { loadBrokerProfiles, removeBrokerProfile, saveBrokerProfile } from "./helpers"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
 import { MqttConnectionView } from "./panels/MqttConnectionView"
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
 import { randomBytes } from "crypto"
+import BrokerProfileManager from "BrokerProfileManager"
 
 export class VSMqttApp {
   private _profilesProvider: MqttProfilesProvider
@@ -60,7 +60,7 @@ export class VSMqttApp {
     if (treeItem) {
       brokerConfig = treeItem.brokerProfile
     } else {
-      const profiles = await loadBrokerProfiles()
+      const profiles = await BrokerProfileManager.loadBrokerProfiles()
 
       if (!profiles) {
         return
@@ -116,7 +116,7 @@ export class VSMqttApp {
       port = "1883"
     }
 
-    await saveBrokerProfile({
+    await BrokerProfileManager.saveBrokerProfile({
       name,
       host,
       port: parseInt(port),
@@ -148,13 +148,13 @@ export class VSMqttApp {
       return
     }
 
-    await removeBrokerProfile(brokerProfile)
+    await BrokerProfileManager.removeBrokerProfile(brokerProfile)
     this._profilesProvider.update()
     MqttConnectionView.kill(brokerProfile)
   }
 
   private async _getBrokerProfileWithQuickPick(): Promise<MqttBrokerConfig | undefined> {
-    const profiles = await loadBrokerProfiles()
+    const profiles = await BrokerProfileManager.loadBrokerProfiles()
     if (profiles) {
       const profileName = await vscode.window.showQuickPick(
         profiles.map((profile) => {
