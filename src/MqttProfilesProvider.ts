@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
-import BrokerProfileManager from "BrokerProfileManager"
+import BrokerProfileManager from "./BrokerProfileManager"
 
 export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfileTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<BrokerProfileTreeItem | undefined | void> =

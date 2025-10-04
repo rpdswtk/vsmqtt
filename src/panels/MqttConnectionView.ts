@@ -6,8 +6,8 @@ import { MqttClientFactory } from "../MqttClientFactory"
 import { IPublishPacket } from "mqtt-packet"
 import * as moment from "moment"
 import ExtensionMessages from "@common/constants/ExtensionMessages"
-import { SubscriptionManager } from "SubscriptionManager"
-import { getNonce, getUri } from "webViewUtils"
+import { SubscriptionManager } from "../SubscriptionManager"
+import { getNonce, getUri } from "../webViewUtils"
 
 export class MqttConnectionView {
   public static readonly viewType = "mqtt-connection"

@@ -4,7 +4,7 @@ import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
 import { MqttConnectionView } from "./panels/MqttConnectionView"
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
 import { randomBytes } from "crypto"
-import BrokerProfileManager from "BrokerProfileManager"
+import BrokerProfileManager from "./BrokerProfileManager"
 
 export class VSMqttApp {
   private _profilesProvider: MqttProfilesProvider
