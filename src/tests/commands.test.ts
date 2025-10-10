@@ -117,11 +117,13 @@ describe("Commands", function () {
 
       await sleep(2000)
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(await (await input.getMessage()).startsWith("Username"), "Should be username").to.be.true
       await input.setText("user")
       await input.confirm()
 
       await input.wait()
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(await (await input.getMessage()).startsWith("Password"), "Should be password").to.be.true
       await input.cancel()
     })
