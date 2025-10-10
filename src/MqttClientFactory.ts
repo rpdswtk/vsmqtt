@@ -1,5 +1,5 @@
 import { MqttClient, connect } from "mqtt"
-import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import * as fs from "fs"
 import * as vscode from "vscode"
 // eslint-disable-next-line @typescript-eslint/no-var-requires

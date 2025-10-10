@@ -5,3 +5,4 @@ out
 cmd
 webview-ui/*
 svelte.config.js
+webpack.config.js

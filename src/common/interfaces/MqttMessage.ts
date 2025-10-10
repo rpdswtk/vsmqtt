@@ -1,4 +1,4 @@
-export interface MQTTMessage {
+export default interface MQTTMessage {
   id: number
   topic: string
   payload: string

@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { vscode } from "./utilities/vscode"
   import { selectedMessage } from "./utilities/stores"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
 
   const clearRetainedTopic = () => {
-    vscode.postMessage({
-      type: "clearRetainedTopic",
-      value: {
-        topic: $selectedMessage.topic,
-      },
-    })
+    if (!$selectedMessage) {
+      return
+    }
+
+    ExtensionHostBridge.clearRetainedTopic($selectedMessage.topic)
   }
 </script>
 

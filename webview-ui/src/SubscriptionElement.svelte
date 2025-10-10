@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { vscode } from "./utilities/vscode"
   import { ColorManager } from "./utilities/ColorManager"
   import type { SubscriptionItem } from "./types"
   import { subscriptions, savedSubscriptions, messages } from "./utilities/stores"
   import Icon from "./Icon.svelte"
   import match from "mqtt-match"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
+  import type MQTTMessage from "@common/interfaces/MqttMessage"
 
   export let subscription: SubscriptionItem
   export let profileName: string
@@ -15,31 +16,16 @@
     $subscriptions.delete(subscriptionItem.topic)
     $subscriptions = $subscriptions
 
-    vscode.postMessage({
-      type: "unsubscribe",
-      value: { topic: subscriptionItem.topic },
-    })
+    ExtensionHostBridge.unsubscribeFromTopic(subscriptionItem.topic)
   }
 
   function handlePin(pin = true) {
-    let type = pin ? "saveSubscription" : "removeSavedSubscription"
-    let payload = {
-      profileName: profileName,
-      subscription: {
-        topic: subscription.topic,
-        qos: subscription.qos,
-      },
-    }
-
-    vscode.postMessage({
-      type,
-      value: payload,
-    })
-
     if (pin) {
       $savedSubscriptions.set(subscription.topic, subscription)
+      ExtensionHostBridge.saveSubscription(profileName, subscription)
     } else {
       $savedSubscriptions.delete(subscription.topic)
+      ExtensionHostBridge.removeSavedSubscription(profileName, subscription)
     }
 
     $savedSubscriptions = $savedSubscriptions
@@ -50,15 +36,12 @@
   }
 
   function exportLog() {
-    vscode.postMessage({
-      type: "exportMessages",
-      value: {
-        topic: subscription.topic,
-        messages: $messages.filter(
-          (message) => message.topic === subscription.topic || match(subscription.topic, message.topic)
-        ),
-      },
-    })
+    var messagesToExport = $messages.filter(
+      (message: MQTTMessage) =>
+        message.topic === subscription.topic || match(subscription.topic, message.topic)
+    )
+
+    ExtensionHostBridge.exportMessages(subscription.topic, messagesToExport)
   }
 </script>
 

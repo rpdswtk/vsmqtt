@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import { loadBrokerProfiles } from "./helpers"
-import { MqttBrokerConfig } from "./interfaces/MqttBrokerConfig"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+import BrokerProfileManager from "./BrokerProfileManager"
 
 export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfileTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<BrokerProfileTreeItem | undefined | void> =
@@ -18,7 +18,7 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
 
   async getChildren(_element?: BrokerProfileTreeItem): Promise<BrokerProfileTreeItem[] | undefined> {
     try {
-      const profiles = await loadBrokerProfiles()
+      const profiles = await BrokerProfileManager.loadBrokerProfiles()
       if (profiles) {
         const brokerProfiles = profiles.map((profile) => {
           return new BrokerProfileTreeItem(profile.name, profile)

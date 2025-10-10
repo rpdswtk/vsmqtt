@@ -1,17 +1,13 @@
 import { MqttClient } from "mqtt"
 import * as vscode from "vscode"
-import {
-  getNonce,
-  getUri,
-  openMqttMessageInEditor,
-  removeSavedSubscription,
-  saveMessageLog,
-  saveSubscription,
-} from "../helpers"
-import { MqttBrokerConfig } from "../interfaces/MqttBrokerConfig"
+import { openMqttMessageInEditor, saveMessageLog } from "../helpers"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import { MqttClientFactory } from "../MqttClientFactory"
 import { IPublishPacket } from "mqtt-packet"
-import moment = require("moment")
+import * as moment from "moment"
+import ExtensionMessages from "@common/constants/ExtensionMessages"
+import { SubscriptionManager } from "../SubscriptionManager"
+import { getNonce, getUri } from "../webViewUtils"
 
 export class MqttConnectionView {
   public static readonly viewType = "mqtt-connection"
@@ -88,7 +84,7 @@ export class MqttConnectionView {
 
     this._panel.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
-        case "publish": {
+        case ExtensionMessages.publish: {
           if (!data.value) {
             return
           }
@@ -101,7 +97,7 @@ export class MqttConnectionView {
           })
           break
         }
-        case "subscribe": {
+        case ExtensionMessages.subscribe: {
           if (!data.value) {
             return
           }
@@ -111,7 +107,7 @@ export class MqttConnectionView {
           })
           break
         }
-        case "unsubscribe": {
+        case ExtensionMessages.unsubscribe: {
           if (!data.value) {
             return
           }
@@ -119,23 +115,23 @@ export class MqttConnectionView {
           await this._mqttClient?.unsubscribe(data.value.topic)
           break
         }
-        case "saveSubscription": {
+        case ExtensionMessages.saveSubscription: {
           if (!data.value) {
             return
           }
           console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`)
-          await saveSubscription(data.value.profileName, data.value.subscription)
+          await SubscriptionManager.saveSubscription(data.value.profileName, data.value.subscription)
           break
         }
-        case "removeSavedSubscription": {
+        case ExtensionMessages.removeSavedSubscription: {
           if (!data.value) {
             return
           }
           console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`)
-          await removeSavedSubscription(data.value.profileName, data.value.subscription)
+          await SubscriptionManager.removeSavedSubscription(data.value.profileName, data.value.subscription)
           break
         }
-        case "exportMessages": {
+        case ExtensionMessages.exportMessages: {
           if (!data.value) {
             return
           }
@@ -143,14 +139,14 @@ export class MqttConnectionView {
           saveMessageLog(data.value.messages)
           break
         }
-        case "clearRetainedTopic": {
+        case ExtensionMessages.clearRetainedTopic: {
           console.log(`Clearing retained topic: ${data.value.topic}`)
           await this._mqttClient?.publish(data.value.topic, "", {
             retain: true,
           })
           break
         }
-        case "openMessage": {
+        case ExtensionMessages.openMessage: {
           console.log(`Opening message: ${data.value.topic}`)
           await openMqttMessageInEditor(data.value.payload)
           break
@@ -205,7 +201,7 @@ export class MqttConnectionView {
       const timestamp = moment().format("YYYY-MM-DD h:mm:ss.SSS")
       console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`)
       this._panel?.webview.postMessage({
-        type: "onMqttMessage",
+        type: ExtensionMessages.onMqttMessage,
         value: {
           id: this._messageCount++,
           topic,
@@ -219,13 +215,13 @@ export class MqttConnectionView {
 
     this._mqttClient.on("connect", () => {
       this._panel?.webview.postMessage({
-        type: "onMqttConnectionChange",
+        type: ExtensionMessages.onMqttConnectionChange,
         value: { connected: true },
       })
 
       this._mqttClient?.once("error", () => {
         this._panel?.webview.postMessage({
-          type: "onMqttConnectionChange",
+          type: ExtensionMessages.onMqttConnectionChange,
           value: { connected: false },
         })
       })

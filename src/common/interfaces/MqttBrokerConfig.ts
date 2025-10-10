@@ -1,6 +1,6 @@
-import type { MqttSubscription } from "./MqttSubscription"
+import type MqttSubscription from "@common/interfaces/MqttSubscription"
 
-export interface MqttBrokerConfig {
+export default interface MqttBrokerConfig {
   name: string
   host: string
   port: number

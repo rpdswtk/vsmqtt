@@ -1,21 +1,15 @@
 <script lang="ts">
-  import { vscode } from "./utilities/vscode"
   import { ColorManager } from "./utilities/ColorManager"
   import { subscriptions, savedSubscriptions } from "./utilities/stores"
   import { onMount } from "svelte"
   import SubscriptionElement from "./SubscriptionElement.svelte"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
 
   export let profileName: string
 
   onMount(() => {
     $savedSubscriptions?.forEach((subscription) => {
-      vscode.postMessage({
-        type: "subscribe",
-        value: {
-          topic: subscription.topic,
-          qos: subscription.qos,
-        },
-      })
+      ExtensionHostBridge.subscribeToTopic(subscription.topic, subscription.qos)
 
       $subscriptions = $subscriptions.set(subscription.topic, {
         topic: subscription.topic,

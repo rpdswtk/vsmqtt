@@ -1,20 +1,19 @@
 <script lang="ts">
   import { onDestroy, tick } from "svelte"
   import { messages, selectedMessage } from "./utilities/stores"
-  import { vscode } from "./utilities/vscode"
   import "@vscode-elements/elements/dist/vscode-context-menu/index.js"
   import type { VscodeContextMenu } from "@vscode-elements/elements/dist/vscode-context-menu/index.js"
   import { onMount } from "svelte"
+  import ExtensionHostBridge from "./utilities/extensionBridge"
 
   let autoScroll = true
   let list: Element
   let contextMenu: VscodeContextMenu
 
   const handleContextMenuSelect = (_: CustomEvent) => {
-    vscode.postMessage({
-      type: "openMessage",
-      value: $selectedMessage,
-    })
+    if ($selectedMessage) {
+      ExtensionHostBridge.openMessage($selectedMessage)
+    }
   }
 
   const showContextMenu = async (x: number, y: number) => {
@@ -31,9 +30,6 @@
     if (x + element.clientWidth >= windowWidth) {
       element.style.left = `${x - element.clientWidth}px`
     }
-
-    console.log("client ", element.clientWidth)
-    console.log("window ", windowWidth)
   }
 
   const handleRightClick = (event: MouseEvent) => {
@@ -72,14 +68,12 @@
   })
 
   onDestroy(() => {
-    contextMenu.removeEventListener("vsc-context-menu-select", null)
+    contextMenu.removeEventListener("vsc-context-menu-select", handleContextMenuSelect)
   })
 </script>
 
-<vscode-context-menu
-  class="context-menu"
-  bind:this={contextMenu}
-  on:contextmenu={(event) => event.preventDefault()}></vscode-context-menu>
+<vscode-context-menu class="context-menu" bind:this={contextMenu} on:contextmenu|preventDefault
+></vscode-context-menu>
 
 <div class="root">
   <h2 class="title">Messages</h2>
@@ -95,10 +89,7 @@
         }}
         on:dblclick={() => {
           $selectedMessage = message
-          vscode.postMessage({
-            type: "openMessage",
-            value: $selectedMessage,
-          })
+          ExtensionHostBridge.openMessage(message)
         }}
         on:contextmenu={(event) => {
           event.preventDefault()
