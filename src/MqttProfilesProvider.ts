@@ -32,7 +32,10 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
 }
 
 export class BrokerProfileTreeItem extends vscode.TreeItem {
-  constructor(public readonly label: string, public readonly brokerProfile: MqttBrokerConfig) {
+  constructor(
+    public readonly label: string,
+    public readonly brokerProfile: MqttBrokerConfig
+  ) {
     super(label)
   }
 }

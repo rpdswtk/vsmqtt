@@ -2,9 +2,9 @@ import { MqttClient, connect } from "mqtt"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import * as fs from "fs"
 import * as vscode from "vscode"
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { isAbsolutePath } = require("path-validation")
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
 ;(global as any).WebSocket = require("ws") // WebSocket is not defined bugfix (mqttjs is using global websocket)
 
 export class MqttClientFactory {

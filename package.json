@@ -10,7 +10,7 @@
     "url": "https://github.com/rpdswtk/vsmqtt.git"
   },
   "engines": {
-    "vscode": "^1.74.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Other"
@@ -264,30 +264,30 @@
     "clean": ""
   },
   "devDependencies": {
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^5.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^22.13.4",
-    "@types/vscode": "^1.46.0",
+    "@types/vscode": "^1.105.0",
     "@types/ws": "^8.5.8",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
     "aedes": "^0.50.0",
+    "alias-hq": "^6.2.4",
     "chai": "^4.3.10",
     "concurrently": "^8.2.2",
-    "eslint": "^7.19.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.5.4",
     "mocha": "^10.2.0",
     "pm2": "^5.4.3",
-    "prettier": "^2.2.1",
-    "rimraf": "^5.0.5",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
     "ts-loader": "^9.5.2",
     "typescript": "^5.6.2",
     "vscode-extension-tester": "^8.16.2",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "ws": "^8.14.2",
-    "alias-hq": "^6.2.4"
+    "ws": "^8.14.2"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",

@@ -1,5 +1,6 @@
 import * as vscode from "vscode"
 import MQTTMessage from "@common/interfaces/MqttMessage"
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 import csvWriter = require("csv-writer")
 const createCsvWriter = csvWriter.createObjectCsvWriter
 

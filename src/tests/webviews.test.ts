@@ -33,10 +33,15 @@ describe("Webviews", function () {
   it("Renders each section", async function () {
     const mqttView = await openview()
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.className("state"))).to.exist
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.className("publish-options"))).to.exist
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.className("subscription-options"))).to.exist
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.id("message-section"))).to.exist
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.id("message-overview-section"))).to.exist
 
     await mqttView.switchBack()
@@ -123,6 +128,7 @@ describe("Webviews", function () {
       const topic = await messageOverview.findElement(By.className("topic")).getAttribute("innerText")
       expect(topic).to.equal(TOPIC)
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(await messageOverview.findElement(By.className("timestamp"))).to.exist
 
       const qos = await messageOverview.findElement(By.className("qos")).getAttribute("innerText")
