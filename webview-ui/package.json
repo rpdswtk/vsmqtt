@@ -24,7 +24,7 @@
     "@types/vscode-webview": "^1.57.4",
     "@typescript-eslint/parser": "^8.46.0",
     "eslint": "^8.56.0",
-    "eslint-plugin-svelte": "^2.34.0",
+    "eslint-plugin-svelte": "^3.12.5",
     "rollup": "^2.79.1",
     "rollup-plugin-css-only": "^4.5.2",
     "rollup-plugin-livereload": "^2.0.0",
