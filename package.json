@@ -282,7 +282,7 @@
     "pm2": "^5.4.3",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
-    "ts-loader": "^9.5.2",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "vscode-extension-tester": "^8.18.0",
     "webpack": "^5.97.1",
