@@ -5,6 +5,10 @@
   "description": "VSMqtt is a simple MQTT client integrated in vscode.",
   "version": "1.7.0",
   "icon": "logo.png",
+  "galleryBanner": {
+    "theme": "dark",
+    "color": "#000000"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rpdswtk/vsmqtt.git"
@@ -39,7 +43,7 @@
         {
           "id": "vsmqtt-sidebar-view",
           "title": "VSMqtt",
-          "icon": "media/cloud.svg"
+          "icon": "media/icon.svg"
         }
       ]
     },
@@ -56,46 +60,31 @@
         "command": "vsmqtt.refreshProfileList",
         "category": "VSMqtt",
         "title": "Refresh broker profile list",
-        "icon": {
-          "light": "resources/light/refresh.svg",
-          "dark": "resources/dark/refresh.svg"
-        }
+        "icon": "$(refresh)"
       },
       {
         "command": "vsmqtt.connectToBroker",
         "category": "VSMqtt",
         "title": "Connect to mqtt broker",
-        "icon": {
-          "light": "resources/light/play.svg",
-          "dark": "resources/dark/play.svg"
-        }
+        "icon": "$(debug-connected)"
       },
       {
         "command": "vsmqtt.addProfile",
         "category": "VSMqtt",
         "title": "Add broker profile",
-        "icon": {
-          "light": "resources/light/add.svg",
-          "dark": "resources/dark/add.svg"
-        }
+        "icon": "$(add)"
       },
       {
         "command": "vsmqtt.editProfile",
         "category": "VSMqtt",
         "title": "Edit broker profile",
-        "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
-        }
+        "icon": "$(edit)"
       },
       {
         "command": "vsmqtt.deleteProfile",
         "category": "VSMqtt",
         "title": "Remove broker profile",
-        "icon": {
-          "light": "resources/light/trash.svg",
-          "dark": "resources/dark/trash.svg"
-        }
+        "icon": "$(trash)"
       }
     ],
     "menus": {
@@ -258,10 +247,11 @@
     "test-compile": "tsc -p ./src/tests --skipLibCheck",
     "pretest": "npm run test-compile && npm run build:webview && npm run lint && npm run start-broker",
     "posttest": "npm run stop-broker",
-    "start-broker": "npm run stop-broker || pm2 start cmd/broker.js",
+    "start-broker": "pm2 start cmd/broker.js -f",
     "stop-broker": "pm2 delete broker",
     "package": "webpack --mode production --devtool hidden-source-map",
-    "clean": ""
+    "clean": "rimraf ./dist && rimraf ./webview-ui/build && rimraf ./out",
+    "clean:all": "npm run clean && cd webview-ui && npm run clean"
   },
   "devDependencies": {
     "@types/chai": "^5.2.0",

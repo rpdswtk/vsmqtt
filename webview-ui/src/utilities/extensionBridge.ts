@@ -1,7 +1,7 @@
-import type MQTTMessage from "@common/interfaces/MqttMessage"
-import { vscode } from "./vscode"
-import type MqttSubscription from "@common/interfaces/MqttSubscription"
 import ExtensionMessages from "@common/constants/ExtensionMessages"
+import type MQTTMessage from "@common/interfaces/MqttMessage"
+import type MqttSubscription from "@common/interfaces/MqttSubscription"
+import { vscode } from "./vscode"
 
 export default class ExtensionHostBridge {
   public static openMessage(message: MQTTMessage): void {

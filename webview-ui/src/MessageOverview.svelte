@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { selectedMessage } from "./utilities/stores"
+  import "@vscode-elements/elements/dist/vscode-toolbar-button/index.js"
   import ExtensionHostBridge from "./utilities/extensionBridge"
+  import { selectedMessage } from "./utilities/stores"
 
   const clearRetainedTopic = () => {
     if (!$selectedMessage) {
@@ -15,10 +16,11 @@
   <div class="message-details">
     <div class="timestamp">{$selectedMessage.timestamp}</div>
     <div class="topic">{$selectedMessage.topic}</div>
-    <div class="qos">QoS {$selectedMessage.qos}</div>
+    <div class="qos user-select-none">QoS {$selectedMessage.qos}</div>
     {#if $selectedMessage.retain}
-      <div class="retained">Retained</div>
-      <a on:click={clearRetainedTopic} href="foo" class="clear-retained">Clear</a>
+      <div class="retained user-select-none">Retained</div>
+      <vscode-toolbar-button class="clear-retained" on:click={clearRetainedTopic}
+        >Clear</vscode-toolbar-button>
     {/if}
     <textarea class="payload" readonly>{$selectedMessage.payload}</textarea>
   </div>

@@ -1,6 +1,6 @@
-import * as vscode from "vscode"
-import MqttSubscription from "@common/interfaces/MqttSubscription"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+import MqttSubscription from "@common/interfaces/MqttSubscription"
+import * as vscode from "vscode"
 
 export class SubscriptionManager {
   public static async saveSubscription(
@@ -10,6 +10,7 @@ export class SubscriptionManager {
     const config = vscode.workspace.getConfiguration("vsmqtt")
     const brokerProfiles = config.get<Array<MqttBrokerConfig>>("brokerProfiles")
     const brokerProfile = brokerProfiles?.find((profile) => profile.name === brokerProfileName)
+
     if (brokerProfile) {
       if (!brokerProfile.savedSubscriptions) {
         brokerProfile.savedSubscriptions = []

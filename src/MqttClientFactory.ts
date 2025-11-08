@@ -1,6 +1,6 @@
-import { MqttClient, connect } from "mqtt"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import * as fs from "fs"
+import { MqttClient, connect } from "mqtt"
 import * as vscode from "vscode"
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { isAbsolutePath } = require("path-validation")
@@ -77,6 +77,7 @@ export class MqttClientFactory {
     const client = MqttClientFactory.clients.get(config.name)
     client?.removeAllListeners()
     client?.end()
+
     if (client) {
       MqttClientFactory.clients.delete(config.name)
     }

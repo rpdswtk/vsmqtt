@@ -9,6 +9,7 @@ enum ExtensionMessages {
   exportMessages = "exportMessages",
   onMqttConnectionChange = "onMqttConnectionChange",
   onMqttMessage = "onMqttMessage",
+  themeInformationChange = "themeInformationChange",
 }
 
 export default ExtensionMessages

@@ -1,10 +1,10 @@
-import * as vscode from "vscode"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
-import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
-import { MqttConnectionView } from "./panels/MqttConnectionView"
-import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
 import { randomBytes } from "crypto"
+import * as vscode from "vscode"
 import BrokerProfileManager from "./BrokerProfileManager"
+import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
+import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
+import { MqttConnectionView } from "./panels/MqttConnectionView"
 
 export class VSMqttApp {
   private _profilesProvider: MqttProfilesProvider
@@ -49,8 +49,8 @@ export class VSMqttApp {
     )
 
     this._context.subscriptions.push(
-      vscode.commands.registerCommand("vsmqtt.refreshProfileList", async () => {
-        await this._profilesProvider.update()
+      vscode.commands.registerCommand("vsmqtt.refreshProfileList", () => {
+        this._profilesProvider.update()
       })
     )
   }
@@ -60,7 +60,7 @@ export class VSMqttApp {
     if (treeItem) {
       brokerConfig = treeItem.brokerProfile
     } else {
-      const profiles = await BrokerProfileManager.loadBrokerProfiles()
+      const profiles = BrokerProfileManager.loadBrokerProfiles()
 
       if (!profiles) {
         return
@@ -96,6 +96,7 @@ export class VSMqttApp {
     const name = await vscode.window.showInputBox({
       prompt: "Profile name",
     })
+
     if (!name) {
       return
     }
@@ -104,6 +105,7 @@ export class VSMqttApp {
       prompt: "Host",
       placeHolder: "localhost",
     })
+
     if (!host) {
       host = "localhost"
     }
@@ -112,6 +114,7 @@ export class VSMqttApp {
       prompt: "Port",
       placeHolder: "1883",
     })
+
     if (!port) {
       port = "1883"
     }
@@ -122,13 +125,16 @@ export class VSMqttApp {
       port: parseInt(port),
       clientId: `vsmqtt_client_${randomBytes(2).toString("hex")}`,
     })
+
     this._profilesProvider.update()
   }
 
   private async _deleteProfile(treeItem: BrokerProfileTreeItem) {
     let brokerProfile = treeItem?.brokerProfile
+
     if (!brokerProfile) {
       const quickPickResult = await this._getBrokerProfileWithQuickPick()
+
       if (quickPickResult) {
         brokerProfile = quickPickResult as MqttBrokerConfig
       }
@@ -154,7 +160,8 @@ export class VSMqttApp {
   }
 
   private async _getBrokerProfileWithQuickPick(): Promise<MqttBrokerConfig | undefined> {
-    const profiles = await BrokerProfileManager.loadBrokerProfiles()
+    const profiles = BrokerProfileManager.loadBrokerProfiles()
+
     if (profiles) {
       const profileName = await vscode.window.showQuickPick(
         profiles.map((profile) => {
