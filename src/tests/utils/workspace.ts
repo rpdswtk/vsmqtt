@@ -1,8 +1,8 @@
+import { randomBytes } from "node:crypto"
 import * as fs from "node:fs"
 import * as path from "node:path"
 import { EditorView, InputBox, TextEditor, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE } from "./constants.js"
-import { randomBytes } from "node:crypto"
 import sleep from "./sleep.js"
 
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"

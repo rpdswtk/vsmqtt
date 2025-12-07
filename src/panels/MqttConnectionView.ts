@@ -1,12 +1,13 @@
+import ExtensionMessages from "@common/constants/ExtensionMessages"
+import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+import * as moment from "moment"
 import { MqttClient } from "mqtt"
+import { IPublishPacket } from "mqtt-packet"
 import * as vscode from "vscode"
 import { openMqttMessageInEditor, saveMessageLog } from "../helpers"
-import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import { MqttClientFactory } from "../MqttClientFactory"
-import { IPublishPacket } from "mqtt-packet"
-import * as moment from "moment"
-import ExtensionMessages from "@common/constants/ExtensionMessages"
 import { SubscriptionManager } from "../SubscriptionManager"
+import { showProgressNotification } from "../utils/window"
 import { getNonce, getUri } from "../webViewUtils"
 
 export class MqttConnectionView {
@@ -17,6 +18,7 @@ export class MqttConnectionView {
   private readonly _extensionUri: vscode.Uri
   private _disposables: vscode.Disposable[] = []
   private _mqttClient?: MqttClient
+  private _loadingNotificationCancellationToken: vscode.CancellationTokenSource | undefined
 
   private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>()
   private _messageCount: number
@@ -48,10 +50,20 @@ export class MqttConnectionView {
       }
     )
 
+    panel.iconPath = {
+      dark: vscode.Uri.joinPath(extensionUri, "media", "icon_light.svg"),
+      light: vscode.Uri.joinPath(extensionUri, "media", "icon.svg"),
+    }
+
     MqttConnectionView._openViews.set(
       brokerConfig.name,
       new MqttConnectionView(panel, extensionUri, brokerConfig)
     )
+
+    MqttConnectionView._openViews.get(brokerConfig.name)?._panel.webview.postMessage({
+      type: ExtensionMessages.themeInformationChange,
+      value: { themeKind: vscode.window.activeColorTheme.kind },
+    })
   }
 
   public static kill(brokerConfig: MqttBrokerConfig): void {
@@ -78,6 +90,9 @@ export class MqttConnectionView {
     this._extensionUri = extensionUri
     this.brokerConfig = brokerConfig
     this._messageCount = 0
+    this._loadingNotificationCancellationToken = showProgressNotification(
+      `Connecting to broker at ${this.brokerConfig.host}`
+    )
 
     // Set the webview's initial html content
     this._update()
@@ -154,6 +169,17 @@ export class MqttConnectionView {
       }
     })
 
+    vscode.window.onDidChangeActiveColorTheme(
+      (e) => {
+        this._panel.webview.postMessage({
+          type: ExtensionMessages.themeInformationChange,
+          value: { themeKind: e.kind },
+        })
+      },
+      null,
+      this._disposables
+    )
+
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programatically
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
@@ -187,6 +213,7 @@ export class MqttConnectionView {
     this._mqttClient = MqttClientFactory.createClient(this.brokerConfig)
 
     this._mqttClient.once("error", async (error: Error) => {
+      this._loadingNotificationCancellationToken?.cancel()
       const result = await vscode.window.showErrorMessage(
         `Could not connect to ${this.brokerConfig.host} - ${error.message}`,
         "Open settings.json"
@@ -214,6 +241,8 @@ export class MqttConnectionView {
     })
 
     this._mqttClient.on("connect", () => {
+      this._loadingNotificationCancellationToken?.cancel()
+
       this._panel?.webview.postMessage({
         type: ExtensionMessages.onMqttConnectionChange,
         value: { connected: true },

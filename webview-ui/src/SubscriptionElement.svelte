@@ -1,132 +1,78 @@
 <script lang="ts">
-  import { ColorManager } from "./utilities/ColorManager"
+  import "@vscode-elements/elements/dist/vscode-badge/index.js"
+  import "@vscode-elements/elements/dist/vscode-toolbar-button/index.js"
+  import { createEventDispatcher } from "svelte"
+  import { Menu, Mute, Pinned } from "svelte-codicons"
   import type { SubscriptionItem } from "./types"
-  import { subscriptions, savedSubscriptions, messages } from "./utilities/stores"
-  import Icon from "./Icon.svelte"
-  import match from "mqtt-match"
+  import { ColorManager } from "./utilities/ColorManager"
   import ExtensionHostBridge from "./utilities/extensionBridge"
-  import type MQTTMessage from "@common/interfaces/MqttMessage"
+  import { isConnected, savedSubscriptions, subscriptions } from "./utilities/stores"
 
-  export let subscription: SubscriptionItem
-  export let profileName: string
+  export let topic: string
 
-  let showMenu = false
+  $: subscription = $subscriptions.get(topic)!
 
-  function unsubscribe(subscriptionItem: SubscriptionItem) {
+  const dispatch = createEventDispatcher()
+
+  const unsubscribe = (subscriptionItem: SubscriptionItem) => {
     $subscriptions.delete(subscriptionItem.topic)
     $subscriptions = $subscriptions
 
     ExtensionHostBridge.unsubscribeFromTopic(subscriptionItem.topic)
   }
 
-  function handlePin(pin = true) {
-    if (pin) {
-      $savedSubscriptions.set(subscription.topic, subscription)
-      ExtensionHostBridge.saveSubscription(profileName, subscription)
-    } else {
-      $savedSubscriptions.delete(subscription.topic)
-      ExtensionHostBridge.removeSavedSubscription(profileName, subscription)
-    }
-
-    $savedSubscriptions = $savedSubscriptions
-  }
-
-  function mute() {
-    subscription.muted = !subscription.muted
-  }
-
-  function exportLog() {
-    var messagesToExport = $messages.filter(
-      (message: MQTTMessage) =>
-        message.topic === subscription.topic || match(subscription.topic, message.topic)
-    )
-
-    ExtensionHostBridge.exportMessages(subscription.topic, messagesToExport)
+  const handleContextMenuClick = (event: MouseEvent) => {
+    dispatch("menuClick", {
+      element: event.target as HTMLElement,
+      subscription: subscription,
+    })
   }
 </script>
 
-<svelte:window on:click={() => (showMenu = false)} />
-
 <div class="list-item">
-  <div class="color-marker" style="background-color: {ColorManager.getColor(subscription.topic)};" />
-  <div class="topic-label">Topic:</div>
-  <div class="topic">{subscription.topic}</div>
-  {#if !showMenu}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div
-      class="menu-icon"
-      on:click={(e) => {
-        e.stopPropagation()
-        showMenu = true
-      }}>
-      <Icon name="menu" />
-    </div>
-  {/if}
-  {#if showMenu}
-    <!--eslint-disable-next-line svelte/valid-compile-->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="menu" on:click={(e) => e.stopPropagation()}>
-      <!--eslint-disable-next-line svelte/valid-compile-->
-      <div
-        class="menu-icon close"
-        on:click={(e) => {
-          e.stopPropagation()
-          showMenu = false
-        }}>
-        <Icon name="close" />
-      </div>
-      <ul class="menu-list">
-        <!--eslint-disable-next-line svelte/valid-compile-->
-        <li
-          on:click={() => {
-            mute()
-          }}>
-          {#if !subscription.muted}
-            Mute
-          {/if}
-          {#if subscription.muted}
-            Unmute
-          {/if}
-        </li>
-        {#if $savedSubscriptions.has(subscription.topic)}
-          <!--eslint-disable-next-line svelte/valid-compile-->
-          <li on:click={() => handlePin(false)}>Unpin</li>
-        {/if}
-        {#if !$savedSubscriptions.has(subscription.topic)}
-          <!--eslint-disable-next-line svelte/valid-compile-->
-          <li on:click={() => handlePin()}>Pin</li>
-        {/if}
-        <!--eslint-disable-next-line svelte/valid-compile-->
-        <li on:click={() => exportLog()}>Export csv</li>
-      </ul>
-    </div>
-  {/if}
-  <div class="qos">QoS {subscription.qos}</div>
-  <div class="status-icons">
+  <div class="topic-label">
+    <vscode-badge style="--vscode-badge-background: {ColorManager.getColor(subscription.topic)};"
+      >Topic:&nbsp;&nbsp;&nbsp;{subscription.topic}</vscode-badge>
+  </div>
+  <div class="menu-icon mt-2 user-select-none" on:click={handleContextMenuClick}>
+    <Menu name="menu" />
+  </div>
+  <div class="qos user-select-none">
+    QoS:
+    {subscription.qos}
+  </div>
+  <div class="status-icons user-select-none">
     {#if $savedSubscriptions.has(subscription.topic)}
-      <Icon name="pinned" title="Pinned" hoverable={false} />
+      <Pinned />
     {/if}
     {#if subscription.muted}
-      <Icon name="mute" title="Muted" hoverable={false} />
+      <Mute />
     {/if}
   </div>
-  <div class="msg-cnt">{subscription.messageCount}</div>
-  <button
-    class="unsub"
-    on:click={() => {
-      unsubscribe(subscription)
-    }}>Unsubscribe</button>
+  <div class="msg-cnt user-select-none">
+    <vscode-badge variant="counter">{subscription.messageCount}</vscode-badge>
+  </div>
+  <div class="unsub d-flex justify-content-end">
+    {#if $isConnected}
+      <vscode-toolbar-button
+        on:click={() => {
+          unsubscribe(subscription)
+        }}>Unsubscribe</vscode-toolbar-button>
+    {:else}
+      <vscode-toolbar-button disabled>Unsubscribe</vscode-toolbar-button>
+    {/if}
+  </div>
 </div>
 
 <style>
   .list-item {
     display: grid;
     grid-template-rows: auto 30px;
-    grid-template-columns: 4px 4em auto 2em 7em;
+    grid-template-columns: 4em auto 2em 7em;
     grid-template-areas:
-      "color-marker topic-label topic menu-icon unsub"
-      "color-marker qos pin-icon . message-count";
-    background-color: var(--vscode-input-background);
+      "topic-label topic-label menu-icon unsub"
+      "qos pin-icon . message-count";
+    background-color: var(--vscode-settings-dropdownBorder);
     margin-bottom: 5px;
     margin-top: 5px;
   }
@@ -134,70 +80,43 @@
   .topic-label {
     grid-area: topic-label;
     margin: 5px;
-  }
-
-  .topic {
-    grid-area: topic;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin: 5px;
   }
 
   .qos {
     grid-area: qos;
-    margin: 2px 5px 5px 5px;
+    margin: 5px 0px 0px 10px;
+    color: var(--vscode-input-placeholderForeground);
   }
 
   .unsub {
     grid-area: unsub;
   }
 
-  .color-marker {
-    grid-area: color-marker;
-    width: 3px;
-    margin: 3px;
-  }
-
   .msg-cnt {
     grid-area: message-count;
     text-align: right;
-    margin-right: 5px;
-    margin-top: 2px;
+    margin-right: 4px;
+    margin-top: 4px;
   }
 
   .menu-icon {
     grid-area: menu-icon;
     cursor: pointer;
     margin: 3px;
-    z-index: 2;
-  }
-
-  .menu {
-    grid-area: 1 / 4 / 3 / 6;
-    z-index: 1;
-    background-color: var(--vscode-input-background);
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    border: 1px solid var(--vscode-textLink-activeForeground);
-  }
-
-  .menu-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .menu-list li:hover {
-    color: var(--vscode-button-foreground);
-    cursor: pointer;
   }
 
   .status-icons {
     grid-area: pin-icon;
-    margin: 3px;
+    margin-top: 6px;
+    margin-left: 3px;
     display: flex;
     flex-direction: row;
+  }
+
+  vscode-badge {
+    box-sizing: border-box;
   }
 </style>

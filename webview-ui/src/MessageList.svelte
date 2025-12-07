@@ -1,13 +1,20 @@
 <script lang="ts">
-  import { onDestroy, tick } from "svelte"
-  import { messages, selectedMessage } from "./utilities/stores"
+  import "@vscode-elements/elements/dist/vscode-button/index.js"
+  import "@vscode-elements/elements/dist/vscode-checkbox/index.js"
   import "@vscode-elements/elements/dist/vscode-context-menu/index.js"
   import type { VscodeContextMenu } from "@vscode-elements/elements/dist/vscode-context-menu/index.js"
-  import { onMount } from "svelte"
+  import "@vscode-elements/elements/dist/vscode-scrollable/index.js"
+  import type { VscodeScrollable } from "@vscode-elements/elements/dist/vscode-scrollable/index.js"
+  import { onDestroy, onMount, tick } from "svelte"
+  import MessageElement from "./MessageElement.svelte"
+  import { showContextMenu } from "./utilities/contextMenu"
+  import "./utilities/contextMenu.css"
   import ExtensionHostBridge from "./utilities/extensionBridge"
+  import { messages, selectedMessage } from "./utilities/stores"
+  import VSCodeBindableWrapper from "./utilities/VSCodeBindableWrapper.svelte"
 
   let autoScroll = true
-  let list: Element
+  let list: VscodeScrollable
   let contextMenu: VscodeContextMenu
 
   const handleContextMenuSelect = (_: CustomEvent) => {
@@ -16,37 +23,13 @@
     }
   }
 
-  const showContextMenu = async (x: number, y: number) => {
-    contextMenu.show = true
-    await tick()
-    let element = contextMenu as HTMLElement
-    element.style.left = `${x}px`
-    element.style.top = `${y}px`
-
-    let windowWidth = window.innerWidth
-
-    await tick()
-
-    if (x + element.clientWidth >= windowWidth) {
-      element.style.left = `${x - element.clientWidth}px`
-    }
-  }
-
   const handleRightClick = (event: MouseEvent) => {
     event.preventDefault()
-    showContextMenu(event.clientX, event.clientY)
+    showContextMenu(event.clientX, event.clientY, contextMenu)
   }
 
   const scrollToBottom = () => {
-    if (list.scrollHeight - list.scrollTop >= list.clientHeight * 3) {
-      list.scroll({ top: list.scrollHeight, left: 0, behavior: "auto" })
-    } else {
-      list.scroll({
-        top: list.scrollHeight,
-        left: 0,
-        behavior: "smooth",
-      })
-    }
+    list.scrollPos = list.scrollMax
   }
 
   onMount(() => {
@@ -76,65 +59,37 @@
 ></vscode-context-menu>
 
 <div class="root">
-  <h2 class="title">Messages</h2>
+  <h2 class="title section-title user-select-none">Messages</h2>
 
-  <div class="message-list" bind:this={list} on:contextmenu={(e) => e.preventDefault()}>
-    {#each $messages as message}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div
-        class="list-item"
-        class:selected={$selectedMessage === message}
-        on:click={() => {
-          $selectedMessage = message
-        }}
-        on:dblclick={() => {
-          $selectedMessage = message
-          ExtensionHostBridge.openMessage(message)
-        }}
-        on:contextmenu={(event) => {
-          event.preventDefault()
-          $selectedMessage = message
-          handleRightClick(event)
-        }}>
-        <div class="color-marker" style="background-color: {message.color}" />
-        <div class="topic">{message.topic}</div>
-        <div class="qos">QoS {message.qos}</div>
-        <div class="payload">{message.payload}</div>
-        {#if message.retain}
-          <div class="retain">Retained</div>
-        {/if}
-        <div class="id">{message.id}</div>
-      </div>
-    {/each}
+  <div class="message-list" on:contextmenu={(e) => e.preventDefault()}>
+    <vscode-scrollable class="pe-3" bind:this={list} alwaysVisible>
+      {#each $messages as message}
+        <div
+          on:contextmenu={(event) => {
+            event.preventDefault()
+            $selectedMessage = message
+            handleRightClick(event)
+          }}>
+          <MessageElement {message} />
+        </div>
+      {/each}
+    </vscode-scrollable>
   </div>
 
   <div class="options">
-    <span class="scroll">Autoscroll</span>
-    <input
-      type="checkbox"
-      class="checkbox"
-      bind:checked={autoScroll}
-      on:change={() => {
-        if (autoScroll) {
-          scrollToBottom()
-        }
-      }} />
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span
+    <VSCodeBindableWrapper bind:value={autoScroll}>
+      <vscode-checkbox label="Autoscroll"></vscode-checkbox>
+    </VSCodeBindableWrapper>
+    <vscode-button
+      secondary
       class="clear-button"
       on:click={() => {
         $messages = []
-      }}>Clear list</span>
+      }}>Clear list</vscode-button>
   </div>
 </div>
 
 <style>
-  .context-menu {
-    position: absolute;
-    z-index: 2;
-    width: fit-content;
-  }
-
   .root {
     display: grid;
     grid-template-rows: min-content auto min-content;
@@ -149,65 +104,12 @@
   .message-list {
     grid-row-start: 2;
     grid-row-end: 3;
-    height: 100%;
-    overflow: scroll;
-  }
-
-  .list-item {
-    display: grid;
-    grid-template-rows: auto 2em;
-    grid-template-columns: 6px auto 60px 50px;
-    background-color: var(--vscode-input-background);
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 5px;
-    margin-left: 1px;
-    padding: 2px;
-    cursor: pointer;
-    grid-template-areas:
-      "color-marker topic retain qos"
-      "color-marker payload payload id";
+    min-height: 0;
   }
 
   .options {
     grid-row-start: 3;
     grid-row-end: 4;
-  }
-
-  .topic {
-    grid-area: topic;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .qos {
-    grid-area: qos;
-    text-align: right;
-    padding-right: 4px;
-  }
-
-  .retain {
-    grid-area: retain;
-    margin-right: 5px;
-  }
-
-  .payload {
-    grid-area: payload;
-    margin-top: 3px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .selected {
-    outline: solid 1px var(--vscode-focusBorder);
-  }
-
-  .scroll {
-    float: left;
-    margin-left: 2px;
   }
 
   .clear-button {
@@ -216,15 +118,10 @@
     margin-right: 15px;
   }
 
-  .color-marker {
-    grid-area: color-marker;
-    margin-right: 3px;
-  }
-
-  .id {
-    grid-area: id;
-    text-align: right;
-    padding-right: 4px;
-    margin-top: 3px;
+  vscode-scrollable {
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 0;
   }
 </style>

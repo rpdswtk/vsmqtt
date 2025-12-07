@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
-import { closeWorkSpace, createSettingsWithProfile, initWorkspace, openWorkSpace } from "./utils/workspace.js"
 import sleep from "./utils/sleep.js"
+import { closeWorkSpace, createSettingsWithProfile, initWorkspace, openWorkSpace } from "./utils/workspace.js"
 
 describe("Webviews", function () {
   let projectPath: string
@@ -34,7 +34,7 @@ describe("Webviews", function () {
     const mqttView = await openview()
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    expect(await mqttView.findWebElement(By.className("state"))).to.exist
+    expect(await mqttView.findWebElement(By.className("status"))).to.exist
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(await mqttView.findWebElement(By.className("publish-options"))).to.exist
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -57,11 +57,11 @@ describe("Webviews", function () {
       await subscribeTopicInput.sendKeys(TOPIC)
       await subscribeTopicInput.sendKeys(Key.ENTER)
 
-      const subscriptionElementTopic = await mqttView.findWebElement(By.css(".list-item .topic"))
+      const subscriptionElementTopic = await mqttView.findWebElement(By.css(".topic-label"))
 
       const topic = await subscriptionElementTopic.getAttribute("innerText")
 
-      expect(topic).to.equal(TOPIC)
+      expect(topic).to.contain(TOPIC)
 
       await mqttView.switchBack()
     })
@@ -70,7 +70,7 @@ describe("Webviews", function () {
       const mqttView = await openview()
 
       const subscribeTopicInput = await mqttView.findWebElement(By.id("subscribe-topic-input"))
-      const topicInput = await mqttView.findWebElement(By.id("topic-input"))
+      const topicInput = await mqttView.findWebElement(By.id("publish-topic-input"))
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 
@@ -105,7 +105,7 @@ describe("Webviews", function () {
       const mqttView = await openview()
 
       const subscribeTopicInput = await mqttView.findWebElement(By.id("subscribe-topic-input"))
-      const topicInput = await mqttView.findWebElement(By.id("topic-input"))
+      const topicInput = await mqttView.findWebElement(By.id("publish-topic-input"))
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 
@@ -144,7 +144,7 @@ describe("Webviews", function () {
       const mqttView = await openview()
 
       const subscribeTopicInput = await mqttView.findWebElement(By.id("subscribe-topic-input"))
-      const topicInput = await mqttView.findWebElement(By.id("topic-input"))
+      const topicInput = await mqttView.findWebElement(By.id("publish-topic-input"))
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 

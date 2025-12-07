@@ -1,0 +1,5 @@
+.context-menu {
+  position: absolute;
+  z-index: 20;
+  width: fit-content;
+}

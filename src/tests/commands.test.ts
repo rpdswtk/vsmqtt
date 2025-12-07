@@ -1,10 +1,9 @@
 import { expect } from "chai"
-import * as path from "path"
 import * as fs from "node:fs"
-import { Workbench, InputBox, VSBrowser, ModalDialog, WebView, By } from "vscode-extension-tester"
-import sleep from "./utils/sleep.js"
-import { EditorView } from "vscode-extension-tester"
+import * as path from "path"
+import { By, EditorView, InputBox, ModalDialog, VSBrowser, WebView, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE, WEBSOCKET_PORT } from "./utils/constants.js"
+import sleep from "./utils/sleep.js"
 import { closeWorkSpace, createSettingsWithProfile, initWorkspace } from "./utils/workspace.js"
 
 describe("Commands", function () {
@@ -104,8 +103,8 @@ describe("Commands", function () {
       const mqttView = new WebView()
       await mqttView.switchToFrame()
 
-      const connectionState = await mqttView.findWebElement(By.className("state"))
-      expect(await connectionState.getText()).to.equal("Connected")
+      const connectionState = await mqttView.findWebElement(By.className("status"))
+      expect(await connectionState.getText()).to.equal("ONLINE")
       await mqttView.switchBack()
     })
 
@@ -144,8 +143,8 @@ describe("Commands", function () {
       const mqttView = new WebView()
       await mqttView.switchToFrame()
 
-      const connectionState = await mqttView.findWebElement(By.className("state"))
-      expect(await connectionState.getText()).to.equal("Connected")
+      const connectionState = await mqttView.findWebElement(By.className("status"))
+      expect(await connectionState.getText()).to.equal("ONLINE")
       await mqttView.switchBack()
     })
   })

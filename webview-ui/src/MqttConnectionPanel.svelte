@@ -1,21 +1,30 @@
 <script lang="ts">
-  import { onMount } from "svelte"
-  import type MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
-  import PublishSection from "./PublishSection.svelte"
-  import SubscribeSection from "./SubscribeSection.svelte"
-  import MessageList from "./MessageList.svelte"
-  import SubscriptionList from "./SubscriptionList.svelte"
-  import MessageOverview from "./MessageOverview.svelte"
-  import { messages, selectedMessage, subscriptions, savedSubscriptions } from "./utilities/stores"
-  import match from "mqtt-match"
-  import { ColorManager } from "./utilities/ColorManager"
-  import type { SubscriptionItem } from "./types"
   import ExtensionMessages from "@common/constants/ExtensionMessages"
+  import type MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+  import type { ColorThemeKind } from "@common/interfaces/ThemeInformation"
+  import match from "mqtt-match"
+  import { onMount } from "svelte"
+  import { writable } from "svelte/store"
+  import MessageList from "./MessageList.svelte"
+  import MessageOverview from "./MessageOverview.svelte"
+  import PublishSection from "./PublishSection.svelte"
+  import StatusIndicator from "./StatusIndicator.svelte"
+  import SubscribeSection from "./SubscribeSection.svelte"
+  import SubscriptionList from "./SubscriptionList.svelte"
+  import type { SubscriptionItem } from "./types"
+  import { ColorManager } from "./utilities/ColorManager"
+  import {
+    isConnected,
+    messages,
+    savedSubscriptions,
+    selectedMessage,
+    subscriptions,
+  } from "./utilities/stores"
 
   let brokerConfig: MqttBrokerConfig
-  let connected: boolean
+  let themeColorKind = writable<ColorThemeKind | undefined>()
 
-  function getSubscriptionorNull(topic: string): SubscriptionItem | undefined {
+  const getSubscriptionOrNull = (topic: string): SubscriptionItem | undefined => {
     let subscription = $subscriptions.get(topic)
     if (!subscription) {
       let matchedTopic = Array.from($subscriptions.keys()).find((usedTopic) => match(usedTopic, topic))
@@ -28,6 +37,11 @@
   }
 
   onMount(() => {
+    // disable right click
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault()
+    })
+
     // TODO
     // eslint-disable-next-line no-undef
     brokerConfig = brokerProfile
@@ -35,14 +49,14 @@
     brokerConfig.savedSubscriptions?.forEach((subscription) =>
       $savedSubscriptions.set(subscription.topic, subscription)
     )
-    window.addEventListener("message", (event) => {
+    window.addEventListener("message", async (event) => {
       const message = event.data
       switch (message.type) {
         case ExtensionMessages.onMqttConnectionChange:
-          connected = message.value.connected
+          $isConnected = message.value.connected
           break
         case ExtensionMessages.onMqttMessage: {
-          let subscription = getSubscriptionorNull(message.value.topic)
+          let subscription = getSubscriptionOrNull(message.value.topic)
 
           if (subscription && !subscription.muted) {
             message.value.color = ColorManager.getColor(subscription.topic)
@@ -51,6 +65,11 @@
             $subscriptions.set(subscription.topic, subscription)
             $subscriptions = $subscriptions
           }
+          break
+        }
+        case ExtensionMessages.themeInformationChange: {
+          ColorManager.clearColors()
+          themeColorKind.set(message.value.themeKind)
           break
         }
       }
@@ -64,41 +83,37 @@
   })
 </script>
 
-<div id="content">
-  <div id="header">
-    {#if brokerConfig}
-      <h1 class="profile-name">MQTT profile: {brokerConfig.name}</h1>
-      {#if connected}
-        <h1 class="state">Connected</h1>
-      {:else}
-        <h1 class="state">Disconnected</h1>
+{#if $themeColorKind}
+  {#key $themeColorKind}
+    <div id="content">
+      <div id="header" class="user-select-none">
+        <h2 class="profile-name">Profile: {brokerConfig.name}</h2>
+        <div class="status"><StatusIndicator /></div>
+      </div>
+
+      <div id="publish-section" class="container">
+        <PublishSection />
+      </div>
+
+      <div id="subscribe-section" class="container">
+        <SubscribeSection />
+      </div>
+
+      {#if brokerConfig}
+        <div id="subscription-list-section" class="container">
+          <SubscriptionList profileName={brokerConfig.name} />
+        </div>
       {/if}
-      <br />
-    {/if}
-  </div>
 
-  <div id="publish-section" class="container">
-    <PublishSection />
-  </div>
+      <div id="message-section" class="container">
+        <MessageList />
+      </div>
 
-  <div id="subscribe-section" class="container">
-    <SubscribeSection />
-  </div>
-
-  {#if brokerConfig}
-    <div id="subscription-list-section" class="container">
-      <SubscriptionList profileName={brokerConfig.name} />
-    </div>
-  {/if}
-
-  <div id="message-section" class="container">
-    <MessageList />
-  </div>
-
-  <div id="message-overview-section" class="container">
-    <MessageOverview />
-  </div>
-</div>
+      <div id="message-overview-section" class="container">
+        <MessageOverview />
+      </div>
+    </div>{/key}
+{/if}
 
 <style>
   #content {
@@ -116,9 +131,12 @@
 
   .profile-name {
     float: left;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-left: 2px;
   }
 
-  .state {
+  .status {
     float: right;
   }
 
@@ -132,7 +150,6 @@
 
   #subscription-list-section {
     grid-area: 4 / 1 / 6 / 2;
-    overflow: scroll;
   }
 
   #message-section {
@@ -147,7 +164,7 @@
 
   .container {
     padding: 5px;
-    border: 1.5px solid var(--vscode-input-background);
-    margin: 5px;
+    border: 1px solid var(--vscode-settings-dropdownBorder);
+    margin: 3px;
   }
 </style>

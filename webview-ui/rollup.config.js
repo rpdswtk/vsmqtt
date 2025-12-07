@@ -48,6 +48,10 @@ export default {
         // enable run-time checks when not in production
         dev: !production,
       },
+      onwarn: (warning, handler) => {
+        if (warning.code && warning.code.startsWith("a11y-")) return
+        handler(warning)
+      },
     }),
     alias({
       entries: hq.get("rollup"),
