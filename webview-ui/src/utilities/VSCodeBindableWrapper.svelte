@@ -9,6 +9,13 @@
   let vsCodeElement: AssociatedFormControl
   let isCheckbox: boolean
 
+  $: {
+    if (value !== null && value !== undefined && vsCodeElement) {
+      console.log(value)
+      vsCodeElement.value = value.toString()
+    }
+  }
+
   const initObserver = (element: HTMLElement) => {
     vsCodeElement = element.firstChild as unknown as AssociatedFormControl
     isCheckbox = element.firstChild!.nodeName.toUpperCase().includes("CHECKBOX")
