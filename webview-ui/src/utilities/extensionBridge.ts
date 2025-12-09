@@ -76,4 +76,16 @@ export default class ExtensionHostBridge {
       },
     })
   }
+
+  public static saveDefaultPublishValues(topic: string, payload: string, qos: number, retain: boolean): void {
+    vscode.postMessage({
+      type: ExtensionMessages.saveDefaultPublishValues,
+      value: {
+        topic,
+        payload,
+        qos,
+        retain,
+      },
+    })
+  }
 }

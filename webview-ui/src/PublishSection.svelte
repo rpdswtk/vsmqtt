@@ -1,19 +1,23 @@
 <script lang="ts">
+  import type { DefaultsForPublish } from "@common/interfaces/MqttBrokerConfig"
   import "@vscode-elements/elements/dist/vscode-button/index.js"
   import "@vscode-elements/elements/dist/vscode-checkbox/index.js"
   import "@vscode-elements/elements/dist/vscode-single-select/index.js"
   import "@vscode-elements/elements/dist/vscode-textarea/index.js"
   import "@vscode-elements/elements/dist/vscode-textfield/index.js"
+  import "@vscode-elements/elements/dist/vscode-toolbar-button/index.js"
+  import { Save } from "svelte-codicons"
+  import "./styles.css"
   import ExtensionHostBridge from "./utilities/extensionBridge"
+  import { isConnected } from "./utilities/stores"
   import VSCodeBindableWrapper from "./utilities/VSCodeBindableWrapper.svelte"
 
-  import "./styles.css"
-  import { isConnected } from "./utilities/stores"
+  export let defaultsForPublish: DefaultsForPublish | undefined
 
-  let publishText: string
-  let publishTopic: string
-  let selectedQos = "0"
-  let retain: boolean = false
+  let publishText: string = defaultsForPublish?.payload ?? ""
+  let publishTopic: string = defaultsForPublish?.topic ?? ""
+  let selectedQos: string = defaultsForPublish?.qos.toString() ?? "0"
+  let retain: boolean = defaultsForPublish?.retain ?? false
 </script>
 
 <h2 class="section-title user-select-none">Publish</h2>
@@ -35,6 +39,11 @@
   <VSCodeBindableWrapper bind:value={retain}>
     <vscode-checkbox label="Retain"></vscode-checkbox>
   </VSCodeBindableWrapper>
+  <vscode-toolbar-button
+    title="Save as default"
+    on:click={() =>
+      ExtensionHostBridge.saveDefaultPublishValues(publishTopic, publishText, parseInt(selectedQos), retain)}
+    ><Save /></vscode-toolbar-button>
 </div>
 
 <div class="d-flex justify-content-start align-items-center gap-2 ms-1 mt-2">

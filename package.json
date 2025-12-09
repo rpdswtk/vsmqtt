@@ -205,7 +205,12 @@
                       "type": "string"
                     },
                     "qos": {
-                      "type": "number"
+                      "type": "number",
+                      "enum": [
+                        0,
+                        1,
+                        2
+                      ]
                     }
                   }
                 }
@@ -214,13 +219,42 @@
                 "type": "boolean",
                 "description": "Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only."
               },
-              "rejectUnauthorized ": {
+              "rejectUnauthorized": {
                 "type": "boolean",
                 "description": "Skip server certificate validation"
               },
-              "unixSocket ": {
+              "unixSocket": {
                 "type": "boolean",
                 "description": "Connect to unix socket"
+              },
+              "defaultsForPublish": {
+                "type": "object",
+                "description": "Defaults field values for publish on UI",
+                "required": [
+                  "topic",
+                  "payload"
+                ],
+                "properties": {
+                  "topic": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "string"
+                  },
+                  "qos": {
+                    "type": "number",
+                    "default": 0,
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ]
+                  },
+                  "retain": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
               }
             }
           },

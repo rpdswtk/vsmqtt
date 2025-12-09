@@ -1,10 +1,10 @@
-import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
+import MqttBrokerConfig, { DefaultsForPublish } from "@common/interfaces/MqttBrokerConfig"
 import * as vscode from "vscode"
 
 class BrokerProfileManager {
   public static async saveBrokerProfile(newProfile: MqttBrokerConfig): Promise<void> {
     const config = vscode.workspace.getConfiguration("vsmqtt")
-    const brokerProfiles = config.get<Array<MqttBrokerConfig>>("brokerProfiles")
+    const brokerProfiles = this.getBrokerProfiles(config)
 
     if (brokerProfiles) {
       const index = brokerProfiles?.findIndex((profile) => profile.name === newProfile.name)
@@ -21,7 +21,7 @@ class BrokerProfileManager {
 
   public static async removeBrokerProfile(brokerProfile: MqttBrokerConfig): Promise<void> {
     const config = vscode.workspace.getConfiguration("vsmqtt")
-    const brokerProfiles = config.get<Array<MqttBrokerConfig>>("brokerProfiles")
+    const brokerProfiles = this.getBrokerProfiles(config)
 
     if (brokerProfiles) {
       const index = brokerProfiles?.findIndex((profile) => profile.name === brokerProfile.name)
@@ -35,10 +35,30 @@ class BrokerProfileManager {
   }
 
   public static loadBrokerProfiles(): MqttBrokerConfig[] | undefined {
-    const config = vscode.workspace.getConfiguration("vsmqtt")
-    const brokerProfiles = config.get<Array<MqttBrokerConfig>>("brokerProfiles")
+    return this.getBrokerProfiles()
+  }
 
-    return brokerProfiles
+  public static async saveDefaultsForPublish(
+    profileName: string,
+    defaults: DefaultsForPublish
+  ): Promise<void> {
+    const config = vscode.workspace.getConfiguration("vsmqtt")
+    const brokerProfiles = this.getBrokerProfiles(config)
+
+    const profile = brokerProfiles?.find((profile) => profile.name === profileName)
+
+    if (profile) {
+      profile.defaultsForPublish = defaults
+      await config.update("brokerProfiles", brokerProfiles)
+    }
+  }
+
+  private static getBrokerProfiles(
+    configuration: vscode.WorkspaceConfiguration | null = null
+  ): MqttBrokerConfig[] | undefined {
+    const config = configuration ?? vscode.workspace.getConfiguration("vsmqtt")
+
+    return config.get<Array<MqttBrokerConfig>>("brokerProfiles")
   }
 }
 
