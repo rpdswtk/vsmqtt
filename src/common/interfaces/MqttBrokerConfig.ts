@@ -21,4 +21,12 @@ export default interface MqttBrokerConfig {
   promptCredentials?: boolean
   insecure?: boolean
   rejectUnauthorized?: boolean
+  defaultsForPublish?: DefaultsForPublish
+}
+
+export interface DefaultsForPublish {
+  topic: string
+  payload: string
+  qos: number
+  retain: boolean
 }

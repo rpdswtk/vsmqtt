@@ -92,7 +92,7 @@
       </div>
 
       <div id="publish-section" class="container">
-        <PublishSection />
+        <PublishSection defaultsForPublish={brokerConfig.defaultsForPublish} />
       </div>
 
       <div id="subscribe-section" class="container">

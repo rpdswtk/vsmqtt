@@ -11,7 +11,6 @@
 
   $: {
     if (value !== null && value !== undefined && vsCodeElement) {
-      console.log(value)
       vsCodeElement.value = value.toString()
     }
   }

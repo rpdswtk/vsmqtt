@@ -10,6 +10,7 @@ enum ExtensionMessages {
   onMqttConnectionChange = "onMqttConnectionChange",
   onMqttMessage = "onMqttMessage",
   themeInformationChange = "themeInformationChange",
+  saveDefaultPublishValues = "saveDefaultPublishValues",
 }
 
 export default ExtensionMessages

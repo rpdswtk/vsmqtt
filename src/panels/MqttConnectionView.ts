@@ -4,6 +4,7 @@ import * as moment from "moment"
 import { MqttClient } from "mqtt"
 import { IPublishPacket } from "mqtt-packet"
 import * as vscode from "vscode"
+import BrokerProfileManager from "../BrokerProfileManager"
 import { openMqttMessageInEditor, saveMessageLog } from "../helpers"
 import { MqttClientFactory } from "../MqttClientFactory"
 import { SubscriptionManager } from "../SubscriptionManager"
@@ -103,10 +104,12 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
+
           console.log(
             `Publishing to topic: ${data.value.topic} QoS: ${data.value.qos} Retain: ${data.value.retain}`
           )
-          await this._mqttClient?.publish(data.value.topic, data.value.payload, {
+
+          this._mqttClient?.publish(data.value.topic, data.value.payload, {
             qos: data.value.qos,
             retain: data.value.retain,
           })
@@ -126,15 +129,19 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
+
           console.log(`Unsubscribing from topic: ${data.value.topic}`)
-          await this._mqttClient?.unsubscribe(data.value.topic)
+
+          this._mqttClient?.unsubscribe(data.value.topic)
           break
         }
         case ExtensionMessages.saveSubscription: {
           if (!data.value) {
             return
           }
+
           console.log(`Saving subscription: ${JSON.stringify(data.value.subscription)}`)
+
           await SubscriptionManager.saveSubscription(data.value.profileName, data.value.subscription)
           break
         }
@@ -142,7 +149,9 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
+
           console.log(`Removing saved subscription: ${JSON.stringify(data.value.subscription)}`)
+
           await SubscriptionManager.removeSavedSubscription(data.value.profileName, data.value.subscription)
           break
         }
@@ -150,21 +159,35 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
+
           console.log(`Saving message log for topic: ${data.value.topic}`)
+
           saveMessageLog(data.value.messages)
           break
         }
         case ExtensionMessages.clearRetainedTopic: {
           console.log(`Clearing retained topic: ${data.value.topic}`)
-          await this._mqttClient?.publish(data.value.topic, "", {
+
+          this._mqttClient?.publish(data.value.topic, "", {
             retain: true,
           })
           break
         }
         case ExtensionMessages.openMessage: {
           console.log(`Opening message: ${data.value.topic}`)
+
           await openMqttMessageInEditor(data.value.payload)
           break
+        }
+        case ExtensionMessages.saveDefaultPublishValues: {
+          const value = data.value
+
+          BrokerProfileManager.saveDefaultsForPublish(brokerConfig.name, {
+            topic: value.topic,
+            payload: value.payload,
+            qos: value.qos,
+            retain: value.retain,
+          })
         }
       }
     })
