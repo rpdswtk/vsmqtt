@@ -228,6 +228,7 @@ export class MqttConnectionView {
   }
 
   public dispose(): void {
+    this._loadingNotificationCancellationToken?.cancel()
     MqttConnectionView._openViews.delete(this._brokerConfig.name)
     MqttClientFactory.disposeClient(this._brokerConfig)
 
