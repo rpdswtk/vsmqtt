@@ -276,7 +276,7 @@
     "watch:all": "concurrently \"npm run watch\" \"cd webview-ui && npm run watch\"",
     "lint": "eslint src --ext ts",
     "lint:all": "npm run lint && cd webview-ui && npm run lint",
-    "test": "npx extest setup-and-run out/tests/*.js -m src/tests/.mocharc.js",
+    "test": "node cmd/runTests.js",
     "test:ci": "npm run lint:all && npm run test",
     "test-compile": "tsc -p ./src/tests --skipLibCheck",
     "pretest": "npm run test-compile && npm run build:webview && npm run lint && npm run start-broker",

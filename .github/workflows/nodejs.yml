@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build and test
 
 on:
   push:
@@ -10,9 +10,13 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  TEST_VERBOSE: ${{ vars.TEST_VERBOSE }}
+
 jobs:
   build-and-test:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -30,3 +34,19 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm run test:ci
         if: runner.os != 'Linux'
+
+      - name: Prepare artifacts
+        if: always() && vars.TEST_VERBOSE == 'True'
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          cp logs/chromedriver.log artifacts/
+          cp logs/test-output.log artifacts/
+          if [ -d test-resources/screenshots ]; then cp test-resources/screenshots/**/* artifacts/; fi
+
+      - name: Upload logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.os }}
+          path: artifacts/**
