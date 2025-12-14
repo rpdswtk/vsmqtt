@@ -1,5 +1,6 @@
 import { expect } from "chai"
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester"
+import { log } from "./utils/logging.js"
 import sleep from "./utils/sleep.js"
 import { closeWorkSpace, createSettingsWithProfile, initWorkspace, openWorkSpace } from "./utils/workspace.js"
 
@@ -10,10 +11,14 @@ describe("Webviews", function () {
     await createSettingsWithProfile(projectPath)
     await openWorkSpace(projectPath)
 
+    log("Connecting to mqtt broker")
     await new Workbench().executeCommand("Connect to mqtt broker")
     const input = await InputBox.create()
+
+    log("Selecting broker profile")
     await input.selectQuickPick(0)
 
+    log("Opening mqtt webview")
     const webview = await new EditorView().openEditor("VSMQTT")
     await webview.wait(10000)
     const mqttView = new WebView()
@@ -23,11 +28,13 @@ describe("Webviews", function () {
   }
 
   this.beforeEach(async function () {
+    log(`Starting test setup for: ${this.currentTest?.title || "unknown"}`)
     projectPath = await initWorkspace(__dirname)
   })
 
   this.afterEach(async function () {
     await closeWorkSpace(this.currentTest)
+    log(`Finished test cleanup for: ${this.currentTest?.title || "unknown"}`)
   })
 
   it("Renders each section", async function () {
@@ -74,14 +81,18 @@ describe("Webviews", function () {
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 
+      log("Subscribing to topic")
       await subscribeTopicInput.sendKeys(TOPIC)
       await subscribeTopicInput.sendKeys(Key.ENTER)
+
+      log("Publishing message")
       await topicInput.sendKeys(TOPIC)
       await payloadInput.sendKeys("hello")
       await publishButton.click()
 
       await sleep(500)
 
+      log("Verifying received message")
       const subscriptionElementMessageCount = await mqttView.findWebElement(By.css(".list-item .msg-cnt"))
       const subscriptionElementTopic = await mqttView.findWebElement(By.css(".list-item .topic"))
       const messageListItem = await mqttView.findWebElement(By.css(".message-list .list-item"))
@@ -109,20 +120,24 @@ describe("Webviews", function () {
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 
+      log("Subscribing to topic")
       await subscribeTopicInput.sendKeys(TOPIC)
       await subscribeTopicInput.sendKeys(Key.ENTER)
+
+      log("Publishing message")
       await topicInput.sendKeys(TOPIC)
       await payloadInput.sendKeys("hello")
       await publishButton.click()
 
       await sleep(500)
-
+      log("Opening message details")
       const listItem = await mqttView.findWebElement(By.css(".message-list .list-item"))
 
       await listItem.click()
 
       await sleep(500)
 
+      log("Verifying message details")
       const messageOverview = await mqttView.findWebElement(By.className("message-details"))
 
       const topic = await messageOverview.findElement(By.className("topic")).getAttribute("innerText")
@@ -148,11 +163,13 @@ describe("Webviews", function () {
       const payloadInput = await mqttView.findWebElement(By.id("payload-input"))
       const publishButton = await mqttView.findWebElement(By.id("publish-button"))
 
+      log("Subscribing to topic")
       await subscribeTopicInput.sendKeys(TOPIC)
       await subscribeTopicInput.sendKeys(Key.ENTER)
 
       await sleep(500)
 
+      log("Unsubscribing from topic")
       const unsubscribeButton = await mqttView.findWebElement(
         By.css("#subscription-list-section .list-item .unsub")
       )
@@ -161,12 +178,14 @@ describe("Webviews", function () {
 
       await sleep(500)
 
+      log("Publishing message")
       await topicInput.sendKeys(TOPIC)
       await payloadInput.sendKeys("hello")
       await publishButton.click()
 
       await mqttView.switchBack()
 
+      log("Verifying no messages received")
       const subscriptionElements = await mqttView.findWebElements(
         By.css("#subscription-list-section .list-item")
       )
