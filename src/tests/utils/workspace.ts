@@ -3,23 +3,24 @@ import * as fs from "node:fs"
 import * as path from "node:path"
 import { EditorView, InputBox, TextEditor, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE } from "./constants.js"
+import { log } from "./logging.js"
 import sleep from "./sleep.js"
 
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
 export const initWorkspace = async (dirname: string): Promise<string> => {
   await sleep(2000)
-  console.log("Initializing workspace")
+  log("Initializing workspace")
   const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
-  console.log("Project path: ", projectPath)
+  log("Project path: " + projectPath)
 
   if (!fs.existsSync(projectPath)) {
-    console.log("Creating folder...")
+    log("Creating folder...")
     fs.mkdirSync(projectPath)
   }
 
-  console.log("Folder created")
+  log("Folder created")
   await openWorkSpace(projectPath)
   await sleep(5000)
   return projectPath
@@ -29,7 +30,7 @@ export const createSettingsWithProfile = async (
   projectPath: string,
   propertyOverrides = {}
 ): Promise<void> => {
-  console.log("Creating settings.json")
+  log("Creating settings.json")
 
   const settings = {
     "vsmqtt.brokerProfiles": [{ ...BROKER_PROFILE, ...propertyOverrides }],
@@ -52,19 +53,19 @@ export const createSettingsWithProfile = async (
 
   await input.confirm()
 
-  console.log("Settings file created")
+  log("Settings file created")
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
   if (currentTest?.state === "passed" || currentTest?.state === "failed") {
     await new Workbench().executeCommand("close workspace")
-    console.log("Workspace closed")
+    log("Workspace closed")
   }
 }
 
 export const openWorkSpace = async (projectPath: string): Promise<void> => {
   await new EditorView().closeAllEditors()
-  console.log("Opening project folder: ", projectPath)
+  log("Opening project folder: " + projectPath)
 
   const prompt = await new Workbench().openCommandPrompt()
 
@@ -75,5 +76,5 @@ export const openWorkSpace = async (projectPath: string): Promise<void> => {
 
   await input.setText(projectPath)
   await input.confirm()
-  console.log("Project folder opened")
+  log("Project folder opened")
 }
