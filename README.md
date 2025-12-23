@@ -30,7 +30,7 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 
 This extension stores mqtt broker profiles in workspace settings.json under: `"vsmqtt.brokerProfiles"`.
 
-### Properties:
+### Configuration properties:
 
 | name      | type   | description                                                       | required |
 |-----------|--------|-------------------------------------------------------------------|----------|
@@ -48,8 +48,10 @@ This extension stores mqtt broker profiles in workspace settings.json under: `"v
 | clientId  | string | Client ID                                                         |          |
 | keepalive | number | Keepalive interval in seconds.                                    |          |
 | insecure  | boolean | Disable verification of the server hostname in the server certificate. This option makes it possible for a malicious third party to impersonate your server through DNS spoofing. Use it in testing environment only.                                    |          |
-| rejectUnauthorized | boolean | Skip server certificate validation |          |
-| unixSocket | boolean | Connect to unix socket |          |
+| rejectUnauthorized | boolean | Skip server certificate validation                                |          |
+| unixSocket | boolean | Connect to unix socket                                            |          |
+| savedSubscriptions | array | Array of saved subscriptions, each object with topic (string) and qos (number: 0, 1, or 2) |          |
+| defaultsForPublish | object | Defaults for publish: topic (string), payload (string), qos (number: 0, 1, or 2, default 0), retain (boolean, default false). This is used for populating publish part on UI |          |
 
 ### Examples:
 
