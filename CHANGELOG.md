@@ -85,4 +85,12 @@ VSMQTT versions.
 ## [1.7.0] - 2025-03-06
 
 ### Added
-- Add Open in text editor feature 
+- Add Open in text editor feature
+
+## [1.8.0] - 2025-12-23
+
+### Changed
+- UI redesign
+
+### Added
+- Add Defaults for publish feature
