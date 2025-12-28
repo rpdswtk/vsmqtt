@@ -1,23 +1,29 @@
 <script lang="ts">
-  import type { DefaultsForPublish } from "@common/interfaces/MqttBrokerConfig"
   import "@vscode-elements/elements/dist/vscode-button/index.js"
   import "@vscode-elements/elements/dist/vscode-checkbox/index.js"
   import "@vscode-elements/elements/dist/vscode-single-select/index.js"
   import "@vscode-elements/elements/dist/vscode-textarea/index.js"
   import "@vscode-elements/elements/dist/vscode-textfield/index.js"
   import "@vscode-elements/elements/dist/vscode-toolbar-button/index.js"
-  import { Save } from "svelte-codicons"
+  import { FileText, Save } from "svelte-codicons"
   import "./styles.css"
   import ExtensionHostBridge from "./utilities/extensionBridge"
-  import { isConnected } from "./utilities/stores"
+  import { brokerConfig, isConnected } from "./utilities/stores"
   import VSCodeBindableWrapper from "./utilities/VSCodeBindableWrapper.svelte"
 
-  export let defaultsForPublish: DefaultsForPublish | undefined
+  let publishText: string = ""
+  let publishTopic: string = ""
+  let selectedQos: string = "0"
+  let retain: boolean = false
 
-  let publishText: string = defaultsForPublish?.payload ?? ""
-  let publishTopic: string = defaultsForPublish?.topic ?? ""
-  let selectedQos: string = defaultsForPublish?.qos.toString() ?? "0"
-  let retain: boolean = defaultsForPublish?.retain ?? false
+  brokerConfig.subscribe((config) => {
+    if (config?.defaultsForPublish) {
+      publishText = config.defaultsForPublish.payload
+      publishTopic = config.defaultsForPublish.topic
+      selectedQos = config.defaultsForPublish.qos.toString()
+      retain = config.defaultsForPublish.retain
+    }
+  })
 </script>
 
 <h2 class="section-title user-select-none">Publish</h2>
@@ -39,11 +45,16 @@
   <VSCodeBindableWrapper bind:value={retain}>
     <vscode-checkbox label="Retain"></vscode-checkbox>
   </VSCodeBindableWrapper>
-  <vscode-toolbar-button
-    title="Save as default"
-    on:click={() =>
-      ExtensionHostBridge.saveDefaultPublishValues(publishTopic, publishText, parseInt(selectedQos), retain)}
-    ><Save /></vscode-toolbar-button>
+  <div class="d-flex">
+    <vscode-toolbar-button
+      title="Save as default"
+      on:click={() => {
+        ExtensionHostBridge.saveDefaultPublishValues(publishTopic, publishText, parseInt(selectedQos), retain)
+      }}><Save /></vscode-toolbar-button>
+    <vscode-toolbar-button
+      title="Load default publish values"
+      on:click={() => ExtensionHostBridge.reloadBrokerConfig()}><FileText /></vscode-toolbar-button>
+  </div>
 </div>
 
 <div class="d-flex justify-content-start align-items-center gap-2 ms-1 mt-2">

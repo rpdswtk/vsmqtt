@@ -1,6 +1,5 @@
 <script lang="ts">
   import ExtensionMessages from "@common/constants/ExtensionMessages"
-  import type MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
   import type { ColorThemeKind } from "@common/interfaces/ThemeInformation"
   import match from "mqtt-match"
   import { onMount } from "svelte"
@@ -14,6 +13,7 @@
   import type { SubscriptionItem } from "./types"
   import { ColorManager } from "./utilities/ColorManager"
   import {
+    brokerConfig,
     isConnected,
     messages,
     savedSubscriptions,
@@ -21,7 +21,6 @@
     subscriptions,
   } from "./utilities/stores"
 
-  let brokerConfig: MqttBrokerConfig
   let themeColorKind = writable<ColorThemeKind | undefined>()
 
   const getSubscriptionOrNull = (topic: string): SubscriptionItem | undefined => {
@@ -42,13 +41,6 @@
       event.preventDefault()
     })
 
-    // TODO
-    // eslint-disable-next-line no-undef
-    brokerConfig = brokerProfile
-    $savedSubscriptions = new Map()
-    brokerConfig.savedSubscriptions?.forEach((subscription) =>
-      $savedSubscriptions.set(subscription.topic, subscription)
-    )
     window.addEventListener("message", async (event) => {
       const message = event.data
       switch (message.type) {
@@ -72,6 +64,13 @@
           themeColorKind.set(message.value.themeKind)
           break
         }
+        case ExtensionMessages.brokerConfigChanged: {
+          brokerConfig.set(message.value.brokerConfig)
+          $brokerConfig?.savedSubscriptions?.forEach((subscription) =>
+            $savedSubscriptions.set(subscription.topic, subscription)
+          )
+          break
+        }
       }
     })
   })
@@ -83,16 +82,16 @@
   })
 </script>
 
-{#if $themeColorKind}
+{#if $themeColorKind && $brokerConfig}
   {#key $themeColorKind}
     <div id="content">
       <div id="header" class="user-select-none">
-        <h2 class="profile-name">Profile: {brokerConfig.name}</h2>
+        <h2 class="profile-name">Profile: {$brokerConfig.name}</h2>
         <div class="status"><StatusIndicator /></div>
       </div>
 
       <div id="publish-section" class="container">
-        <PublishSection defaultsForPublish={brokerConfig.defaultsForPublish} />
+        <PublishSection />
       </div>
 
       <div id="subscribe-section" class="container">
@@ -101,7 +100,7 @@
 
       {#if brokerConfig}
         <div id="subscription-list-section" class="container">
-          <SubscriptionList profileName={brokerConfig.name} />
+          <SubscriptionList profileName={$brokerConfig.name} />
         </div>
       {/if}
 
