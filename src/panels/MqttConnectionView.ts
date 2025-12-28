@@ -14,7 +14,7 @@ import { getNonce, getUri } from "../webViewUtils"
 export class MqttConnectionView {
   public static readonly viewType = "mqtt-connection"
 
-  public brokerConfig: MqttBrokerConfig
+  private _brokerConfig: MqttBrokerConfig
   public readonly _panel: vscode.WebviewPanel
   private readonly _extensionUri: vscode.Uri
   private _disposables: vscode.Disposable[] = []
@@ -61,9 +61,16 @@ export class MqttConnectionView {
       new MqttConnectionView(panel, extensionUri, brokerConfig)
     )
 
-    MqttConnectionView._openViews.get(brokerConfig.name)?._panel.webview.postMessage({
+    panel.webview.postMessage({
       type: ExtensionMessages.themeInformationChange,
       value: { themeKind: vscode.window.activeColorTheme.kind },
+    })
+
+    panel.webview.postMessage({
+      type: ExtensionMessages.brokerConfigChanged,
+      value: {
+        brokerConfig,
+      },
     })
   }
 
@@ -89,10 +96,10 @@ export class MqttConnectionView {
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig) {
     this._panel = panel
     this._extensionUri = extensionUri
-    this.brokerConfig = brokerConfig
+    this._brokerConfig = brokerConfig
     this._messageCount = 0
     this._loadingNotificationCancellationToken = showProgressNotification(
-      `Connecting to broker at ${this.brokerConfig.host}`
+      `Connecting to broker at ${this._brokerConfig.host}`
     )
 
     // Set the webview's initial html content
@@ -188,6 +195,18 @@ export class MqttConnectionView {
             qos: value.qos,
             retain: value.retain,
           })
+          break
+        }
+        case ExtensionMessages.reloadBrokerConfig: {
+          this._reloadBrokerConfig()
+
+          this._panel.webview.postMessage({
+            type: ExtensionMessages.brokerConfigChanged,
+            value: {
+              brokerConfig: this._brokerConfig,
+            },
+          })
+          break
         }
       }
     })
@@ -209,8 +228,8 @@ export class MqttConnectionView {
   }
 
   public dispose(): void {
-    MqttConnectionView._openViews.delete(this.brokerConfig.name)
-    MqttClientFactory.disposeClient(this.brokerConfig)
+    MqttConnectionView._openViews.delete(this._brokerConfig.name)
+    MqttClientFactory.disposeClient(this._brokerConfig)
 
     // Clean up our resources
     this._panel.webview.onDidReceiveMessage(() => {
@@ -232,13 +251,21 @@ export class MqttConnectionView {
     this._panel.webview.html = this._getHtmlForWebview(webview)
   }
 
+  private _reloadBrokerConfig() {
+    const profiles = BrokerProfileManager.loadBrokerProfiles()
+    const profile = profiles?.find((p) => p.name === this._brokerConfig.name)
+    if (profile) {
+      this._brokerConfig = profile
+    }
+  }
+
   private _initMqtt() {
-    this._mqttClient = MqttClientFactory.createClient(this.brokerConfig)
+    this._mqttClient = MqttClientFactory.createClient(this._brokerConfig)
 
     this._mqttClient.once("error", async (error: Error) => {
       this._loadingNotificationCancellationToken?.cancel()
       const result = await vscode.window.showErrorMessage(
-        `Could not connect to ${this.brokerConfig.host} - ${error.message}`,
+        `Could not connect to ${this._brokerConfig.host} - ${error.message}`,
         "Open settings.json"
       )
 
@@ -304,7 +331,7 @@ export class MqttConnectionView {
           webview.cspSource
         }; script-src 'nonce-${nonce}';">
         <script nonce="${nonce}">
-          const brokerProfile = ${JSON.stringify(this.brokerConfig)};
+          const brokerProfile = ${JSON.stringify(this._brokerConfig)};
         </script>
         <link href="${stylesResetUri}" rel="stylesheet">
         <link href="${stylesMainUri}" rel="stylesheet">

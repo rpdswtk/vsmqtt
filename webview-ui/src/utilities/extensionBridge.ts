@@ -88,4 +88,10 @@ export default class ExtensionHostBridge {
       },
     })
   }
+
+  public static reloadBrokerConfig(): void {
+    vscode.postMessage({
+      type: ExtensionMessages.reloadBrokerConfig,
+    })
+  }
 }

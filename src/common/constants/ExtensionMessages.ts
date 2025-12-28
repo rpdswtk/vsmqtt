@@ -1,4 +1,5 @@
 enum ExtensionMessages {
+  brokerConfigChanged = "brokerConfigChanged",
   openMessage = "openMessage",
   clearRetainedTopic = "clearRetainedTopic",
   publish = "publish",
@@ -11,6 +12,7 @@ enum ExtensionMessages {
   onMqttMessage = "onMqttMessage",
   themeInformationChange = "themeInformationChange",
   saveDefaultPublishValues = "saveDefaultPublishValues",
+  reloadBrokerConfig = "reloadBrokerConfig",
 }
 
 export default ExtensionMessages
