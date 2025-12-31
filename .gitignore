@@ -6,3 +6,5 @@ node_modules
 test-resources
 .eslintcache
 mochawesome-report
+*.log
+logs/
