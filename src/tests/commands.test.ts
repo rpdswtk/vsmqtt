@@ -16,12 +16,12 @@ describe("Commands", function () {
   })
 
   this.afterEach(async function () {
-    closeWorkSpace(this.currentTest)
+    await closeWorkSpace(this.currentTest)
     log(`Finished test cleanup for: ${this.currentTest?.title || "unknown"}`)
   })
 
   describe("Add broker profile", () => {
-    this.retries(3)
+    this.retries(2)
 
     it.skip("saves profile to settings.json", async function () {
       await new Workbench().executeCommand("add broker profile")
@@ -95,7 +95,7 @@ describe("Commands", function () {
   })
 
   describe("Connect to mqtt broker", () => {
-    this.retries(3)
+    this.retries(2)
 
     it("connects to broker", async function () {
       log("Refreshing broker profile list")
@@ -110,7 +110,7 @@ describe("Commands", function () {
 
       log("Opening mqtt webview")
       const webview = await new EditorView().openEditor("VSMQTT")
-      webview.wait()
+      await webview.wait(10000)
       const mqttView = new WebView()
       await mqttView.switchToFrame()
 

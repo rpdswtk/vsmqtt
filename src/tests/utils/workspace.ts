@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto"
 import * as fs from "node:fs"
 import * as path from "node:path"
-import { EditorView, InputBox, TextEditor, Workbench } from "vscode-extension-tester"
+import { EditorView, InputBox, Key, TextEditor, VSBrowser, Workbench } from "vscode-extension-tester"
 import { BROKER_PROFILE } from "./constants.js"
 import { log } from "./logging.js"
 import sleep from "./sleep.js"
@@ -9,7 +9,8 @@ import sleep from "./sleep.js"
 const TEST_PROJECT_FOLDER_PREFIX = "testProject"
 
 export const initWorkspace = async (dirname: string): Promise<string> => {
-  await sleep(2000)
+  await VSBrowser.instance.waitForWorkbench()
+  await sleep(500)
   log("Initializing workspace")
   const folder = TEST_PROJECT_FOLDER_PREFIX + randomBytes(4).toString("hex")
   const projectPath = path.join(dirname, folder)
@@ -53,10 +54,12 @@ export const createSettingsWithProfile = async (
 
   await input.confirm()
 
+  await sleep(500) // let VS Code dismiss the overlay
   log("Settings file created")
 }
 
 export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> => {
+  await VSBrowser.instance.waitForWorkbench()
   if (currentTest?.state === "passed" || currentTest?.state === "failed") {
     await new Workbench().executeCommand("close workspace")
     log("Workspace closed")
@@ -64,7 +67,19 @@ export const closeWorkSpace = async (currentTest?: Mocha.Test): Promise<void> =>
 }
 
 export const openWorkSpace = async (projectPath: string): Promise<void> => {
-  await new EditorView().closeAllEditors()
+  await VSBrowser.instance.waitForWorkbench()
+  await sleep(1500)
+
+  // Dismiss any lingering quickinput overlay from the previous test
+  try {
+    await VSBrowser.instance.driver.actions().sendKeys(Key.ESCAPE).perform()
+    await sleep(300)
+  } catch (e) {
+    // ignore
+  }
+
+  await safeCloseAllEditors()
+
   log("Opening project folder: " + projectPath)
 
   const prompt = await new Workbench().openCommandPrompt()
@@ -77,4 +92,17 @@ export const openWorkSpace = async (projectPath: string): Promise<void> => {
   await input.setText(projectPath)
   await input.confirm()
   log("Project folder opened")
+}
+
+const safeCloseAllEditors = async (): Promise<void> => {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      await new Workbench().executeCommand("workbench.action.closeAllEditors")
+      await sleep(300)
+      return
+    } catch (e) {
+      // swallow all errors — closing editors is best-effort
+      await sleep(500)
+    }
+  }
 }
