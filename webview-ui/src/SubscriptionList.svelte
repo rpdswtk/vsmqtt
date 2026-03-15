@@ -117,7 +117,7 @@
 
   <div class="wrapper d-flex flex-column flex-fill">
     <vscode-scrollable class="flex-fill pe-3" alwaysVisible style="min-height: 0; height: 100%;">
-      {#each Array.from($subscriptions.values()) as subscription}
+      {#each Array.from($subscriptions.values()) as subscription (subscription.topic)}
         <SubscriptionElement topic={subscription.topic} on:menuClick={onMenuClick} />
       {/each}
     </vscode-scrollable>

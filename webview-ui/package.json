@@ -7,7 +7,7 @@
     "watch": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint --ext .js,.svelte src",
+    "lint": "eslint --config eslint.config.js --ext .js,.svelte src && tsc -p ./tsconfig.json --noEmit",
     "clean": "rm -rf build/*"
   },
   "dependencies": {
@@ -22,11 +22,11 @@
     "@rollup/plugin-typescript": "^12.1.4",
     "@tsconfig/svelte": "5.0.4",
     "@types/vscode-webview": "^1.57.4",
-    "@typescript-eslint/parser": "^8.46.0",
+    "@typescript-eslint/parser": "^8.57.0",
     "alias-hq": "^6.2.4",
     "bootstrap": "^5.3.8",
-    "eslint": "^8.56.0",
-    "eslint-plugin-svelte": "^2.34.0",
+    "eslint": "^10.0.3",
+    "eslint-plugin-svelte": "^3.15.2",
     "rollup": "^2.79.1",
     "rollup-plugin-css-only": "^4.5.2",
     "rollup-plugin-livereload": "^2.0.0",

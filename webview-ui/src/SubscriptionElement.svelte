@@ -12,7 +12,9 @@
 
   $: subscription = $subscriptions.get(topic)!
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher<{
+    menuClick: { element: HTMLElement; subscription: SubscriptionItem }
+  }>()
 
   const unsubscribe = (subscriptionItem: SubscriptionItem) => {
     $subscriptions.delete(subscriptionItem.topic)

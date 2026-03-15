@@ -63,7 +63,7 @@
 
   <div class="message-list" on:contextmenu={(e) => e.preventDefault()}>
     <vscode-scrollable class="pe-3" bind:this={list} alwaysVisible>
-      {#each $messages as message}
+      {#each $messages as message (message.id)}
         <div
           on:contextmenu={(event) => {
             event.preventDefault()
