@@ -1,29 +1,39 @@
-const aedes = require("aedes")()
-const server = require("net").createServer(aedes.handle)
-const httpServer = require("http").createServer()
-const WebSocket = require("ws")
+import { Aedes } from "aedes"
+import { createServer as createHttpServer } from "node:http"
+import { createServer } from "node:net"
+import { WebSocketServer, createWebSocketStream } from "ws"
 const PORT = 1883
 const WEBSOCKET_PORT = 8083
 
-const startBroker = () => {
+const startBroker = async () => {
+  const aedes = await Aedes.createBroker()
+  const server = createServer(aedes.handle)
+
   server.listen(PORT, function () {
     console.log("server started and listening on port ", PORT)
   })
 
-  process.on("message", ({ testsCompleted }) => {
-    process.exit(testsCompleted ? 0 : 1)
+  server.on("connection", function (stream) {
+    const client = stream.client
+    console.log("client connected", client ? client.id : "unknown")
   })
 }
 
-const startWebsocketBroker = () => {
-  const wss = new WebSocket.Server({ server: httpServer })
-  wss.on("connection", function connection(ws) {
-    const duplex = WebSocket.createWebSocketStream(ws)
-    aedes.handle(duplex)
+const startWebsocketBroker = async () => {
+  const aedes = await Aedes.createBroker()
+  const httpServer = createHttpServer()
+  const wss = new WebSocketServer({
+    server: httpServer,
+  })
+
+  wss.on("connection", (websocket, req) => {
+    console.log("websocket client connected")
+    const stream = createWebSocketStream(websocket)
+    aedes.handle(stream, req)
   })
 
   httpServer.listen(WEBSOCKET_PORT, function () {
-    console.log("websocket server listening on port", WEBSOCKET_PORT)
+    console.log("websocket server listening on port ", WEBSOCKET_PORT)
   })
 }
 

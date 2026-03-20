@@ -98,7 +98,7 @@
         <SubscribeSection />
       </div>
 
-      {#if brokerConfig}
+      {#if $brokerConfig}
         <div id="subscription-list-section" class="container">
           <SubscriptionList profileName={$brokerConfig.name} />
         </div>
