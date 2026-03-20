@@ -25,7 +25,7 @@
     "@typescript-eslint/parser": "^8.57.0",
     "alias-hq": "^6.2.4",
     "bootstrap": "^5.3.8",
-    "eslint": "^10.0.3",
+    "eslint": "^10.1.0",
     "eslint-plugin-svelte": "^3.15.2",
     "rollup": "^4.59.0",
     "rollup-plugin-css-only": "^4.5.5",
