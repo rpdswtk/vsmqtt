@@ -1,14 +1,14 @@
-import svelte from "rollup-plugin-svelte"
+import alias from "@rollup/plugin-alias"
 import commonjs from "@rollup/plugin-commonjs"
 import resolve from "@rollup/plugin-node-resolve"
-import livereload from "rollup-plugin-livereload"
-import { terser } from "rollup-plugin-terser"
-import sveltePreprocess from "svelte-preprocess"
-import typescript from "@rollup/plugin-typescript"
-import css from "rollup-plugin-css-only"
-import hq from "alias-hq"
-import alias from "@rollup/plugin-alias"
 import sucrase from "@rollup/plugin-sucrase"
+import terser from "@rollup/plugin-terser"
+import typescript from "@rollup/plugin-typescript"
+import hq from "alias-hq"
+import css from "rollup-plugin-css-only"
+import livereload from "rollup-plugin-livereload"
+import svelte from "rollup-plugin-svelte"
+import sveltePreprocess from "svelte-preprocess"
 
 const production = !process.env.ROLLUP_WATCH
 

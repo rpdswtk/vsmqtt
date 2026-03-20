@@ -284,8 +284,7 @@
     "start-broker": "pm2 start cmd/broker.js -f",
     "stop-broker": "pm2 delete broker",
     "package": "webpack --mode production --devtool hidden-source-map",
-    "clean": "rimraf ./dist && rimraf ./webview-ui/build && rimraf ./out",
-    "clean:all": "npm run clean && cd webview-ui && npm run clean"
+    "clean": "rimraf -- ./dist ./webview-ui/build ./out && rimraf --glob *.vsix"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",

@@ -29,5 +29,13 @@
   },
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
-  }
+  },
+  "vsmqtt.brokerProfiles": [
+    {
+      "name": "test",
+      "host": "localhost",
+      "port": 1883,
+      "clientId": "vsmqtt_client_3405"
+    }
+  ]
 }
