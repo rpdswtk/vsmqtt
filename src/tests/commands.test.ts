@@ -64,6 +64,7 @@ describe("Commands", function () {
 
       log("Confirming removal")
       const dialog = new ModalDialog()
+      dialog.wait(5000)
       await VSBrowser.instance.waitForWorkbench()
       await dialog.pushButton("Yes")
 

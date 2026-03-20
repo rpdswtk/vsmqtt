@@ -17,7 +17,8 @@ async function runTests() {
   return new Promise((_, __) => {
     const patchPath = path.resolve(__dirname, "patchDriver.js")
 
-    const cmd = "npx extest setup-and-run out/tests/*.js -m src/tests/.mocharc.js --storage test-resources"
+    const cmd =
+      "npx extest setup-and-run out/tests/*.js -m src/tests/.mocharc.js --storage test-resources --extensions_dir out/tests"
 
     const child = spawn(cmd, {
       shell: true,
