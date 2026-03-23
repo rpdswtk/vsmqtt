@@ -309,7 +309,7 @@
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "vscode-extension-tester": "^8.23.0",
-    "webpack": "^5.103.0",
+    "webpack": "^5.105.4",
     "webpack-cli": "^6.0.1",
     "ws": "^8.18.3"
   },
