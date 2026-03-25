@@ -177,6 +177,7 @@ describe("Commands", function () {
         host: "ws://localhost",
         port: WEBSOCKET_PORT,
         protocol: "ws",
+        path: "/mqtt",
       })
 
       log("Connecting to mqtt broker over websocket")
