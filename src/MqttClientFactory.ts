@@ -60,6 +60,11 @@ export class MqttClientFactory {
       options.rejectUnauthorized = false
     }
 
+    // Workaround to support mqttjs v5
+    if (options.host && options.host.startsWith(`${options.protocol}://`)) {
+      options.host = options.host.replace(`${options.protocol}://`, "")
+    }
+
     if (options.host) {
       client = connect(options.host, options)
     } else {
