@@ -294,7 +294,7 @@
     "@types/vscode": "^1.110.0",
     "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
-    "@typescript-eslint/parser": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.2",
     "aedes": "^1.0.1",
     "alias-hq": "^6.2.4",
     "chai": "^6.2.2",
