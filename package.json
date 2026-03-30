@@ -311,7 +311,7 @@
     "vscode-extension-tester": "^8.23.0",
     "webpack": "^5.105.4",
     "webpack-cli": "^7.0.2",
-    "ws": "^8.18.3"
+    "ws": "^8.20.0"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
