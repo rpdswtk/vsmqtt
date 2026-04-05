@@ -7,6 +7,7 @@ const { isAbsolutePath } = require("path-validation")
 
 export class MqttClientFactory {
   private static clients: Map<string, MqttClient> = new Map<string, MqttClient>()
+  private static _brokerProfiles: Map<string, MqttBrokerConfig> = new Map<string, MqttBrokerConfig>()
 
   public static createClient(config: MqttBrokerConfig): MqttClient {
     let client = MqttClientFactory.clients.get(config.name)
@@ -67,6 +68,7 @@ export class MqttClientFactory {
     }
 
     MqttClientFactory.clients.set(options.name, client)
+    MqttClientFactory._brokerProfiles.set(options.name, config)
 
     return client
   }
@@ -78,6 +80,13 @@ export class MqttClientFactory {
 
     if (client) {
       MqttClientFactory.clients.delete(config.name)
+      MqttClientFactory._brokerProfiles.delete(config.name)
     }
+  }
+
+  public static didClientConfigChange(newConfig: MqttBrokerConfig): boolean {
+    const oldConfig = MqttClientFactory._brokerProfiles.get(newConfig.name)
+
+    return JSON.stringify(oldConfig) !== JSON.stringify(newConfig)
   }
 }

@@ -3,6 +3,7 @@ import { randomBytes } from "crypto"
 import * as vscode from "vscode"
 import BrokerProfileManager from "./BrokerProfileManager"
 import { MqttProfileQuickPickItem } from "./interfaces/MqttProfileQuickPickItem"
+import { MqttClientFactory } from "./MqttClientFactory"
 import { BrokerProfileTreeItem, MqttProfilesProvider } from "./MqttProfilesProvider"
 import { MqttConnectionView } from "./panels/MqttConnectionView"
 
@@ -89,7 +90,12 @@ export class VSMqttApp {
       brokerConfig.password = password
     }
 
-    MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig)
+    if (MqttClientFactory.didClientConfigChange(brokerConfig)) {
+      MqttConnectionView.kill(brokerConfig)
+      MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig)
+    } else {
+      MqttConnectionView.createOrShow(this._context.extensionUri, brokerConfig)
+    }
   }
 
   private async _addProfile() {
