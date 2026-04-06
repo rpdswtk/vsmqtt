@@ -9,7 +9,7 @@ export class MqttClientFactory {
   private static clients: Map<string, MqttClient> = new Map<string, MqttClient>()
   private static _brokerProfiles: Map<string, MqttBrokerConfig> = new Map<string, MqttBrokerConfig>()
 
-  public static createClient(config: MqttBrokerConfig): MqttClient {
+  public static createClient(config: MqttBrokerConfig): MqttClient | undefined {
     let client = MqttClientFactory.clients.get(config.name)
     if (client) {
       return client
@@ -66,10 +66,15 @@ export class MqttClientFactory {
       options.host = options.host.replace(`${options.protocol}://`, "")
     }
 
-    if (options.host) {
-      client = connect(options.host, options)
-    } else {
-      client = connect(options)
+    try {
+      if (options.host) {
+        client = connect(options.host, options)
+      } else {
+        client = connect(options)
+      }
+    } catch (error) {
+      console.error(error)
+      return undefined
     }
 
     MqttClientFactory.clients.set(options.name, client)
