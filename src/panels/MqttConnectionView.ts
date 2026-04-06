@@ -263,6 +263,12 @@ export class MqttConnectionView {
   private _initMqtt() {
     this._mqttClient = MqttClientFactory.createClient(this._brokerConfig)
 
+    if (!this._mqttClient) {
+      this._loadingNotificationCancellationToken?.cancel()
+      vscode.window.showErrorMessage("Could not connect to broker with the provided configuration")
+      return
+    }
+
     this._mqttClient.once("error", async (error: Error) => {
       this._loadingNotificationCancellationToken?.cancel()
       const result = await vscode.window.showErrorMessage(
