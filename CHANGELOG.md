@@ -94,3 +94,7 @@ VSMQTT versions.
 
 ### Added
 - Add Defaults for publish feature
+
+## [1.8.1] - 2026-04-06
+### Changed
+- Fixed reconnection issue
