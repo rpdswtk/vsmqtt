@@ -84,14 +84,42 @@ describe("Commands", function () {
 
     it("opens settings.json", async function () {
       log("Editing broker profile")
+      await createSettingsWithProfile(projectPath)
+
       await new Workbench().executeCommand("Edit broker profile")
+
       await sleep(2000)
 
-      const editorView = new EditorView()
+      // 1. Handle QuickInput (QuickPick/InputBox)
+      // This handles cases where VS Code asks "Open Settings (JSON)?" or similar choices.
+      try {
+        const input = await InputBox.create()
+        await input.confirm()
+        await sleep(500)
+      } catch (e) {
+        // No QuickInput detected
+      }
 
-      const titles = await editorView.getOpenEditorTitles()
+      // 2. Handle ModalDialog (Centered dialogs like Workspace Trust)
+      try {
+        const dialog = new ModalDialog()
+        const buttons = await dialog.getButtons()
+        for (const button of buttons) {
+          const text = await button.getText()
+          // Matches "Yes", "Trust", "Allow", "Open", etc.
+          if (text.match(/Yes|Trust|Allow|Confirm|Open/i)) {
+            await button.click()
+            await sleep(1000)
+            break
+          }
+        }
+      } catch (e) {
+        // No ModalDialog detected
+      }
 
-      expect(titles).to.contain("settings.json")
+      // Finally, wait for and find the actual editor tab
+      const settingsFile = await new EditorView().openEditor("settings.json")
+      expect(await settingsFile.getTitle()).to.equal("settings.json")
     })
   })
 
@@ -149,6 +177,7 @@ describe("Commands", function () {
         host: "ws://localhost",
         port: WEBSOCKET_PORT,
         protocol: "ws",
+        path: "/mqtt",
       })
 
       log("Connecting to mqtt broker over websocket")

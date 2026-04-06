@@ -7,8 +7,9 @@ const { isAbsolutePath } = require("path-validation")
 
 export class MqttClientFactory {
   private static clients: Map<string, MqttClient> = new Map<string, MqttClient>()
+  private static _brokerProfiles: Map<string, MqttBrokerConfig> = new Map<string, MqttBrokerConfig>()
 
-  public static createClient(config: MqttBrokerConfig): MqttClient {
+  public static createClient(config: MqttBrokerConfig): MqttClient | undefined {
     let client = MqttClientFactory.clients.get(config.name)
     if (client) {
       return client
@@ -60,13 +61,24 @@ export class MqttClientFactory {
       options.rejectUnauthorized = false
     }
 
-    if (options.host) {
-      client = connect(options.host, options)
-    } else {
-      client = connect(options)
+    // Workaround to support mqttjs v5
+    if (options.host && options.host.startsWith(`${options.protocol}://`)) {
+      options.host = options.host.replace(`${options.protocol}://`, "")
+    }
+
+    try {
+      if (options.host) {
+        client = connect(options.host, options)
+      } else {
+        client = connect(options)
+      }
+    } catch (error) {
+      console.error(error)
+      return undefined
     }
 
     MqttClientFactory.clients.set(options.name, client)
+    MqttClientFactory._brokerProfiles.set(options.name, config)
 
     return client
   }
@@ -78,6 +90,13 @@ export class MqttClientFactory {
 
     if (client) {
       MqttClientFactory.clients.delete(config.name)
+      MqttClientFactory._brokerProfiles.delete(config.name)
     }
+  }
+
+  public static didClientConfigChange(newConfig: MqttBrokerConfig): boolean {
+    const oldConfig = MqttClientFactory._brokerProfiles.get(newConfig.name)
+
+    return JSON.stringify(oldConfig) !== JSON.stringify(newConfig)
   }
 }
