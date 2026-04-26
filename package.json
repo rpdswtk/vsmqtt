@@ -14,7 +14,7 @@
     "url": "https://github.com/rpdswtk/vsmqtt.git"
   },
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.116.0"
   },
   "categories": [
     "Other"
@@ -291,7 +291,7 @@
     "@types/chai": "^5.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^25.6.0",
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.116.0",
     "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.59.0",
