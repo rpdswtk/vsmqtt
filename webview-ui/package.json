@@ -22,7 +22,7 @@
     "@rollup/plugin-typescript": "^12.3.0",
     "@tsconfig/svelte": "5.0.8",
     "@types/vscode-webview": "^1.57.5",
-    "@typescript-eslint/parser": "^8.58.1",
+    "@typescript-eslint/parser": "^8.59.0",
     "alias-hq": "^6.2.4",
     "bootstrap": "^5.3.8",
     "eslint": "^10.2.1",
