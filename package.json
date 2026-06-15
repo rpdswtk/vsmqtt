@@ -310,7 +310,7 @@
     "typescript": "^5.9.3",
     "vscode-extension-tester": "^8.23.0",
     "webpack": "^5.105.4",
-    "webpack-cli": "^7.0.2"
+    "webpack-cli": "^7.0.3"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
