@@ -2,8 +2,8 @@
   import "@vscode-elements/elements/dist/vscode-badge/index.js"
   import { isConnected } from "./utilities/stores"
 
-  $: statusText = $isConnected ? "online" : "offline"
-  $: statusColor = $isConnected ? "var(--vscode-charts-green)" : "var(--vscode-charts-red)"
+  const statusText = $derived($isConnected ? "online" : "offline")
+  const statusColor = $derived($isConnected ? "var(--vscode-charts-green)" : "var(--vscode-charts-red)")
 </script>
 
 <vscode-badge class="label"

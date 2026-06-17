@@ -48,12 +48,12 @@
   <div class="d-flex">
     <vscode-toolbar-button
       title="Save as default"
-      on:click={() => {
+      onclick={() => {
         ExtensionHostBridge.saveDefaultPublishValues(publishTopic, publishText, parseInt(selectedQos), retain)
       }}><Save /></vscode-toolbar-button>
     <vscode-toolbar-button
       title="Load default publish values"
-      on:click={() => ExtensionHostBridge.reloadBrokerConfig()}><FileText /></vscode-toolbar-button>
+      onclick={() => ExtensionHostBridge.reloadBrokerConfig()}><FileText /></vscode-toolbar-button>
   </div>
 </div>
 
@@ -65,7 +65,7 @@
 <vscode-button
   class="ms-1 mt-1"
   id="publish-button"
-  on:click={() => {
+  onclick={() => {
     if (publishTopic) {
       ExtensionHostBridge.publishMessage(publishTopic, publishText, parseInt(selectedQos), retain)
     }

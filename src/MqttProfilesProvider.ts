@@ -25,7 +25,7 @@ export class MqttProfilesProvider implements vscode.TreeDataProvider<BrokerProfi
         })
         return Promise.resolve(brokerProfiles)
       }
-    } catch (error) {
+    } catch (_error) {
       return Promise.reject([])
     }
   }

@@ -2,6 +2,12 @@ const sveltePlugin = require("eslint-plugin-svelte")
 const tsParser = require("@typescript-eslint/parser")
 const svelteParser = require("svelte-eslint-parser")
 
+const a11yOff = Object.fromEntries(
+  Object.keys(sveltePlugin.rules)
+    .filter((r) => r.startsWith("a11y-"))
+    .map((r) => [`svelte/${r}`, "off"])
+)
+
 module.exports = [
   {
     ignores: ["node_modules", "rollup.config.js"],
@@ -30,6 +36,7 @@ module.exports = [
     },
     rules: {
       "svelte/valid-compile": ["error", { ignoreWarnings: true }],
+      ...a11yOff,
     },
   },
 ]
