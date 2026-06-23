@@ -1,5 +1,6 @@
 import MqttBrokerConfig, { DefaultsForPublish } from "@common/interfaces/MqttBrokerConfig"
 import * as vscode from "vscode"
+import { getStorageTarget } from "./config"
 
 class BrokerProfileManager {
   public static async saveBrokerProfile(newProfile: MqttBrokerConfig): Promise<void> {
@@ -15,7 +16,7 @@ class BrokerProfileManager {
         brokerProfiles.push(newProfile)
       }
 
-      await config.update("brokerProfiles", brokerProfiles)
+      await config.update("brokerProfiles", brokerProfiles, getStorageTarget())
     }
   }
 
@@ -29,7 +30,7 @@ class BrokerProfileManager {
       if (index !== undefined && index !== -1) {
         brokerProfiles.splice(index, 1)
 
-        await config.update("brokerProfiles", brokerProfiles)
+        await config.update("brokerProfiles", brokerProfiles, getStorageTarget())
       }
     }
   }
@@ -49,7 +50,7 @@ class BrokerProfileManager {
 
     if (profile) {
       profile.defaultsForPublish = defaults
-      await config.update("brokerProfiles", brokerProfiles)
+      await config.update("brokerProfiles", brokerProfiles, getStorageTarget())
     }
   }
 

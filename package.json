@@ -261,6 +261,17 @@
           "default": [],
           "scope": "window",
           "description": "VSMQTT broker profiles"
+        },
+        "vsmqtt.profileStorageTarget": {
+          "type": "string",
+          "enum": ["user", "workspace"],
+          "enumDescriptions": [
+            "Store profiles in User Settings. Available across all workspaces and synced via Settings Sync.",
+            "Store profiles in Workspace Settings (.vscode/settings.json). Scoped to this project only."
+          ],
+          "default": "workspace",
+          "description": "Where broker profiles are persisted. Change this before creating or editing profiles.",
+          "scope": "machine"
         }
       }
     }

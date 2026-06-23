@@ -1,6 +1,7 @@
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
 import MqttSubscription from "@common/interfaces/MqttSubscription"
 import * as vscode from "vscode"
+import { getStorageTarget } from "./config"
 
 export class SubscriptionManager {
   public static async saveSubscription(
@@ -24,7 +25,7 @@ export class SubscriptionManager {
         brokerProfile.savedSubscriptions[index] = subscription
       }
 
-      await config.update("brokerProfiles", brokerProfiles)
+      await config.update("brokerProfiles", brokerProfiles, getStorageTarget())
     }
   }
 
@@ -42,7 +43,7 @@ export class SubscriptionManager {
       if (index > -1) {
         brokerProfile.savedSubscriptions.splice(index, 1)
 
-        await config.update("brokerProfiles", brokerProfiles)
+        await config.update("brokerProfiles", brokerProfiles, getStorageTarget())
       }
     }
   }
