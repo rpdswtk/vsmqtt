@@ -53,8 +53,10 @@
           if (subscription && !subscription.muted) {
             message.value.color = ColorManager.getColor(subscription.topic)
             $messages = [...$messages, message.value]
-            subscription.messageCount += 1
-            $subscriptions.set(subscription.topic, subscription)
+            $subscriptions.set(subscription.topic, {
+              ...subscription,
+              messageCount: subscription.messageCount + 1,
+            })
             $subscriptions = $subscriptions
           }
           break

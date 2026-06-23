@@ -4,7 +4,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
+    "noUncheckedSideEffectImports": false,
     "paths": {
       "@common/*": ["../src/common/*"]
     }

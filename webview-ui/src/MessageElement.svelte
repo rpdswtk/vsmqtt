@@ -5,16 +5,16 @@
   import ExtensionHostBridge from "./utilities/extensionBridge"
   import { selectedMessage } from "./utilities/stores"
 
-  export let message: MQTTMessage
+  let { message }: { message: MQTTMessage } = $props()
 </script>
 
 <div
   class="list-item"
   class:selected={$selectedMessage === message}
-  on:click={() => {
+  onclick={() => {
     $selectedMessage = message
   }}
-  on:dblclick={() => {
+  ondblclick={() => {
     $selectedMessage = message
     ExtensionHostBridge.openMessage(message)
   }}>

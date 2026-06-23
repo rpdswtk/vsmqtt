@@ -1,20 +1,21 @@
 <script lang="ts">
   import "@vscode-elements/elements/dist/vscode-badge/index.js"
   import "@vscode-elements/elements/dist/vscode-toolbar-button/index.js"
-  import { createEventDispatcher } from "svelte"
   import { Menu, Mute, Pinned } from "svelte-codicons"
   import type { SubscriptionItem } from "./types"
   import { ColorManager } from "./utilities/ColorManager"
   import ExtensionHostBridge from "./utilities/extensionBridge"
   import { isConnected, savedSubscriptions, subscriptions } from "./utilities/stores"
 
-  export let topic: string
+  let {
+    topic,
+    onMenuClick,
+  }: {
+    topic: string
+    onMenuClick?: (detail: { element: HTMLElement; subscription: SubscriptionItem }) => void
+  } = $props()
 
-  $: subscription = $subscriptions.get(topic)!
-
-  const dispatch = createEventDispatcher<{
-    menuClick: { element: HTMLElement; subscription: SubscriptionItem }
-  }>()
+  const subscription = $derived($subscriptions.get(topic)!)
 
   const unsubscribe = (subscriptionItem: SubscriptionItem) => {
     $subscriptions.delete(subscriptionItem.topic)
@@ -24,7 +25,7 @@
   }
 
   const handleContextMenuClick = (event: MouseEvent) => {
-    dispatch("menuClick", {
+    onMenuClick?.({
       element: event.target as HTMLElement,
       subscription: subscription,
     })
@@ -36,7 +37,7 @@
     <vscode-badge style="--vscode-badge-background: {ColorManager.getColor(subscription.topic)};"
       >Topic:&nbsp;&nbsp;&nbsp;{subscription.topic}</vscode-badge>
   </div>
-  <div class="menu-icon mt-2 user-select-none" on:click={handleContextMenuClick}>
+  <div class="menu-icon mt-2 user-select-none" onclick={handleContextMenuClick}>
     <Menu name="menu" />
   </div>
   <div class="qos user-select-none">
@@ -57,7 +58,7 @@
   <div class="unsub d-flex justify-content-end">
     {#if $isConnected}
       <vscode-toolbar-button
-        on:click={() => {
+        onclick={() => {
           unsubscribe(subscription)
         }}>Unsubscribe</vscode-toolbar-button>
     {:else}
