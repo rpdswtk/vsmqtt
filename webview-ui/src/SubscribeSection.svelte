@@ -31,10 +31,15 @@
 </script>
 
 <h2 class="section-title user-select-none">Subscribe</h2>
-<form on:submit|preventDefault={subscribe}>
+<form
+  onsubmit={(e) => {
+    e.preventDefault()
+    subscribe(e)
+  }}>
   <div class="d-flex justify-content-start gap-2 m-1 subscription-options">
     <VSCodeBindableWrapper bind:value={subscribeTopic} innerClass="w-50">
-      <vscode-textfield id="subscribe-topic-input" type="text" placeholder="Topic" class="w-100" />
+      <vscode-textfield id="subscribe-topic-input" type="text" placeholder="Topic" class="w-100"
+      ></vscode-textfield>
     </VSCodeBindableWrapper>
     <VSCodeBindableWrapper bind:value={selectedQos}>
       <vscode-single-select id="qos-select" class="qos-select">

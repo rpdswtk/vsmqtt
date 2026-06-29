@@ -55,17 +55,19 @@
   })
 </script>
 
-<vscode-context-menu class="context-menu" bind:this={contextMenu} on:contextmenu|preventDefault
-></vscode-context-menu>
+<vscode-context-menu
+  class="context-menu"
+  bind:this={contextMenu}
+  oncontextmenu={(e: Event) => e.preventDefault()}></vscode-context-menu>
 
 <div class="root">
   <h2 class="title section-title user-select-none">Messages</h2>
 
-  <div class="message-list" on:contextmenu={(e) => e.preventDefault()}>
+  <div class="message-list" oncontextmenu={(e) => e.preventDefault()}>
     <vscode-scrollable class="pe-3" bind:this={list} alwaysVisible>
       {#each $messages as message (message.id)}
         <div
-          on:contextmenu={(event) => {
+          oncontextmenu={(event) => {
             event.preventDefault()
             $selectedMessage = message
             handleRightClick(event)
@@ -83,7 +85,7 @@
     <vscode-button
       secondary
       class="clear-button"
-      on:click={() => {
+      onclick={() => {
         $messages = []
       }}>Clear list</vscode-button>
   </div>

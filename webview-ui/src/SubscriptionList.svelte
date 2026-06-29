@@ -13,7 +13,7 @@
   import ExtensionHostBridge from "./utilities/extensionBridge"
   import { messages, savedSubscriptions, subscriptions } from "./utilities/stores"
 
-  export let profileName: string
+  let { profileName }: { profileName: string } = $props()
   let selectedSubscription: SubscriptionItem
   let contextMenu: VscodeContextMenu
 
@@ -48,7 +48,7 @@
 
   const mute = () => {
     selectedSubscription.muted = !selectedSubscription.muted
-    $subscriptions = $subscriptions.set(selectedSubscription.topic, selectedSubscription)
+    $subscriptions = $subscriptions.set(selectedSubscription.topic, { ...selectedSubscription })
   }
 
   const exportLog = () => {
@@ -60,14 +60,14 @@
     ExtensionHostBridge.exportMessages(selectedSubscription.topic, messagesToExport)
   }
 
-  const onMenuClick = (event: CustomEvent) => {
+  const onMenuClick = (detail: { element: HTMLElement; subscription: SubscriptionItem }) => {
     if (contextMenu.show) {
       contextMenu.show = false
       return
     }
 
-    const element = event.detail.element as HTMLElement
-    selectedSubscription = event.detail.subscription as SubscriptionItem
+    const element = detail.element as HTMLElement
+    selectedSubscription = detail.subscription as SubscriptionItem
 
     contextMenu.data = [
       {
@@ -109,8 +109,10 @@
   })
 </script>
 
-<vscode-context-menu class="context-menu" bind:this={contextMenu} on:contextmenu|preventDefault
-></vscode-context-menu>
+<vscode-context-menu
+  class="context-menu"
+  bind:this={contextMenu}
+  oncontextmenu={(e: Event) => e.preventDefault()}></vscode-context-menu>
 
 <div class="d-flex flex-column h-100">
   <h2 class="section-title user-select-none">Subscriptions</h2>
@@ -118,7 +120,7 @@
   <div class="wrapper d-flex flex-column flex-fill">
     <vscode-scrollable class="flex-fill pe-3" alwaysVisible style="min-height: 0; height: 100%;">
       {#each Array.from($subscriptions.values()) as subscription (subscription.topic)}
-        <SubscriptionElement topic={subscription.topic} on:menuClick={onMenuClick} />
+        <SubscriptionElement topic={subscription.topic} {onMenuClick} />
       {/each}
     </vscode-scrollable>
   </div>

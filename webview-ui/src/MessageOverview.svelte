@@ -19,8 +19,7 @@
     <div class="qos user-select-none">QoS {$selectedMessage.qos}</div>
     {#if $selectedMessage.retain}
       <div class="retained user-select-none">Retained</div>
-      <vscode-toolbar-button class="clear-retained" on:click={clearRetainedTopic}
-        >Clear</vscode-toolbar-button>
+      <vscode-toolbar-button class="clear-retained" onclick={clearRetainedTopic}>Clear</vscode-toolbar-button>
     {/if}
     <textarea class="payload" readonly>{$selectedMessage.payload}</textarea>
   </div>

@@ -9,9 +9,8 @@
     "rootDir": "src",
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
     "paths": {
-      "@common/*": ["common/*"]
+      "@common/*": ["./src/common/*"]
     }
   },
   "exclude": ["node_modules", ".vscode-test", "webview-ui", "e2e-tests"]
