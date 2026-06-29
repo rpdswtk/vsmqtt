@@ -295,7 +295,7 @@
     "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
-    "aedes": "^1.0.2",
+    "aedes": "^1.1.0",
     "alias-hq": "^6.2.4",
     "chai": "^6.2.2",
     "concurrently": "^10.0.3",
