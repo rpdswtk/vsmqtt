@@ -17,9 +17,19 @@ export class VSMqttApp {
 
     context.subscriptions.push(vscode.window.registerTreeDataProvider("mqttProfiles", this._profilesProvider))
 
-    vscode.workspace.onDidChangeConfiguration(() => {
-      this._profilesProvider.update()
-    })
+    vscode.workspace.onDidChangeConfiguration(
+      (event) => {
+        this._profilesProvider.update()
+        if (event.affectsConfiguration("vsmqtt.profileStorageTarget")) {
+          BrokerProfileManager.detectProfileScopeConflict()
+        }
+      },
+      null,
+      context.subscriptions
+    )
+
+    // Check for profile scope conflicts on startup
+    BrokerProfileManager.detectProfileScopeConflict()
 
     this._initCommands()
   }
@@ -39,7 +49,11 @@ export class VSMqttApp {
 
     this._context.subscriptions.push(
       vscode.commands.registerCommand("vsmqtt.editProfile", async () => {
-        await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile")
+        if (BrokerProfileManager.getStorageTarget() === vscode.ConfigurationTarget.Global) {
+          await vscode.commands.executeCommand("workbench.action.openSettingsJson")
+        } else {
+          await vscode.commands.executeCommand("workbench.action.openWorkspaceSettingsFile")
+        }
       })
     )
 

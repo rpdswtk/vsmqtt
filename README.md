@@ -29,7 +29,17 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 
 ## Extension Settings
 
-This extension stores mqtt broker profiles in workspace settings.json under: `"vsmqtt.brokerProfiles"`.
+By default, this extension stores MQTT broker profiles in workspace `settings.json` under: `"vsmqtt.brokerProfiles"`.
+
+You can configure where profiles are saved using the `"vsmqtt.profileStorageTarget"` setting. Note that this setting has a **machine scope** (it cannot be overridden at the workspace level, preventing a workspace configuration from shadowing your preferred global target).
+
+### Storage Target Settings:
+
+* **`vsmqtt.profileStorageTarget`**:
+  * `"workspace"` (default): Stores broker profiles in the Workspace Settings (`.vscode/settings.json`). Scoped to this project only.
+  * `"user"`: Stores broker profiles in the User Settings. Available across all workspaces and synced via Settings Sync.
+
+When switching storage targets, the extension will automatically detect leftover profiles in the other scope and prompt you to migrate them (preserving non-overlapping profiles and letting you choose how to resolve conflicts).
 
 ### Configuration properties:
 
