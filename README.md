@@ -45,6 +45,7 @@ When switching storage targets, the extension will automatically detect leftover
 
 | name      | type   | description                                                       | required |
 |-----------|--------|-------------------------------------------------------------------|----------|
+| profileStorageTarget | string | Extension setting. Specifies where broker profiles are persisted: `"workspace"` (default) or `"user"`. | - |
 | name      | string | Profile name                                                      |     -    |
 | host      | string | Broker host                                                       |     -    |
 | port      | number | Broker port                                                       |     -    |

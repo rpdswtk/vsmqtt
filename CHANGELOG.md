@@ -98,3 +98,7 @@ VSMQTT versions.
 ## [1.8.1] - 2026-04-06
 ### Changed
 - Fixed reconnection issue
+
+## [1.8.2] - 2026-07-12
+### Added
+- Added profileStorageTarget option
