@@ -1,7 +1,7 @@
 # VSMQTT
 
-[![](https://img.shields.io/visual-studio-marketplace/v/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
-[![](https://img.shields.io/visual-studio-marketplace/i/rpdswtk.vsmqtt)](https://marketplace.visualstudio.com/items?itemName=rpdswtk.vsmqtt)
+[![](https://vsmarketplacebadges.dev/version/rpdswtk.vsmqtt.svg)](https://vsmarketplacebadges.dev/version/rpdswtk.vsmqtt.svg)
+[![](https://vsmarketplacebadges.dev/installs-short/rpdswtk.vsmqtt.svg)](https://vsmarketplacebadges.dev/installs-short/rpdswtk.vsmqtt.svg)
 ![Open VSX Downloads](https://img.shields.io/open-vsx/dt/rpdswtk/vsmqtt?color=c160ef&label=Open%20VSX%20installs)
 
 <a href="https://www.buymeacoffee.com/rpdswtk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
@@ -45,6 +45,7 @@ When switching storage targets, the extension will automatically detect leftover
 
 | name      | type   | description                                                       | required |
 |-----------|--------|-------------------------------------------------------------------|----------|
+| profileStorageTarget | string | Extension setting. Specifies where broker profiles are persisted: `"workspace"` (default) or `"user"`. | - |
 | name      | string | Profile name                                                      |     -    |
 | host      | string | Broker host                                                       |     -    |
 | port      | number | Broker port                                                       |     -    |

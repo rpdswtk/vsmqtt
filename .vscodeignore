@@ -30,6 +30,7 @@ vsc-extension-quickstart.md
 **/*.ts
 **/.prettierignore
 **/.eslintignore
+**/eslint.config.js
 
 node_modules/**
 out/**
