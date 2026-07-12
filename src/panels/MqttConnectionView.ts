@@ -1,6 +1,6 @@
 import ExtensionMessages from "@common/constants/ExtensionMessages"
 import MqttBrokerConfig from "@common/interfaces/MqttBrokerConfig"
-import * as moment from "moment"
+import moment from "moment"
 import { MqttClient } from "mqtt"
 import { IPublishPacket } from "mqtt-packet"
 import * as vscode from "vscode"
