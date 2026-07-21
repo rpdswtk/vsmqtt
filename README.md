@@ -26,6 +26,7 @@ Vsmqtt is a simple MQTT client integrated in vscode.
 * Clear retained messages
 * Right click on message to open in text edior
 * Save/load default topic, payload, qos and retain values for publish section on UI
+* Auto-format and pretty-print JSON, XML, YAML, CSV, INI and Base64 payloads
 
 ## Extension Settings
 
