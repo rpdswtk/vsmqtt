@@ -17,6 +17,38 @@
   let list: VscodeScrollable
   let contextMenu: VscodeContextMenu
 
+  let selectedIndex: number = -1
+
+  async function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault()
+      selectedIndex = Math.min(selectedIndex + 1, $messages.length - 1)
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault()
+      selectedIndex = Math.max(selectedIndex - 1, 0)
+    } else {
+      return
+    }
+
+    await tick()
+
+    const selected = document.querySelector<HTMLElement>(".message-item.selected")
+    if (selected && list) {
+      const listRect = list.getBoundingClientRect()
+      const itemRect = selected.getBoundingClientRect()
+
+      if (itemRect.bottom > listRect.bottom) {
+        list.scrollPos += itemRect.bottom - listRect.bottom
+      } else if (itemRect.top < listRect.top) {
+        list.scrollPos -= listRect.top - itemRect.top
+      }
+    }
+  }
+
+  $: if (selectedIndex >= 0 && selectedIndex < $messages.length) {
+    $selectedMessage = $messages[selectedIndex]
+  }
+
   const handleContextMenuSelect = (_: CustomEvent) => {
     if ($selectedMessage) {
       ExtensionHostBridge.openMessage($selectedMessage)
@@ -63,10 +95,23 @@
 <div class="root">
   <h2 class="title section-title user-select-none">Messages</h2>
 
-  <div class="message-list" oncontextmenu={(e) => e.preventDefault()}>
+  <div
+    class="message-list"
+    tabindex="0"
+    role="listbox"
+    aria-label="Received messages"
+    onkeydown={handleKeydown}
+    oncontextmenu={(e) => e.preventDefault()}>
     <vscode-scrollable class="pe-3" bind:this={list} alwaysVisible>
-      {#each $messages as message (message.id)}
+      {#each $messages as message, i (message.id)}
         <div
+          class="message-item"
+          class:selected={i === selectedIndex}
+          role="option"
+          aria-selected={i === selectedIndex}
+          onclick={() => {
+            selectedIndex = i
+          }}
           oncontextmenu={(event) => {
             event.preventDefault()
             $selectedMessage = message
@@ -87,6 +132,7 @@
       class="clear-button"
       onclick={() => {
         $messages = []
+        selectedIndex = -1
       }}>Clear list</vscode-button>
   </div>
 </div>
@@ -107,6 +153,7 @@
     grid-row-start: 2;
     grid-row-end: 3;
     min-height: 0;
+    outline: none;
   }
 
   .options {
@@ -125,5 +172,11 @@
     box-sizing: border-box;
     height: 100%;
     min-height: 0;
+  }
+
+  .message-item.selected {
+    background-color: var(--vscode-list-activeSelectionBackground);
+    color: var(--vscode-list-activeSelectionForeground);
+    outline: none;
   }
 </style>
