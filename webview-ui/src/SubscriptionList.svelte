@@ -49,6 +49,11 @@
   const mute = () => {
     selectedSubscription.muted = !selectedSubscription.muted
     $subscriptions = $subscriptions.set(selectedSubscription.topic, { ...selectedSubscription })
+    if (selectedSubscription.muted) {
+      ExtensionHostBridge.unsubscribeFromTopic(selectedSubscription.topic)
+    } else {
+      ExtensionHostBridge.subscribeToTopic(selectedSubscription.topic, selectedSubscription.qos, true)
+    }
   }
 
   const exportLog = () => {
