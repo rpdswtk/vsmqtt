@@ -30,12 +30,13 @@ export default class ExtensionHostBridge {
     })
   }
 
-  public static subscribeToTopic(topic: string, qos: number): void {
+  public static subscribeToTopic(topic: string, qos: number, ignoreRetained = false): void {
     vscode.postMessage({
       type: ExtensionMessages.subscribe,
       value: {
         topic,
         qos,
+        ignoreRetained,
       },
     })
   }
