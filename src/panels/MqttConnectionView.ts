@@ -24,6 +24,9 @@ export class MqttConnectionView {
   private static _openViews: Map<string, MqttConnectionView> = new Map<string, MqttConnectionView>()
   private _messageCount: number
 
+  // Ignoring retained messages for subscriptions that have been muted before
+  private _ignoreRetainedTopics = new Set<string>()
+
   public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig): void {
     const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 
@@ -126,9 +129,16 @@ export class MqttConnectionView {
           if (!data.value) {
             return
           }
-          console.log(`Subscribing to topic: ${data.value.topic} QoS: ${data.value.qos}`)
-          this._mqttClient?.subscribe(data.value.topic, {
-            qos: data.value.qos,
+          const topic = data.value.topic
+          const qos = data.value.qos
+          const ignoreRetained = data.value.ignoreRetained
+
+          console.log(`Subscribing to topic: ${topic} QoS: ${qos}`)
+          if (ignoreRetained) {
+            this._ignoreRetainedTopics.add(topic)
+          }
+          this._mqttClient?.subscribe(topic, {
+            qos: qos,
           })
           break
         }
@@ -282,6 +292,9 @@ export class MqttConnectionView {
     })
 
     this._mqttClient.on("message", (topic, message, packet: IPublishPacket) => {
+      if (packet.retain && this._ignoreRetainedTopics.has(topic)) {
+        return
+      }
       const timestamp = moment().format("YYYY-MM-DD h:mm:ss.SSS")
       console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`)
       this._panel?.webview.postMessage({
