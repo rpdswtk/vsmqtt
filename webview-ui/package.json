@@ -37,7 +37,7 @@
     "svelte-codicons": "^0.21.0",
     "svelte-preprocess": "^6.0.5",
     "tslib": "^2.8.1",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "yaml": "^2.9.0"
   }
 }
