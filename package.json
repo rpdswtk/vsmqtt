@@ -324,7 +324,7 @@
     "typescript": "^6.0.3",
     "vscode-extension-tester": "^8.24.0",
     "webpack": "^5.109.2",
-    "webpack-cli": "^7.0.3"
+    "webpack-cli": "^7.2.2"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
