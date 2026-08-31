@@ -305,7 +305,7 @@
     "@types/chai": "^5.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^26.1.1",
-    "@types/vscode": "^1.125.0",
+    "@types/vscode": "^1.134.0",
     "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
