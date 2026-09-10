@@ -27,6 +27,23 @@ export class MqttConnectionView {
   // Ignoring retained messages for subscriptions that have been muted before
   private _ignoreRetainedTopics = new Set<string>()
 
+  // Batching: queue messages and flush them together every ~16 ms
+  private _pendingMessages: object[] = []
+  private _flushInterval: ReturnType<typeof setInterval> | undefined
+
+  private _flushPendingMessages = () => {
+    if (this._pendingMessages.length === 0) {
+      return
+    }
+
+    this._panel?.webview.postMessage({
+      type: ExtensionMessages.onMqttMessageBatch,
+      value: this._pendingMessages,
+    })
+
+    this._pendingMessages = []
+  }
+
   public static createOrShow(extensionUri: vscode.Uri, brokerConfig: MqttBrokerConfig): void {
     const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 
@@ -242,6 +259,12 @@ export class MqttConnectionView {
     MqttConnectionView._openViews.delete(this._brokerConfig.name)
     MqttClientFactory.disposeClient(this._brokerConfig)
 
+    // Stop the batch flush interval
+    if (this._flushInterval !== undefined) {
+      clearInterval(this._flushInterval)
+      this._flushInterval = undefined
+    }
+
     // Clean up our resources
     this._panel.webview.onDidReceiveMessage(() => {
       // do nothing
@@ -279,6 +302,9 @@ export class MqttConnectionView {
       return
     }
 
+    // Start the batch flush interval (~one animation frame)
+    this._flushInterval = setInterval(this._flushPendingMessages, 16)
+
     this._mqttClient.once("error", async (error: Error) => {
       this._loadingNotificationCancellationToken?.cancel()
       const result = await vscode.window.showErrorMessage(
@@ -297,16 +323,14 @@ export class MqttConnectionView {
       }
       const timestamp = moment().format("YYYY-MM-DD h:mm:ss.SSS")
       console.log(`${timestamp} - Message received ${topic} Retain: ${packet.retain} Qos: ${packet.qos}`)
-      this._panel?.webview.postMessage({
-        type: ExtensionMessages.onMqttMessage,
-        value: {
-          id: this._messageCount++,
-          topic,
-          payload: message.toString(),
-          qos: packet.qos,
-          retain: packet.retain,
-          timestamp,
-        },
+      // Push into queue; _flushPendingMessages will batch-send on the next tick
+      this._pendingMessages.push({
+        id: this._messageCount++,
+        topic,
+        payload: message.toString(),
+        qos: packet.qos,
+        retain: packet.retain,
+        timestamp,
       })
     })
 

@@ -9,7 +9,7 @@ enum ExtensionMessages {
   removeSavedSubscription = "removeSavedSubscription",
   exportMessages = "exportMessages",
   onMqttConnectionChange = "onMqttConnectionChange",
-  onMqttMessage = "onMqttMessage",
+  onMqttMessageBatch = "onMqttMessageBatch",
   themeInformationChange = "themeInformationChange",
   saveDefaultPublishValues = "saveDefaultPublishValues",
   reloadBrokerConfig = "reloadBrokerConfig",

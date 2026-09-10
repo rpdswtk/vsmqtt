@@ -61,6 +61,25 @@
           }
           break
         }
+        case ExtensionMessages.onMqttMessageBatch: {
+          const accepted: typeof $messages = []
+          for (const raw of message.value as (typeof $messages)[number][]) {
+            const subscription = getSubscriptionOrNull(raw.topic)
+            if (subscription && !subscription.muted) {
+              raw.color = ColorManager.getColor(subscription.topic)
+              accepted.push(raw)
+              $subscriptions.set(subscription.topic, {
+                ...subscription,
+                messageCount: subscription.messageCount + 1,
+              })
+            }
+          }
+          if (accepted.length > 0) {
+            $messages = [...$messages, ...accepted]
+          }
+          $subscriptions = $subscriptions
+          break
+        }
         case ExtensionMessages.themeInformationChange: {
           ColorManager.clearColors()
           themeColorKind.set(message.value.themeKind)

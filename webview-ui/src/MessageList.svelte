@@ -5,7 +5,7 @@
   import type { VscodeContextMenu } from "@vscode-elements/elements/dist/vscode-context-menu/index.js"
   import "@vscode-elements/elements/dist/vscode-scrollable/index.js"
   import type { VscodeScrollable } from "@vscode-elements/elements/dist/vscode-scrollable/index.js"
-  import { onDestroy, onMount, tick } from "svelte"
+  import { onDestroy, onMount } from "svelte"
   import MessageElement from "./MessageElement.svelte"
   import { showContextMenu } from "./utilities/contextMenu"
   import "./utilities/contextMenu.css"
@@ -64,12 +64,20 @@
     list.scrollPos = list.scrollMax
   }
 
+  let scrollScheduled = false
+
+  const scheduleScrollToBottom = () => {
+    if (!autoScroll || scrollScheduled) return
+    scrollScheduled = true
+    requestAnimationFrame(() => {
+      scrollScheduled = false
+      scrollToBottom()
+    })
+  }
+
   onMount(() => {
-    messages.subscribe(async () => {
-      await tick()
-      if (autoScroll) {
-        scrollToBottom()
-      }
+    messages.subscribe(() => {
+      scheduleScrollToBottom()
     })
 
     contextMenu.data = [
