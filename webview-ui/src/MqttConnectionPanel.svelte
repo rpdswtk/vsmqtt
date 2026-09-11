@@ -15,7 +15,9 @@
   import {
     brokerConfig,
     isConnected,
+    MAX_STORED_MESSAGES,
     messages,
+    PAYLOAD_PREVIEW_LENGTH,
     savedSubscriptions,
     selectedMessage,
     subscriptions,
@@ -47,26 +49,16 @@
         case ExtensionMessages.onMqttConnectionChange:
           $isConnected = message.value.connected
           break
-        case ExtensionMessages.onMqttMessage: {
-          let subscription = getSubscriptionOrNull(message.value.topic)
-
-          if (subscription && !subscription.muted) {
-            message.value.color = ColorManager.getColor(subscription.topic)
-            $messages = [...$messages, message.value]
-            $subscriptions.set(subscription.topic, {
-              ...subscription,
-              messageCount: subscription.messageCount + 1,
-            })
-            $subscriptions = $subscriptions
-          }
-          break
-        }
         case ExtensionMessages.onMqttMessageBatch: {
           const accepted: typeof $messages = []
           for (const raw of message.value as (typeof $messages)[number][]) {
             const subscription = getSubscriptionOrNull(raw.topic)
             if (subscription && !subscription.muted) {
               raw.color = ColorManager.getColor(subscription.topic)
+              raw.payloadPreview =
+                raw.payload.length > PAYLOAD_PREVIEW_LENGTH
+                  ? raw.payload.slice(0, PAYLOAD_PREVIEW_LENGTH)
+                  : raw.payload
               accepted.push(raw)
               $subscriptions.set(subscription.topic, {
                 ...subscription,
@@ -75,7 +67,11 @@
             }
           }
           if (accepted.length > 0) {
-            $messages = [...$messages, ...accepted]
+            let next = [...$messages, ...accepted]
+            if (next.length > MAX_STORED_MESSAGES) {
+              next = next.slice(next.length - MAX_STORED_MESSAGES)
+            }
+            $messages = next
           }
           $subscriptions = $subscriptions
           break

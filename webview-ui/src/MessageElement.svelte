@@ -6,6 +6,8 @@
   import { selectedMessage } from "./utilities/stores"
 
   let { message }: { message: MQTTMessage } = $props()
+
+  const badgeColor = message.color ?? ColorManager.getColor(message.topic)
 </script>
 
 <div
@@ -19,11 +21,10 @@
     ExtensionHostBridge.openMessage(message)
   }}>
   <div class="topic">
-    <vscode-badge style="--vscode-badge-background: {ColorManager.getColor(message.topic)};"
-      >{message.topic}</vscode-badge>
+    <vscode-badge style="--vscode-badge-background: {badgeColor};">{message.topic}</vscode-badge>
   </div>
   <div class="qos user-select-none">QoS {message.qos}</div>
-  <div class="payload">{message.payload}</div>
+  <div class="payload">{message.payloadPreview ?? message.payload}</div>
   {#if message.retain}
     <div class="retain user-select-none">
       <vscode-badge>Retained</vscode-badge>

@@ -2,6 +2,7 @@ export default interface MQTTMessage {
   id: number
   topic: string
   payload: string
+  payloadPreview?: string
   retain: boolean
   qos: number
   timestamp: string
