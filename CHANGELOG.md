@@ -102,3 +102,11 @@ VSMQTT versions.
 ## [1.8.2] - 2026-07-12
 ### Added
 - Added profileStorageTarget option
+
+## [1.8.3] - 2026-09-12
+### Changed
+- Unsubscribe from topics when the user mutes it
+
+### Added
+- Message list arrow key navigation
+- Auto-format JSON, XML, YAML, CSV, INI and Base64 payloads
