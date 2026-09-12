@@ -3,9 +3,8 @@
   import "@vscode-elements/elements/dist/vscode-checkbox/index.js"
   import "@vscode-elements/elements/dist/vscode-context-menu/index.js"
   import type { VscodeContextMenu } from "@vscode-elements/elements/dist/vscode-context-menu/index.js"
-  import "@vscode-elements/elements/dist/vscode-scrollable/index.js"
-  import type { VscodeScrollable } from "@vscode-elements/elements/dist/vscode-scrollable/index.js"
-  import { onDestroy, onMount, tick } from "svelte"
+  import { onDestroy, onMount } from "svelte"
+  import VirtualList from "svelte-tiny-virtual-list"
   import MessageElement from "./MessageElement.svelte"
   import { showContextMenu } from "./utilities/contextMenu"
   import "./utilities/contextMenu.css"
@@ -14,34 +13,23 @@
   import VSCodeBindableWrapper from "./utilities/VSCodeBindableWrapper.svelte"
 
   let autoScroll = true
-  let list: VscodeScrollable
   let contextMenu: VscodeContextMenu
 
   let selectedIndex: number = -1
+  let scrollToIndex: number | undefined = undefined
+  let listHeight = 400
 
-  async function handleKeydown(event: KeyboardEvent) {
+  function handleKeydown(event: KeyboardEvent) {
     if (event.key === "ArrowDown") {
       event.preventDefault()
       selectedIndex = Math.min(selectedIndex + 1, $messages.length - 1)
+      scrollToIndex = selectedIndex
     } else if (event.key === "ArrowUp") {
       event.preventDefault()
       selectedIndex = Math.max(selectedIndex - 1, 0)
+      scrollToIndex = selectedIndex
     } else {
       return
-    }
-
-    await tick()
-
-    const selected = document.querySelector<HTMLElement>(".message-item.selected")
-    if (selected && list) {
-      const listRect = list.getBoundingClientRect()
-      const itemRect = selected.getBoundingClientRect()
-
-      if (itemRect.bottom > listRect.bottom) {
-        list.scrollPos += itemRect.bottom - listRect.bottom
-      } else if (itemRect.top < listRect.top) {
-        list.scrollPos -= listRect.top - itemRect.top
-      }
     }
   }
 
@@ -61,7 +49,9 @@
   }
 
   const scrollToBottom = () => {
-    list.scrollPos = list.scrollMax
+    if ($messages.length > 0) {
+      scrollToIndex = $messages.length - 1
+    }
   }
 
   let scrollScheduled = false
@@ -108,27 +98,36 @@
     tabindex="0"
     role="listbox"
     aria-label="Received messages"
+    bind:offsetHeight={listHeight}
     onkeydown={handleKeydown}
     oncontextmenu={(e) => e.preventDefault()}>
-    <vscode-scrollable class="pe-3" bind:this={list} alwaysVisible>
-      {#each $messages as message, i (message.id)}
-        <div
-          class="message-item"
-          class:selected={i === selectedIndex}
-          role="option"
-          aria-selected={i === selectedIndex}
-          onclick={() => {
-            selectedIndex = i
-          }}
-          oncontextmenu={(event) => {
-            event.preventDefault()
-            $selectedMessage = message
-            handleRightClick(event)
-          }}>
-          <MessageElement {message} />
+    <VirtualList
+      width="100%"
+      height={listHeight}
+      itemCount={$messages.length}
+      itemSize={55}
+      {scrollToIndex}
+      scrollToAlignment="end">
+      {#snippet item({ style, index })}
+        <div {style}>
+          <div
+            class="message-item"
+            class:selected={index === selectedIndex}
+            role="option"
+            aria-selected={index === selectedIndex}
+            onclick={() => {
+              selectedIndex = index
+            }}
+            oncontextmenu={(event) => {
+              event.preventDefault()
+              $selectedMessage = $messages[index]
+              handleRightClick(event)
+            }}>
+            <MessageElement message={$messages[index]} />
+          </div>
         </div>
-      {/each}
-    </vscode-scrollable>
+      {/snippet}
+    </VirtualList>
   </div>
 
   <div class="options">
@@ -173,13 +172,6 @@
     cursor: pointer;
     float: right;
     margin-right: 15px;
-  }
-
-  vscode-scrollable {
-    display: block;
-    box-sizing: border-box;
-    height: 100%;
-    min-height: 0;
   }
 
   .message-item.selected {

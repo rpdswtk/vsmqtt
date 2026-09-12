@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@vscode-elements/elements": "^2.5.1",
-    "mqtt-match": "^3.0.0"
+    "mqtt-match": "^3.0.0",
+    "svelte-tiny-virtual-list": "^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^6.0.0",
