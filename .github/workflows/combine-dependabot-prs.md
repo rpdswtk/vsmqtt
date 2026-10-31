@@ -8,6 +8,11 @@ permissions:
   contents: read
   pull-requests: read
   copilot-requests: write
+engine:
+  id: copilot
+  model-routing:
+    goal: cost
+    mode: balanced
 runs-on: ubuntu-latest
 tools:
   github:
