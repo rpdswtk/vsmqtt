@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  copilot-requests: write
 runs-on: ubuntu-latest
 tools:
   github:
