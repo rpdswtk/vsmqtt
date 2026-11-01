@@ -7,10 +7,11 @@ on:
 permissions:
   contents: read
   pull-requests: read
-  copilot-requests: write
 engine:
   id: copilot
-  model: gpt-5.6-luna
+  model: auto
+  env:
+    COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
 runs-on: ubuntu-latest
 tools:
   github:
