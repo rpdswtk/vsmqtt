@@ -10,9 +10,7 @@ permissions:
   copilot-requests: write
 engine:
   id: copilot
-  model-routing:
-    goal: cost
-    mode: balanced
+  model: gpt-5.6-luna
 runs-on: ubuntu-latest
 tools:
   github:
