@@ -9,7 +9,7 @@ permissions:
   pull-requests: read
 engine:
   id: copilot
-  model: auto
+  model: gpt-4.1
   env:
     COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
 runs-on: ubuntu-latest
