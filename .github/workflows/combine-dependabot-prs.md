@@ -7,12 +7,11 @@ on:
 permissions:
   contents: read
   pull-requests: read
-  copilot-requests: write
 engine:
   id: copilot
-  model-routing:
-    goal: cost
-    mode: balanced
+  model: gpt-4.1
+  env:
+    COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
 runs-on: ubuntu-latest
 tools:
   github:
