@@ -2,7 +2,7 @@
 description: Weekly combine open Dependabot npm updates into one tested draft pull request.
 intent: Consolidate open Dependabot updates into one validated, reviewable pull request.
 on:
-  schedule: weekly on monday
+  schedule: "0 10 * * 1"
   skip-if-match: 'is:pr is:open in:title "chore(deps): combined dependency updates"'
 permissions:
   contents: read
