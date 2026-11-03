@@ -39,6 +39,7 @@ safe-outputs:
     base-branch: master
     draft: true
     max: 1
+    allow-full-history-fetch: true
     allowed-files:
       - package.json
       - package-lock.json
