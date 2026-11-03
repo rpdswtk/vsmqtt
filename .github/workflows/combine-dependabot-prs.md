@@ -35,7 +35,7 @@ steps:
 safe-outputs:
   create-pull-request:
     title-prefix: "chore(deps): "
-    branch-prefix: "deps/combined-"
+    branch-prefix: "deps/combined"
     base-branch: master
     draft: true
     max: 1
