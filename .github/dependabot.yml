@@ -11,6 +11,9 @@ updates:
     directory: "/webview-ui"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Amsterdam"
     labels:
       - "dependencies"
       - "webview"
