@@ -121,7 +121,7 @@
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: min-content min-content min-content 40vh 20vh;
+    grid-template-rows: min-content min-content min-content 2fr 1fr;
   }
 
   #header {
@@ -151,16 +151,19 @@
 
   #subscription-list-section {
     grid-area: 4 / 1 / 6 / 2;
+    overflow: hidden;
   }
 
   #message-section {
     grid-area: 4 / 2 / 5 / 3;
     height: 100%;
+    overflow: hidden;
   }
 
   #message-overview-section {
     grid-area: 5 / 2 / 6 / 3;
     border-top: None;
+    overflow: hidden;
   }
 
   .container {
