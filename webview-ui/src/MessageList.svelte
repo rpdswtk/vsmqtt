@@ -60,8 +60,43 @@
     showContextMenu(event.clientX, event.clientY, contextMenu)
   }
 
+  let scrollAnimationId: number | null = null
+
   const scrollToBottom = () => {
-    list.scrollPos = list.scrollMax
+    if (!list) return
+
+    if (scrollAnimationId) {
+      cancelAnimationFrame(scrollAnimationId)
+    }
+
+    const animate = () => {
+      if (!list) {
+        scrollAnimationId = null
+        return
+      }
+
+      const target = list.scrollMax
+      const distance = target - list.scrollPos
+
+      if (distance <= 1) {
+        list.scrollPos = target
+        scrollAnimationId = null
+        return
+      }
+
+      list.scrollPos += Math.max(1, distance * 0.15)
+      scrollAnimationId = requestAnimationFrame(animate)
+    }
+
+    scrollAnimationId = requestAnimationFrame(animate)
+  }
+
+  const onAutoScrollChange = async (e: Event) => {
+    const isChecked = Boolean((e.currentTarget as any)?.checked ?? (e.target as any)?.checked)
+    if (isChecked) {
+      await tick()
+      scrollToBottom()
+    }
   }
 
   onMount(() => {
@@ -125,7 +160,7 @@
 
   <div class="options">
     <VSCodeBindableWrapper bind:value={autoScroll}>
-      <vscode-checkbox label="Autoscroll"></vscode-checkbox>
+      <vscode-checkbox label="Autoscroll" onchange={onAutoScrollChange}></vscode-checkbox>
     </VSCodeBindableWrapper>
     <vscode-button
       secondary

@@ -19,33 +19,40 @@
 
   $effect(() => {
     if (value !== null && value !== undefined && vsCodeElement) {
-      const incoming = value.toString()
-      if (vsCodeElement.value !== incoming) {
-        vsCodeElement.value = incoming
+      if (isCheckbox) {
+        ;(vsCodeElement as VscodeCheckbox).checked = Boolean(value)
+      } else {
+        const incoming = value.toString()
+        if (vsCodeElement.value !== incoming) {
+          vsCodeElement.value = incoming
+        }
       }
     }
   })
 
   const initObserver = (element: HTMLElement) => {
-    vsCodeElement = element.firstChild as unknown as AssociatedFormControl
-    isCheckbox = element.firstChild!.nodeName.toUpperCase().includes("CHECKBOX")
+    const target = (element.firstElementChild || element.firstChild) as HTMLElement
+    vsCodeElement = target as unknown as AssociatedFormControl
+    isCheckbox = target?.nodeName?.toUpperCase().includes("CHECKBOX") ?? false
 
     if (value !== null && value !== undefined) {
-      vsCodeElement.value = value.toString()
+      if (isCheckbox) {
+        ;(vsCodeElement as VscodeCheckbox).checked = Boolean(value)
+      } else {
+        vsCodeElement.value = value.toString()
+      }
     }
 
-    element.firstChild?.addEventListener("change", onChange)
+    target?.addEventListener("change", onChange)
     if (!isCheckbox) {
-      element.firstChild?.addEventListener("input", onChange)
-    } else {
-      ;(vsCodeElement as VscodeCheckbox).checked = value as boolean
+      target?.addEventListener("input", onChange)
     }
 
     return () => {
-      element.firstChild?.removeEventListener("change", onChange)
+      target?.removeEventListener("change", onChange)
 
       if (!isCheckbox) {
-        element.firstChild?.removeEventListener("input", onChange)
+        target?.removeEventListener("input", onChange)
       }
     }
   }
