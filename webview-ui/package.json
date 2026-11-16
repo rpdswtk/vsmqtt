@@ -27,7 +27,7 @@
     "bootstrap": "^5.3.9",
     "eslint": "^10.14.0",
     "eslint-plugin-svelte": "^3.23.0",
-    "rollup": "^4.68.2",
+    "rollup": "^4.68.3",
     "rollup-plugin-css-only": "^4.5.5",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-svelte": "^7.2.3",
