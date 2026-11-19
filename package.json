@@ -322,7 +322,7 @@
     "rimraf": "^6.1.4",
     "ts-loader": "^9.6.2",
     "typescript": "^6.0.3",
-    "vscode-extension-tester": "^8.24.0",
+    "vscode-extension-tester": "^8.28.1",
     "webpack": "^5.112.2",
     "webpack-cli": "^7.2.3"
   },
